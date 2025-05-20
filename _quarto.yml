@@ -1,0 +1,30 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "2025 Coriell Bioinformatics Internship"
+  author: "Gennaro Calendo"
+  date: "2025-05-20"
+  chapters:
+    - index.qmd
+    - intro-to-bioinfo.qmd
+    - r-basics.qmd
+    - data-viz.qmd
+    - stats-by-simulation.qmd
+    - high-dimensional-data-analysis.qmd
+    - presenting-science.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+  pdf:
+    documentclass: scrreprt
+
+
+
