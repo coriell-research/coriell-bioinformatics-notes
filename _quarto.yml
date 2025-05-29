@@ -8,7 +8,7 @@ book:
   date: "2025-05-20"
   chapters:
     - index.qmd
-    - intro-to-bioinfo.qmd
+    - data-best-practices.qmd
     - r-basics.qmd
     - data-viz.qmd
     - stats-by-simulation.qmd

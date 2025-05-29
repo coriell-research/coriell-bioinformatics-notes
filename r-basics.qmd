@@ -1,4 +1,29 @@
 ---
-title: "R Bootcamp"
+title: "R bootcamp"
 ---
+
+## Introduction to programming in R
+
+There are tons of great resources for learning R. [R for Data Science](https://r4ds.had.co.nz/)
+is probably the most popular resource for new useRs to get up to speed with slicing 
+and dicing data in R. The *R for Data Science* book, however, is taught from the 
+perspective of the [Tidyverse](https://www.tidyverse.org/). The *Tidyverse* is 
+an opinionated set of packages and functions that help users perform data 
+manipulations primarily on data.frames. While these packages and functions can be
+great for experienced users by providing ergonomic and consistent interfaces for
+data.frame manipulation, it is my personal belief that new users should first 
+learn the base language, especially if their goal is to perform bioinformatics 
+analysis. 
+
+Bioinformatics tools rely heavily on subsetting and matrix manipulations. 
+In my experience, users who start learning R using only function from the 
+*Tidyverse* have a difficult time understanding matrix manipulations and 
+subsetting operations common in bioinformatics workflows. This becomes 
+especially important when using [SummarizedExperiments](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) - the backbone of many bioinformatics data structures in 
+R. 
+
+For this reason, we're going to focus on learning R from the ground up using 
+functions that exist primarily in the base language. A great resource for 
+learning base R quickly is Norm Matloff's *fasteR* which can be found 
+[here](https://github.com/matloff/fasteR). 
 

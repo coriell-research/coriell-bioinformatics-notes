@@ -6,7 +6,7 @@ before you start working on an interesting project.
 
 We hope to cover:
 
-1. Introduction to bioinformatics
+1. Some data best practices
 2. The basics of programming in R
 3. The basics of data visualization
 4. The basics of statistical testing with simulations
