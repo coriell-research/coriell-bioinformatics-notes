@@ -1,6 +1,4 @@
----
-title: "Some data best practices"
----
+# 'Best' practices for data projects {.unnumbered}
 
 Science requires reproducibility, not only to ensure that your results are 
 generalizable but also to make your life easier. One overlooked aspect of

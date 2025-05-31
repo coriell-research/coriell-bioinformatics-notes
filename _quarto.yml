@@ -9,10 +9,9 @@ book:
   chapters:
     - index.qmd
     - data-best-practices.qmd
+    - linux.qmd
     - r-basics.qmd
     - data-viz.qmd
-    - stats-by-simulation.qmd
-    - high-dimensional-data-analysis.qmd
     - presenting-science.qmd
     - references.qmd
 

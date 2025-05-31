@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.313">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2025 Coriell Bioinformatics Internship - 1&nbsp; Some data best practices</title>
+<title>‘Best’ practices for data projects – 2025 Coriell Bioinformatics Internship</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,9 +17,11 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +48,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -93,24 +65,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-basics.html" rel="next">
+<link href="./linux.html" rel="next">
 <link href="./index.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-128e0f949f8f902082bc899829804d79.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -119,23 +98,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Some data best practices</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data-best-practices.html">‘Best’ practices for data projects</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -143,117 +129,120 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">2025 Coriell Bioinformatics Internship</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Welcome!</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome!</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-best-practices.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Some data best practices</span></a>
+  <a href="./data-best-practices.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">‘Best’ practices for data projects</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r-basics.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R bootcamp</span></a>
+  <a href="./linux.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command line basics</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-viz.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Effective data visualization</span></a>
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R programming basics</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./stats-by-simulation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Statistics using simulations</span></a>
+  <a href="./data-viz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Effective data visualizations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./high-dimensional-data-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">High-dimensional data analysis</span></a>
+  <a href="./presenting-science.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Scientific presentations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./presenting-science.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Effective science communication</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#quick-note-todo" id="toc-quick-note-todo" class="nav-link active" data-scroll-target="#quick-note-todo"><span class="toc-section-number">1.1</span>  Quick note (TODO)</a></li>
-  <li><a href="#why-care-about-data-management" id="toc-why-care-about-data-management" class="nav-link" data-scroll-target="#why-care-about-data-management"><span class="toc-section-number">1.2</span>  Why care about data management?</a></li>
-  <li><a href="#file-management" id="toc-file-management" class="nav-link" data-scroll-target="#file-management"><span class="toc-section-number">2</span>  File Management</a>
+  <li><a href="#quick-note-todo" id="toc-quick-note-todo" class="nav-link active" data-scroll-target="#quick-note-todo">Quick note (TODO)</a></li>
+  <li><a href="#why-care-about-data-management" id="toc-why-care-about-data-management" class="nav-link" data-scroll-target="#why-care-about-data-management">Why care about data management?</a></li>
+  <li><a href="#file-management" id="toc-file-management" class="nav-link" data-scroll-target="#file-management">File Management</a>
   <ul class="collapse">
-  <li><a href="#file-types-and-file-names" id="toc-file-types-and-file-names" class="nav-link" data-scroll-target="#file-types-and-file-names"><span class="toc-section-number">2.1</span>  File types and file names</a></li>
-  <li><a href="#file-naming" id="toc-file-naming" class="nav-link" data-scroll-target="#file-naming"><span class="toc-section-number">2.2</span>  File naming</a></li>
-  <li><a href="#more-on-filenames" id="toc-more-on-filenames" class="nav-link" data-scroll-target="#more-on-filenames"><span class="toc-section-number">2.3</span>  More on filenames</a></li>
-  <li><a href="#create-analysis-freindly-data---tidy-data" id="toc-create-analysis-freindly-data---tidy-data" class="nav-link" data-scroll-target="#create-analysis-freindly-data---tidy-data"><span class="toc-section-number">2.4</span>  Create analysis freindly data - tidy data</a></li>
-  <li><a href="#untidy-data" id="toc-untidy-data" class="nav-link" data-scroll-target="#untidy-data"><span class="toc-section-number">2.5</span>  Untidy(?) data</a></li>
-  <li><a href="#save-and-lock-all-raw-data" id="toc-save-and-lock-all-raw-data" class="nav-link" data-scroll-target="#save-and-lock-all-raw-data"><span class="toc-section-number">2.6</span>  Save and lock all raw data</a></li>
-  <li><a href="#large-files" id="toc-large-files" class="nav-link" data-scroll-target="#large-files"><span class="toc-section-number">2.7</span>  Large files</a></li>
-  <li><a href="#backups" id="toc-backups" class="nav-link" data-scroll-target="#backups"><span class="toc-section-number">2.8</span>  Backups</a>
+  <li><a href="#file-types-and-file-names" id="toc-file-types-and-file-names" class="nav-link" data-scroll-target="#file-types-and-file-names">File types and file names</a></li>
+  <li><a href="#file-naming" id="toc-file-naming" class="nav-link" data-scroll-target="#file-naming">File naming</a></li>
+  <li><a href="#more-on-filenames" id="toc-more-on-filenames" class="nav-link" data-scroll-target="#more-on-filenames">More on filenames</a></li>
+  <li><a href="#create-analysis-freindly-data---tidy-data" id="toc-create-analysis-freindly-data---tidy-data" class="nav-link" data-scroll-target="#create-analysis-freindly-data---tidy-data">Create analysis freindly data - tidy data</a></li>
+  <li><a href="#untidy-data" id="toc-untidy-data" class="nav-link" data-scroll-target="#untidy-data">Untidy(?) data</a></li>
+  <li><a href="#save-and-lock-all-raw-data" id="toc-save-and-lock-all-raw-data" class="nav-link" data-scroll-target="#save-and-lock-all-raw-data">Save and lock all raw data</a></li>
+  <li><a href="#large-files" id="toc-large-files" class="nav-link" data-scroll-target="#large-files">Large files</a></li>
+  <li><a href="#backups" id="toc-backups" class="nav-link" data-scroll-target="#backups">Backups</a>
   <ul class="collapse">
-  <li><a href="#use-the-3-2-1-rule" id="toc-use-the-3-2-1-rule" class="nav-link" data-scroll-target="#use-the-3-2-1-rule"><span class="toc-section-number">2.8.1</span>  Use the 3-2-1 rule:</a></li>
+  <li><a href="#use-the-3-2-1-rule" id="toc-use-the-3-2-1-rule" class="nav-link" data-scroll-target="#use-the-3-2-1-rule">Use the 3-2-1 rule:</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#project-organization" id="toc-project-organization" class="nav-link" data-scroll-target="#project-organization"><span class="toc-section-number">3</span>  Project Organization</a>
+  <li><a href="#project-organization" id="toc-project-organization" class="nav-link" data-scroll-target="#project-organization">Project Organization</a>
   <ul class="collapse">
-  <li><a href="#look-familiar" id="toc-look-familiar" class="nav-link" data-scroll-target="#look-familiar"><span class="toc-section-number">3.1</span>  Look familiar?</a></li>
-  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure"><span class="toc-section-number">3.2</span>  Project structure</a>
+  <li><a href="#look-familiar" id="toc-look-familiar" class="nav-link" data-scroll-target="#look-familiar">Look familiar?</a></li>
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure">Project structure</a>
   <ul class="collapse">
-  <li><a href="#a-more-complex-example" id="toc-a-more-complex-example" class="nav-link" data-scroll-target="#a-more-complex-example"><span class="toc-section-number">3.2.1</span>  A more complex example</a></li>
+  <li><a href="#a-more-complex-example" id="toc-a-more-complex-example" class="nav-link" data-scroll-target="#a-more-complex-example">A more complex example</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#tracking-changes" id="toc-tracking-changes" class="nav-link" data-scroll-target="#tracking-changes"><span class="toc-section-number">4</span>  Tracking Changes</a>
+  <li><a href="#tracking-changes" id="toc-tracking-changes" class="nav-link" data-scroll-target="#tracking-changes">Tracking Changes</a>
   <ul class="collapse">
-  <li><a href="#record-all-steps-used-to-generate-the-data" id="toc-record-all-steps-used-to-generate-the-data" class="nav-link" data-scroll-target="#record-all-steps-used-to-generate-the-data"><span class="toc-section-number">4.1</span>  Record all steps used to generate the data</a></li>
-  <li><a href="#manual-version-control" id="toc-manual-version-control" class="nav-link" data-scroll-target="#manual-version-control"><span class="toc-section-number">4.2</span>  Manual version control</a></li>
-  <li><a href="#version-control-with-git" id="toc-version-control-with-git" class="nav-link" data-scroll-target="#version-control-with-git"><span class="toc-section-number">4.3</span>  Version control with git</a></li>
+  <li><a href="#record-all-steps-used-to-generate-the-data" id="toc-record-all-steps-used-to-generate-the-data" class="nav-link" data-scroll-target="#record-all-steps-used-to-generate-the-data">Record all steps used to generate the data</a></li>
+  <li><a href="#manual-version-control" id="toc-manual-version-control" class="nav-link" data-scroll-target="#manual-version-control">Manual version control</a></li>
+  <li><a href="#version-control-with-git" id="toc-version-control-with-git" class="nav-link" data-scroll-target="#version-control-with-git">Version control with git</a></li>
   </ul></li>
-  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software"><span class="toc-section-number">5</span>  Software</a>
+  <li><a href="#software" id="toc-software" class="nav-link" data-scroll-target="#software">Software</a>
   <ul class="collapse">
-  <li><a href="#quick-tips-to-improve-your-scripts" id="toc-quick-tips-to-improve-your-scripts" class="nav-link" data-scroll-target="#quick-tips-to-improve-your-scripts"><span class="toc-section-number">5.1</span>  Quick tips to improve your scripts</a>
+  <li><a href="#quick-tips-to-improve-your-scripts" id="toc-quick-tips-to-improve-your-scripts" class="nav-link" data-scroll-target="#quick-tips-to-improve-your-scripts">Quick tips to improve your scripts</a>
   <ul class="collapse">
-  <li><a href="#place-a-description-at-the-top-of-every-script" id="toc-place-a-description-at-the-top-of-every-script" class="nav-link" data-scroll-target="#place-a-description-at-the-top-of-every-script"><span class="toc-section-number">5.1.1</span>  Place a description at the top of every script</a></li>
-  <li><a href="#decompose-programs-into-functions" id="toc-decompose-programs-into-functions" class="nav-link" data-scroll-target="#decompose-programs-into-functions"><span class="toc-section-number">5.1.2</span>  Decompose programs into functions</a></li>
-  <li><a href="#give-functions-and-variables-meaningful-names" id="toc-give-functions-and-variables-meaningful-names" class="nav-link" data-scroll-target="#give-functions-and-variables-meaningful-names"><span class="toc-section-number">5.1.3</span>  Give functions and variables meaningful names</a></li>
-  <li><a href="#do-not-control-program-flow-with-comments" id="toc-do-not-control-program-flow-with-comments" class="nav-link" data-scroll-target="#do-not-control-program-flow-with-comments"><span class="toc-section-number">5.1.4</span>  Do not control program flow with comments</a></li>
-  <li><a href="#use-a-consistent-style" id="toc-use-a-consistent-style" class="nav-link" data-scroll-target="#use-a-consistent-style"><span class="toc-section-number">5.1.5</span>  Use a consistent style</a></li>
-  <li><a href="#dont-use-right-hand-assignment" id="toc-dont-use-right-hand-assignment" class="nav-link" data-scroll-target="#dont-use-right-hand-assignment"><span class="toc-section-number">5.1.6</span>  Don’t use right hand assignment</a></li>
+  <li><a href="#place-a-description-at-the-top-of-every-script" id="toc-place-a-description-at-the-top-of-every-script" class="nav-link" data-scroll-target="#place-a-description-at-the-top-of-every-script">Place a description at the top of every script</a></li>
+  <li><a href="#decompose-programs-into-functions" id="toc-decompose-programs-into-functions" class="nav-link" data-scroll-target="#decompose-programs-into-functions">Decompose programs into functions</a></li>
+  <li><a href="#give-functions-and-variables-meaningful-names" id="toc-give-functions-and-variables-meaningful-names" class="nav-link" data-scroll-target="#give-functions-and-variables-meaningful-names">Give functions and variables meaningful names</a></li>
+  <li><a href="#do-not-control-program-flow-with-comments" id="toc-do-not-control-program-flow-with-comments" class="nav-link" data-scroll-target="#do-not-control-program-flow-with-comments">Do not control program flow with comments</a></li>
+  <li><a href="#use-a-consistent-style" id="toc-use-a-consistent-style" class="nav-link" data-scroll-target="#use-a-consistent-style">Use a consistent style</a></li>
+  <li><a href="#dont-use-right-hand-assignment" id="toc-dont-use-right-hand-assignment" class="nav-link" data-scroll-target="#dont-use-right-hand-assignment">Don’t use right hand assignment</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="toc-section-number">6</span>  Summary</a></li>
-  <li><a href="#resources-references" id="toc-resources-references" class="nav-link" data-scroll-target="#resources-references"><span class="toc-section-number">7</span>  Resources &amp; References</a>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#resources-references" id="toc-resources-references" class="nav-link" data-scroll-target="#resources-references">Resources &amp; References</a>
   <ul class="collapse">
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices"><span class="toc-section-number">7.1</span>  Best practices</a></li>
-  <li><a href="#bioinformatics" id="toc-bioinformatics" class="nav-link" data-scroll-target="#bioinformatics"><span class="toc-section-number">7.2</span>  Bioinformatics</a></li>
-  <li><a href="#proficiency-with-computational-tools" id="toc-proficiency-with-computational-tools" class="nav-link" data-scroll-target="#proficiency-with-computational-tools"><span class="toc-section-number">7.3</span>  Proficiency with computational tools</a></li>
-  <li><a href="#r" id="toc-r" class="nav-link" data-scroll-target="#r"><span class="toc-section-number">7.4</span>  R</a></li>
+  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices">Best practices</a></li>
+  <li><a href="#bioinformatics" id="toc-bioinformatics" class="nav-link" data-scroll-target="#bioinformatics">Bioinformatics</a></li>
+  <li><a href="#proficiency-with-computational-tools" id="toc-proficiency-with-computational-tools" class="nav-link" data-scroll-target="#proficiency-with-computational-tools">Proficiency with computational tools</a></li>
+  <li><a href="#r" id="toc-r" class="nav-link" data-scroll-target="#r">R</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -263,7 +252,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Some data best practices</span></h1>
+<h1 class="title">‘Best’ practices for data projects</h1>
 </div>
 
 
@@ -276,31 +265,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   
 
+
 </header>
 
+
 <p>Science requires reproducibility, not only to ensure that your results are generalizable but also to make your life easier. One overlooked aspect of of learning data science is creating consistent and clear organization of your projects and learning how to keep your data safe and easily searchable.</p>
-<section id="quick-note-todo" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="quick-note-todo"><span class="header-section-number">1.1</span> Quick note (TODO)</h2>
+<section id="quick-note-todo" class="level2">
+<h2 class="anchored" data-anchor-id="quick-note-todo">Quick note (TODO)</h2>
 <p><strong>Citations incoming</strong>. Please note that much of this document does not contain original material. References are listed at the end of the chapter (I still need to get my .bib files in order to give proper attribution).</p>
 </section>
-<section id="why-care-about-data-management" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="why-care-about-data-management"><span class="header-section-number">1.2</span> Why care about data management?</h2>
+<section id="why-care-about-data-management" class="level2">
+<h2 class="anchored" data-anchor-id="why-care-about-data-management">Why care about data management?</h2>
 <p>Computing is now an essential part of research. This is outlined beautifully in the paper, <a href="https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002050">“All biology is computational biology”</a> by Florian Markowetz. Data is getting bigger and bigger and we need to be equipped with the tools for storing, manipulating, and communicating insights derived from it. However, most researchers are never taught good computational practices. Computational best practices are imperitive. Implementing best (or good enough) practices can improve reproducibility, ensure correctness, and increase efficiency.</p>
 </section>
-<section id="file-management" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> File Management</h1>
+<section id="file-management" class="level1">
+<h1>File Management</h1>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/golum.jpg" class="img-fluid figure-img"></p>
+<p><img src="images/golum.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
-<section id="file-types-and-file-names" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="file-types-and-file-names"><span class="header-section-number">2.1</span> File types and file names</h2>
+<section id="file-types-and-file-names" class="level2">
+<h2 class="anchored" data-anchor-id="file-types-and-file-names">File types and file names</h2>
 <p>As a data scientist you’ll be dealing with a lot of files but have you ever considered <em>what</em> a file is? Files come in all shapes and formats. Some are very application specific and require specialized programs to open. For example, consider <a href="https://en.wikipedia.org/wiki/DICOM">DICOM</a> files that are used to store and manipulate radiology data. Luckily, in bioinformatics we tend to deal mainly with simple, plain text files, most often. Plain text files are typically designed to be both human and machine-readable. If you have the choice of saving any data, you should know that some formats will make your life easier. Certain file formats like TXT, CSV, TSV, JSON, and YAML are standard plain text file formats that are easy to share and easy to open and manipulate. Because of this, you should prefer to store your data in machine-readable formats. Avoid .xlsx files for storing data. Prefer TXT, CSV, TSV, JSON, YAML, and HDF5.</p>
 <p>If you have very large text files then you can use compression utilities to save space. Most bioinformatics software is designed to work well with gzip compressed data. <code>gzip</code> is a relatively old compression format. You could also consider using <code>xz</code> as a means to compress your data - just know that <code>xz</code> compression is less supported across tools.</p>
 </section>
-<section id="file-naming" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="file-naming"><span class="header-section-number">2.2</span> File naming</h2>
+<section id="file-naming" class="level2">
+<h2 class="anchored" data-anchor-id="file-naming">File naming</h2>
 <p>File naming is important but often overlooked. You want your files to be named logically and communicate their contents. You also want your files to be named in a way that a computer can easily read. For example, spaces in filenames are a royal pain when manipulating files on the command line.</p>
 <p>To ensure filenames are computer friendly, don’t use spaces in filenames. Use only letters, numbers, and “-” “_” and “.” as delimiters. For example:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode Bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bad</span></span>
@@ -341,8 +332,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">doStuff</span> <span class="va">${SAMPLE}</span>.txt<span class="kw">;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="more-on-filenames" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="more-on-filenames"><span class="header-section-number">2.3</span> More on filenames</h2>
+<section id="more-on-filenames" class="level2">
+<h2 class="anchored" data-anchor-id="more-on-filenames">More on filenames</h2>
 <p>It cannot be stressed enough how important filenames can be for an analysis. To get the most out of your files and to avoid catastrpohic failures, you should stick to some basic principles for naming files. First, use consistent and unique identifiers across all files that you generate for an experiment. For example, if you’re conducting a study that has both RNA-seq and ATAC-seq data performed on the same subjects, don’t name the files from the RNA-seq experiment <code>subject1.fq.fz</code> and the files from the ATAC-seq experiment <code>control_subject1.fq.gz</code> if they refer to the same sample. For small projects, it’s fairly easy to create consistent and unique IDs for each subject. For large projects unique random IDs can be used.</p>
 <p>For example, the following filenames would be bad:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">subject1-control_at_96hr1.txt</span></span>
@@ -366,8 +357,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"subject1_control_4days_rep2"</span> <span class="kw">|</span> <span class="ex">shasum</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># b6ea9d729e57cce68b37de390d56c542bc17dea6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="create-analysis-freindly-data---tidy-data" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="create-analysis-freindly-data---tidy-data"><span class="header-section-number">2.4</span> Create analysis freindly data - tidy data</h2>
+<section id="create-analysis-freindly-data---tidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="create-analysis-freindly-data---tidy-data">Create analysis freindly data - tidy data</h2>
 <p>The term <a href="https://vita.had.co.nz/papers/tidy-data.html">tidy data</a> was defined by Hadley Wickham to describe data which is amenable to downstream analysis. Most people are familiar with performing a quick and dirty data analysis in a program like Excel. You may have also used some of Excel’s fancy features for coloring cells, adding bold and underlines to text, and formatting cells with other decorations. All of this tends to just be extra fluff. If you format you data properly then it will be much easier to perform downstream analysis on and will not require the use of extra decorations. This is true even in Excel!</p>
 <p>To conform to the requirements of being <em>tidy</em>, the data should follow some simple principles:</p>
 <ol type="1">
@@ -400,19 +391,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>arrow<span class="sc">::</span><span class="fu">write_parquet</span>(df, <span class="st">"path/to/different_file.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>see <a href="https://arrow.apache.org/docs/r/index.html">R arrow</a> for more details. There’s also the <a href="https://nanoparquet.r-lib.org/">nanoparquet</a> package which provides a light weight reader/writer for parquet files.</p>
 </section>
-<section id="untidy-data" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="untidy-data"><span class="header-section-number">2.5</span> Untidy(?) data</h2>
+<section id="untidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="untidy-data">Untidy(?) data</h2>
 <p>Some data formats are not amenable to the ‘tidy’ structure, i.e.&nbsp;they’re just not best represented as long tables. For example, large/sparse matrices, geo-spatial data, R objects, etc.the lesson here is to store data in the format that is most appropriate for the data. For example, don’t convert a matrix to a long format and save as a tsv file! Save it as an <code>.rds</code> file instead. Large matrices can also be efficiently stored as <a href="https://cran.r-project.org/web/packages/hdf5r/vignettes/hdf5r.html">HDF5 files</a>. Sparse matrices can be saved and accessed eficiently using the <a href="https://matrix.r-forge.r-project.org/">Matrix</a> package in R. And if you are accessing the same data often, consider storing as a <a href="https://www.sqlite.org/index.html">SQLite</a> database and accessing with <a href="https://dbplyr.tidyverse.org/">dbplyr</a> or <a href="https://www.sqlalchemy.org/">sqlalchemy</a> in Python. The main point is don’t force data into a format that you’re familiar with only because you’re familiar with that format. This will often lead to large file sizes and inefficient performance.</p>
 </section>
-<section id="save-and-lock-all-raw-data" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="save-and-lock-all-raw-data"><span class="header-section-number">2.6</span> Save and lock all raw data</h2>
+<section id="save-and-lock-all-raw-data" class="level2">
+<h2 class="anchored" data-anchor-id="save-and-lock-all-raw-data">Save and lock all raw data</h2>
 <p>Keep raw data in its unedited form. This includes not making changes to filenames. In bioinformatics, it’s common to get data from a sequencing facility with incomprehensible filenames. Don’t fall victim to the temptation of changing these filenames! Instead, it’s much better to keep the filenames exactly how they were sent to you and simply create a spreadsheet that maps the files to their metadata. In the case of a sample mix-up, it’s much easier to make a change to a row in a spreadsheet then to track down all of the filenames that you changed and ensure they’re correctly modified.</p>
 <p>Once you have your raw data, you don’t want the raw data to change in any way that is not documented by code. To ensure this, you can consider changing file permissions to make the file immutable (unchangable). Using bash, you can change file permissions with:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chattr</span> +i myfile.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>If you’re using Excel for data analysis, lock the spreadsheet with the raw data and only make references to this sheet when performing calculations.</p>
 </section>
-<section id="large-files" class="level2" data-number="2.7">
-<h2 data-number="2.7" class="anchored" data-anchor-id="large-files"><span class="header-section-number">2.7</span> Large files</h2>
+<section id="large-files" class="level2">
+<h2 class="anchored" data-anchor-id="large-files">Large files</h2>
 <p>You’ll probably be dealing with files on the order of 10s of GBs. You <strong>do not</strong> want to be copying these files from one place to another. This increases confusion and runs the risk of introducing errors. Instead avoid making copies of large local files or persistent databases and simply link to the files.</p>
 <p>You can use use soft links. A powerful way of finding an linking files can be done with <code>find</code></p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Link all fastq files to a local directory</span></span>
@@ -422,8 +413,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.annotation.gtf.gz"</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>gtf <span class="ot">&lt;-</span> rtracklayer<span class="sc">::</span><span class="fu">import</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="backups" class="level2" data-number="2.8">
-<h2 data-number="2.8" class="anchored" data-anchor-id="backups"><span class="header-section-number">2.8</span> Backups</h2>
+<section id="backups" class="level2">
+<h2 class="anchored" data-anchor-id="backups">Backups</h2>
 <blockquote class="blockquote">
 <p>There are two types of people, those who do backups and those who will do backups.</p>
 </blockquote>
@@ -434,8 +425,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>RAID arrays</li>
 </ul>
 <p>All of these solutions mirror the data. Corruption or ransomware will propagate. For example, if you corrupt a file on your local computer and then push that change to DropBox then the file on DropBox is now also corrupted. I’m sure some of these cloud providers have version controlled files but it’s better to just avoid the problem entirely by keeping good backups.</p>
-<section id="use-the-3-2-1-rule" class="level3" data-number="2.8.1">
-<h3 data-number="2.8.1" class="anchored" data-anchor-id="use-the-3-2-1-rule"><span class="header-section-number">2.8.1</span> Use the 3-2-1 rule:</h3>
+<section id="use-the-3-2-1-rule" class="level3">
+<h3 class="anchored" data-anchor-id="use-the-3-2-1-rule">Use the 3-2-1 rule:</h3>
 <ul>
 <li>Keep 3 copies of any important file: 1 primary and 2 backups.</li>
 <li>Keep the files on 2 different media types to protect against different types of hazards.</li>
@@ -445,18 +436,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 </section>
 </section>
-<section id="project-organization" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Project Organization</h1>
-<section id="look-familiar" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="look-familiar"><span class="header-section-number">3.1</span> Look familiar?</h2>
+<section id="project-organization" class="level1">
+<h1>Project Organization</h1>
+<section id="look-familiar" class="level2">
+<h2 class="anchored" data-anchor-id="look-familiar">Look familiar?</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/home_organization.png" class="img-fluid figure-img"></p>
+<p><img src="images/home_organization.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 </section>
-<section id="project-structure" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="project-structure"><span class="header-section-number">3.2</span> Project structure</h2>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">Project structure</h2>
 <p>One of the most useful changes that you can make to your workflow is the create a consistent folder structure for all of your analyses and stick with it. Coming up with a consistent and generalizable structure can be challenging at first but some general guidelines are presented <a href="https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf">here</a> and <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424">here</a></p>
 <p>First of all, when beginning a new project, you should have some way of naming your projects. One good way of naming projects is to each project a descriptive name and append the date the project was started. For example, <code>brca_rnaseq_2023-11-09/</code> is better than <code>rnaseq_data/</code>. In six months when a collaborator wants their old BRCA data re-analyzed you’ll thank yourself for timestamping the project folder and giving it a descriptive name.</p>
 <p>My personal structure for every project looks like:</p>
@@ -478,8 +469,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>results/</code> contains only data generated within the project. It has sub-directories for <code>figures/</code>, <code>data-files/</code> and <code>rds-files/</code>. If you have a longer or more complicated analysis then add sub-directories indicating which script generated the results.</li>
 <li><code>scripts/</code> contains all analysis scripts numbered in their order of execution. Synchronize the script names with the results they produce.</li>
 </ul>
-<section id="a-more-complex-example" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="a-more-complex-example"><span class="header-section-number">3.2.1</span> A more complex example</h3>
+<section id="a-more-complex-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-more-complex-example">A more complex example</h3>
 <pre><font color="#7DAEA3"><b>yyyymmdd_project-name/</b></font>
 ├── <font color="#7DAEA3"><b>data</b></font>
 │&nbsp;&nbsp; ├── <font color="#7DAEA3"><b>00_fastq</b></font>
@@ -520,10 +511,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 </section>
 </section>
-<section id="tracking-changes" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Tracking Changes</h1>
-<section id="record-all-steps-used-to-generate-the-data" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="record-all-steps-used-to-generate-the-data"><span class="header-section-number">4.1</span> Record all steps used to generate the data</h2>
+<section id="tracking-changes" class="level1">
+<h1>Tracking Changes</h1>
+<section id="record-all-steps-used-to-generate-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="record-all-steps-used-to-generate-the-data">Record all steps used to generate the data</h2>
 <p>Always document all steps you used to generate the data that’s present in your projects. This can be as simple as a README with some comments and a <code>wget</code> command or as complex as a <a href="https://snakemake.readthedocs.io/en/stable/index.html">snakemake</a> workflow. The point is, be sure you can track down the exact source of every file that you created or downloaded.</p>
 <p>For example, a README documenting the creation of the files needed to generate a reference index might look like:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode Bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Transcripts:</span></span>
@@ -546,8 +537,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">03_makeFigures.R</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>You can also include a runner script that will execute all of the above. Or, for more consistent workflows, use a workflow manager like <a href="https://training.nextflow.io/">Nextflow</a>, <a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a>, <a href="https://openwdl.org/">WDL</a>, or good ole’ <a href="https://swcarpentry.github.io/make-novice/">GNU Make</a></p>
 </section>
-<section id="manual-version-control" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="manual-version-control"><span class="header-section-number">4.2</span> Manual version control</h2>
+<section id="manual-version-control" class="level2">
+<h2 class="anchored" data-anchor-id="manual-version-control">Manual version control</h2>
 <p>Version control refers to the practice of tracking changes in files and data over their lifetime. You should always track any changes made to your project over the entire life of the project. This can be done either manually or using a dedicated version control system. If doing this manually, add a file called “CHANGELOG.md” in your docs/ directory and add detailed notes in reverse chronological order.</p>
 <p>For example:</p>
 <pre><code>## 2016-04-08
@@ -563,13 +554,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If you make a significant change to the project, copy the whole directory, date it, and store it such that it will no longer be modified. Copies of these old projects can be compressed and saved with tar + xz compression</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode Bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-cJvf</span> old.20231109_myproject.tar.xz myproject/<span class="kw">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="version-control-with-git" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="version-control-with-git"><span class="header-section-number">4.3</span> Version control with git</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/git.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
+<section id="version-control-with-git" class="level2">
+<h2 class="anchored" data-anchor-id="version-control-with-git">Version control with git</h2>
+<p><img src="images/git.png" class="img-fluid" data-fig-height="25%"></p>
 <p><a href="https://git-scm.com/book/ms/v2/Getting-Started-About-Version-Control">git</a> is probably the <em>de facto</em> version control system in use today for tracking changes across software projects. You should strive to learn and use <code>git</code> to track your projects. Version control systems allow you to track all changes, comment on why changes were made, create parallel branches, and merge existing ones.</p>
 <p><code>git</code> is primarily used for source code files. Microsoft Office files and PDFs can be stored with Github but it’s hard to track changes. Rely on Microsoft’s “Track Changes” instead and save frequently.</p>
 <p>It’s not necessary to version control raw data (back it up!) since it shouldn’t change. Likewise, backup intermediate data and version control the scripts that made it.</p>
@@ -577,12 +564,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong>Be careful committing sensitive information to GitHub</strong></p>
 </section>
 </section>
-<section id="software" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Software</h1>
-<section id="quick-tips-to-improve-your-scripts" class="level2" data-number="5.1">
-<h2 data-number="5.1" class="anchored" data-anchor-id="quick-tips-to-improve-your-scripts"><span class="header-section-number">5.1</span> Quick tips to improve your scripts</h2>
-<section id="place-a-description-at-the-top-of-every-script" class="level3" data-number="5.1.1">
-<h3 data-number="5.1.1" class="anchored" data-anchor-id="place-a-description-at-the-top-of-every-script"><span class="header-section-number">5.1.1</span> Place a description at the top of every script</h3>
+<section id="software" class="level1">
+<h1>Software</h1>
+<section id="quick-tips-to-improve-your-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="quick-tips-to-improve-your-scripts">Quick tips to improve your scripts</h2>
+<section id="place-a-description-at-the-top-of-every-script" class="level3">
+<h3 class="anchored" data-anchor-id="place-a-description-at-the-top-of-every-script">Place a description at the top of every script</h3>
 <p>The description should indicate who the author is. When the code was created. A short description of what the expected inputs and outputs are along with how to use the code. You three months from now will appreciate it when you need to revisit your analysis</p>
 <p>For example:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
@@ -601,8 +588,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  save_image(img, <span class="st">"out_directory/corrected.png"</span>)</span>
 <span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="decompose-programs-into-functions" class="level3" data-number="5.1.2">
-<h3 data-number="5.1.2" class="anchored" data-anchor-id="decompose-programs-into-functions"><span class="header-section-number">5.1.2</span> Decompose programs into functions</h3>
+<section id="decompose-programs-into-functions" class="level3">
+<h3 class="anchored" data-anchor-id="decompose-programs-into-functions">Decompose programs into functions</h3>
 <p>Functions make it easier to reason about your code, spot errors, and make changes. This also follows the <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">Don’t Repeat Yourself</a> principle aimed at reducing repetition by replacing it with abstractions that are more stable</p>
 <p>Compare this chunk of code that rescales values using a min-max function (0-1)</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode numberSource R number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>df <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(</span>
@@ -629,8 +616,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(df, rescale01)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Which is easier to read? Which is easier to debug? Which is more efficient?</p>
 </section>
-<section id="give-functions-and-variables-meaningful-names" class="level3" data-number="5.1.3">
-<h3 data-number="5.1.3" class="anchored" data-anchor-id="give-functions-and-variables-meaningful-names"><span class="header-section-number">5.1.3</span> Give functions and variables meaningful names</h3>
+<section id="give-functions-and-variables-meaningful-names" class="level3">
+<h3 class="anchored" data-anchor-id="give-functions-and-variables-meaningful-names">Give functions and variables meaningful names</h3>
 <ul>
 <li>Programs are written for people and then computers</li>
 <li>Use variable and function names that are meaningful and <strong>correct</strong></li>
@@ -653,8 +640,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">main =</span> <span class="st">"Scatter plot of x and y"</span>, ...)</span>
 <span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="do-not-control-program-flow-with-comments" class="level3" data-number="5.1.4">
-<h3 data-number="5.1.4" class="anchored" data-anchor-id="do-not-control-program-flow-with-comments"><span class="header-section-number">5.1.4</span> Do not control program flow with comments</h3>
+<section id="do-not-control-program-flow-with-comments" class="level3">
+<h3 class="anchored" data-anchor-id="do-not-control-program-flow-with-comments">Do not control program flow with comments</h3>
 <ul>
 <li>this is error prone and makes it difficult or impossible to automate</li>
 <li>Use if/else statements instead</li>
@@ -676,8 +663,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.delim</span>(filename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="use-a-consistent-style" class="level3" data-number="5.1.5">
-<h3 data-number="5.1.5" class="anchored" data-anchor-id="use-a-consistent-style"><span class="header-section-number">5.1.5</span> Use a consistent style</h3>
+<section id="use-a-consistent-style" class="level3">
+<h3 class="anchored" data-anchor-id="use-a-consistent-style">Use a consistent style</h3>
 <p>Pick a <a href="https://style.tidyverse.org/">style guide</a> and stick with it. If using R, the <a href="https://styler.r-lib.org/index.html">styler</a> package can automatically clean up poorly formatted code. If using Python, <a href="https://black.readthedocs.io/en/stable/index.html">black</a> is a highly opinionated formatter that is pretty popular. Although, I think <a href="https://docs.astral.sh/ruff/">ruff</a> is currently all the rage with the Pythonistas these days.</p>
 <p>Bad:</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode R code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>flights<span class="sc">|&gt;</span><span class="fu">group_by</span>(dest)<span class="sc">|&gt;</span> <span class="fu">summarize</span>(</span>
@@ -700,8 +687,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="dont-use-right-hand-assignment" class="level3" data-number="5.1.6">
-<h3 data-number="5.1.6" class="anchored" data-anchor-id="dont-use-right-hand-assignment"><span class="header-section-number">5.1.6</span> Don’t use right hand assignment</h3>
+<section id="dont-use-right-hand-assignment" class="level3">
+<h3 class="anchored" data-anchor-id="dont-use-right-hand-assignment">Don’t use right hand assignment</h3>
 <p>This is R specific. I’ve seen this pop up with folks who are strong tidyverse adherents. I get it, that’s the direction of the piping operator. However, this right-hand assignment flies in the face of basically every other programming language, and since code is primarily read rather than executed, it’s much harder to scan a codebase and understand the variable assignment when the assignments can be anywhere in the pipe!</p>
 <p><strong>Don’t do this</strong></p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode R code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
@@ -718,8 +705,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 </section>
 </section>
-<section id="summary" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Summary</h1>
+<section id="summary" class="level1">
+<h1>Summary</h1>
 <ul>
 <li>Data management
 <ul>
@@ -751,10 +738,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul>
 </section>
-<section id="resources-references" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> Resources &amp; References</h1>
-<section id="best-practices" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="best-practices"><span class="header-section-number">7.1</span> Best practices</h2>
+<section id="resources-references" class="level1">
+<h1>Resources &amp; References</h1>
+<section id="best-practices" class="level2">
+<h2 class="anchored" data-anchor-id="best-practices">Best practices</h2>
 <ul>
 <li>Good Enough Practices in Scientific Computing: <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec004">https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec004</a></li>
 <li>Backups: <a href="https://www.cisa.gov/sites/default/files/publications/data_backup_options.pdf">https://www.cisa.gov/sites/default/files/publications/data_backup_options.pdf</a></li>
@@ -766,16 +753,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul>
 </section>
-<section id="bioinformatics" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="bioinformatics"><span class="header-section-number">7.2</span> Bioinformatics</h2>
+<section id="bioinformatics" class="level2">
+<h2 class="anchored" data-anchor-id="bioinformatics">Bioinformatics</h2>
 <ul>
 <li>Bioinformatics Data Skills: <a href="https://www.oreilly.com/library/view/bioinformatics-data-skills/9781449367480/">https://www.oreilly.com/library/view/bioinformatics-data-skills/9781449367480/</a></li>
 <li>BioStars for bioinfo questions: <a href="https://www.biostars.org/">https://www.biostars.org/</a></li>
 <li>Bioconductor common workflows: <a href="https://bioconductor.org/packages/release/BiocViews.html#___Workflow">https://bioconductor.org/packages/release/BiocViews.html#___Workflow</a></li>
 </ul>
 </section>
-<section id="proficiency-with-computational-tools" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="proficiency-with-computational-tools"><span class="header-section-number">7.3</span> Proficiency with computational tools</h2>
+<section id="proficiency-with-computational-tools" class="level2">
+<h2 class="anchored" data-anchor-id="proficiency-with-computational-tools">Proficiency with computational tools</h2>
 <ul>
 <li>MIT Missing Semester: <a href="https://missing.csail.mit.edu/">https://missing.csail.mit.edu/</a>
 <ul>
@@ -783,8 +770,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul>
 </section>
-<section id="r" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="r"><span class="header-section-number">7.4</span> R</h2>
+<section id="r" class="level2">
+<h2 class="anchored" data-anchor-id="r">R</h2>
 <ul>
 <li>R for Data Science: <a href="https://r4ds.hadley.nz/">https://r4ds.hadley.nz/</a></li>
 <li>Advanced R: <a href="https://adv-r.hadley.nz/">https://adv-r.hadley.nz/</a></li>
@@ -802,151 +789,418 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
-    });
-  }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
-    } else {
-      return undefined;
+      return false;
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
+      <a href="./index.html" class="pagination-link" aria-label="Welcome!">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome!</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-basics.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">R bootcamp</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./linux.html" class="pagination-link" aria-label="Command line basics">
+        <span class="nav-page-text">Command line basics</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

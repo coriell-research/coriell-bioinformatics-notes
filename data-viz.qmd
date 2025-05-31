@@ -1,4 +1,1 @@
----
-title: "Effective data visualization"
----
-
+# Effective data visualizations {.unnumbered}

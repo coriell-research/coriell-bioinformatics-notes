@@ -1,6 +1,4 @@
----
-title: "R bootcamp"
----
+# R programming basics {.unnumbered}
 
 ## Introduction to programming in R
 

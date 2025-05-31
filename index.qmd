@@ -1,14 +1,6 @@
 # Welcome! {.unnumbered}
 
 We're excited to have you as an intern and we hope that you'll learn a lot with
-us this summer. We'll use this book as a way to teach some fundamental concepts 
-before you start working on an interesting project. 
-
-We hope to cover:
-
-1. Some data best practices
-2. The basics of programming in R
-3. The basics of data visualization
-4. The basics of statistical testing with simulations
-5. High-dimensional data analysis
-6. How to give great scientific presentations
+us this summer. We'll use this book as a kind of reference manual for the 
+things we think you should have a little background knowledge about before 
+starting on an interesting project.
