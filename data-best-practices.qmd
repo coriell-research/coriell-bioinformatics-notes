@@ -139,10 +139,7 @@ s2TRT4d1.txt
 sbj2_Treatment_4_Days_Replicate_2.txt
 ```
 
-These are better. *Why* are they better? They are consistent. The delimiter is
-consistent between the words ("_") and each of the words represents something 
-meaningful about the sample. These filenames also do not contain any spaces and 
-can easily be parsed automatically.
+Instead, look at these filenames.
 
 ```{.Bash}
 subject1_control_4days_rep1.txt
@@ -150,6 +147,11 @@ subject1_control_4days_rep2.txt
 subject2_treatment_4days_rep1.txt
 subject2_treatment_4days_rep2.txt
 ```
+
+These are better. *Why* are they better? They are consistent. The delimiter is
+consistent between the words ("_") and each of the words represents something 
+meaningful about the sample. These filenames also do not contain any spaces and 
+can easily be parsed automatically.
 
 File naming best practices also apply to naming executable scripts. The name of 
 the file should describe the function of the script. For example, 
@@ -177,7 +179,7 @@ echo "subject1_control_4days_rep2" | shasum
 # b6ea9d729e57cce68b37de390d56c542bc17dea6
 ```
 
-## Create analysis freindly data - tidy data
+## Create analysis friendly data - tidy data
 
 The term [tidy data](https://vita.had.co.nz/papers/tidy-data.html) was defined
 by Hadley Wickham to describe data which is amenable to downstream analysis. 

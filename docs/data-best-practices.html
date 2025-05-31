@@ -201,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#file-types-and-file-names" id="toc-file-types-and-file-names" class="nav-link" data-scroll-target="#file-types-and-file-names">File types and file names</a></li>
   <li><a href="#file-naming" id="toc-file-naming" class="nav-link" data-scroll-target="#file-naming">File naming</a></li>
   <li><a href="#more-on-filenames" id="toc-more-on-filenames" class="nav-link" data-scroll-target="#more-on-filenames">More on filenames</a></li>
-  <li><a href="#create-analysis-freindly-data---tidy-data" id="toc-create-analysis-freindly-data---tidy-data" class="nav-link" data-scroll-target="#create-analysis-freindly-data---tidy-data">Create analysis freindly data - tidy data</a></li>
+  <li><a href="#create-analysis-friendly-data---tidy-data" id="toc-create-analysis-friendly-data---tidy-data" class="nav-link" data-scroll-target="#create-analysis-friendly-data---tidy-data">Create analysis friendly data - tidy data</a></li>
   <li><a href="#untidy-data" id="toc-untidy-data" class="nav-link" data-scroll-target="#untidy-data">Untidy(?) data</a></li>
   <li><a href="#save-and-lock-all-raw-data" id="toc-save-and-lock-all-raw-data" class="nav-link" data-scroll-target="#save-and-lock-all-raw-data">Save and lock all raw data</a></li>
   <li><a href="#large-files" id="toc-large-files" class="nav-link" data-scroll-target="#large-files">Large files</a></li>
@@ -340,11 +340,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">s1_ctl-at-4days_2.txt</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">s2TRT4d1.txt</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">sbj2_Treatment_4_Days_Replicate_2.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>These are better. <em>Why</em> are they better? They are consistent. The delimiter is consistent between the words (“_“) and each of the words represents something meaningful about the sample. These filenames also do not contain any spaces and can easily be parsed automatically.</p>
+<p>Instead, look at these filenames.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode Bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">subject1_control_4days_rep1.txt</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">subject1_control_4days_rep2.txt</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">subject2_treatment_4days_rep1.txt</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">subject2_treatment_4days_rep2.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>These are better. <em>Why</em> are they better? They are consistent. The delimiter is consistent between the words (“_“) and each of the words represents something meaningful about the sample. These filenames also do not contain any spaces and can easily be parsed automatically.</p>
 <p>File naming best practices also apply to naming executable scripts. The name of the file should describe the function of the script. For example,</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode Bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">01_align_with_STAR.sh</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>is better than simply naming the file</p>
@@ -357,8 +358,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"subject1_control_4days_rep2"</span> <span class="kw">|</span> <span class="ex">shasum</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># b6ea9d729e57cce68b37de390d56c542bc17dea6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="create-analysis-freindly-data---tidy-data" class="level2">
-<h2 class="anchored" data-anchor-id="create-analysis-freindly-data---tidy-data">Create analysis freindly data - tidy data</h2>
+<section id="create-analysis-friendly-data---tidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="create-analysis-friendly-data---tidy-data">Create analysis friendly data - tidy data</h2>
 <p>The term <a href="https://vita.had.co.nz/papers/tidy-data.html">tidy data</a> was defined by Hadley Wickham to describe data which is amenable to downstream analysis. Most people are familiar with performing a quick and dirty data analysis in a program like Excel. You may have also used some of Excel’s fancy features for coloring cells, adding bold and underlines to text, and formatting cells with other decorations. All of this tends to just be extra fluff. If you format you data properly then it will be much easier to perform downstream analysis on and will not require the use of extra decorations. This is true even in Excel!</p>
 <p>To conform to the requirements of being <em>tidy</em>, the data should follow some simple principles:</p>
 <ol type="1">
