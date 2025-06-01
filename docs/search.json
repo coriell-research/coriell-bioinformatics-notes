@@ -420,5 +420,205 @@
     "crumbs": [
       "'Best' practices for data projects"
     ]
+  },
+  {
+    "objectID": "linux.html",
+    "href": "linux.html",
+    "title": "Command line basics",
+    "section": "",
+    "text": "Accessing the terminal\nBasic proficiency with the Unix shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The Unix philosopy is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called “pipes”, is a powerful skill for developing quick and composable bioinformatics programs. Here, we’ll describe some essential commands to get you started using the command line.\nFirst, you’ll have to open the Terminal application. If you’re on Mac OS, the quickest way to access your terminal is: “command + space”, typing “terminal” and pressing Enter. On Windows, you’ll have to install Windows Subsystem for Linux which will allow you to interact with a (default) Ubuntu OS.\nOnce you’ve opened the terminal app, you’re ready to start typing commands at the command line.",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#where-am-i",
+    "href": "linux.html#where-am-i",
+    "title": "Command line basics",
+    "section": "Where am I?",
+    "text": "Where am I?\nThe first command you should know is pwd. pwd will print your current working directory. This command is used to display where you are currently in the file system. For example, if I open a terminal window in my “Downloads” directory and type and hit Enter:\n&gt;&gt;&gt; pwd \nIt will return\n/home/gennaro/Downloads\nindicating that I am in my “Downloads” directory.",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#listing-files",
+    "href": "linux.html#listing-files",
+    "title": "Command line basics",
+    "section": "Listing files",
+    "text": "Listing files\nNow that I’m in my “Downloads” directory I want to see what files I’ve downloaded. To do this, I can use the ls command to list files in the directory.\n&gt;&gt;&gt; ls\nwhich returns:\nBDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv\nYour “Downloads” directory will of course have different files. If I need to display more information about these files, such as the time that they were created or how large they are, I can supply the ls command with arguments.\nFor example\n&gt;&gt;&gt; ls -lah\nReturns\ntotal 15M\ndrwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .\ndrwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..\n-rw-rw-r--  1 gennaro gennaro 6.8K May 30 18:00 BDNF-data.tsv\n-rw-rw-r--  1 gennaro gennaro 973K May 30 17:34 CORI_Candidate_SNP_draft_250528_clean.docx\n-rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv\nWhich provides information about the file permissions, the file sizes, and when the files were created.\n\nLearning more about a command\nTo learn more about what arguments are available to any of the command line programs you run, you can use the man, or manual, command. This command will open the user manual for the given command.\nTry typing\n&gt;&gt;&gt; man ls\nto view all of the options available when listing files with ls.",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#moving-around",
+    "href": "linux.html#moving-around",
+    "title": "Command line basics",
+    "section": "Moving around",
+    "text": "Moving around\nLet’s say I want to move from my “Downloads” directory to my “Documents” directory. The command I have to use is cd, short for “change directory”. We can use the cd command with the argument for the target directory we want to go to. For example, to move to my “Documents” directory\n&gt;&gt;&gt; cd /home/gennaro/Documents\n\nDirectory shortcuts\nThe shell has a few shortcuts that make moving around a little easier. Running cd without any arguments will bring you back into your home directory.\n&gt;&gt;&gt; cd\nIn Bash, there is an additional shortcut to specify the “/home” as well. You can use ~ in place of “/home”. For example, to move into my “Documents” folder I can use\n&gt;&gt;&gt; cd ~/Documents\ninstead of typing the full path. To go up one level in the directory you can use ... So to go from my Documents directory ‘up’ into my “/home” directory I can use\n&gt;&gt;&gt; cd ..\nFinally, to go back to the same directory that you were just in you can use\n&gt;&gt;&gt; cd -",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#creating-files",
+    "href": "linux.html#creating-files",
+    "title": "Command line basics",
+    "section": "Creating files",
+    "text": "Creating files\nYou can create files with the touch command. For example, to create an empty file in my “Downloads” directory called “A.txt” I can run\n&gt;&gt;&gt; touch ~/Downloads/A.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#redirection",
+    "href": "linux.html#redirection",
+    "title": "Command line basics",
+    "section": "Redirection",
+    "text": "Redirection\nI’ll add some content to this file using the echo command. echo simply prints it’s arguments back out to the terminal. I’ll also use what is called redirection to append the results of the echo command into the text file.\nRedirection is a core concept in Unix pipes. It allows you to take the output from one program and use it as input to another program. In this example, I’ll take the output from echo and redirect it to the file “A.txt” that we just created.\n&gt;&gt;&gt; echo \"This is a new line in the file\" &gt;&gt; ~/Downloads/A.txt\n&gt;&gt;&gt; echo \"Here is another new line in the file\" &gt;&gt; ~/Downloads/A.txt\nThe &gt;&gt; took the output of the echo command and inserted it as a new line in “A.txt”. Importantly, &gt;&gt; appended these lines into “A.txt”. If I were instead to use &gt; like\n&gt;&gt;&gt; echo \"This will replace the current contents of A.txt\" &gt; ~/Downloads/A.txt\n“A.txt” will be overwritten with the new contents. The final essential redirection operator is the pipe |. The pipe lets you take the output from one program and use it as input to another. I’ll show an example of this later.",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#displaying-the-content-of-files",
+    "href": "linux.html#displaying-the-content-of-files",
+    "title": "Command line basics",
+    "section": "Displaying the content of files",
+    "text": "Displaying the content of files\nThe simplest way to display the contents of a file on the command line is by using the cat command. The cat command is actually designed to concatenate file together, but running it on a single file will print the entire contents of the file to the command line. For example, to print the contents of “A.txt”\n&gt;&gt;&gt; cat ~/Downloads/A.txt\nWill print\nThis will replace the current contents of A.txt\nto the console. If you have a lot of text that you would like to display cat can result in too much information being displayed on the screen. Instead, you can use the less command. less will print the contents of the file as pages on the screen. You can use the d key to scroll down a page, or the u key to scroll up a page.\nAnother way to display only some of the contents of a file is to use the head or tail commands. head -n10 will print the first 10 lines of a file, whereas tail -n10 can be used to print the last 10 lines of a file.",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#copying-files",
+    "href": "linux.html#copying-files",
+    "title": "Command line basics",
+    "section": "Copying files",
+    "text": "Copying files\nYou can copy a file using the cp command. For example, to copy the “A.txt” file into a new file “B.txt” I can use\n&gt;&gt;&gt; cp ~/Downloads/A.txt ~/Downloads/B.txt\nTo copy an entire directory you need to supply the -r, or recursive, argument to the cp command. For example, to create a copy of my Downloads directory inside of my Documents directory\n&gt;&gt;&gt; cp -r ~/Downloads ~/Documents/Downloads-copy",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#moving-and-renaming-files",
+    "href": "linux.html#moving-and-renaming-files",
+    "title": "Command line basics",
+    "section": "Moving and renaming files",
+    "text": "Moving and renaming files\nThe mv command can be used to move files and rename them. For example, to move the “A.txt” file into my Documents directory I can use\n&gt;&gt;&gt; mv A.txt ~/Documents\nIf I now want to change the name of that file I can also use the mv command. Now you need to specify the new file name instead of the location to move the file to\n&gt;&gt;&gt; mv ~/Documents/A.txt ~/Documents/C.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#making-new-directories",
+    "href": "linux.html#making-new-directories",
+    "title": "Command line basics",
+    "section": "Making new directories",
+    "text": "Making new directories\nTo make a new directory you can use the mkdir command. To make a new directory inside of my Downloads directory I can use\n&gt;&gt;&gt; mkdir ~/Downloads/textfiles\nBy default, the mkdir command doesn’t allow you to create nested directories. To enable this, set the mkdir -p flag. For example I can create a parent folder and subfolders using\n&gt;&gt;&gt; mkdir -p ~/Downloads/imagefiles/jpegs\n\nShell expansion\nAnother useful trick is to learn shell expansion. Shell expansion ‘expands’ the arguments. Shell expansion can be a shortcut when creating new project directories. For example\n&gt;&gt;&gt; mkdir -p data doc scripts results/{figures,data-files,rds-files}\nThe results/{figures,data-files,rds-files} expands this command into\nmkdir -p data doc scripts results/figures results/data-files results/rds-files\nWhich saves some typing. Shell expansion can also be used in other contexts. For example, I can create 260 empty text files using the following command\n&gt;&gt;&gt; touch ~/Downloads/textfiles/{A..Z}{1..10}.txt\nAnother useful shell expansion is *. For example, if I needed to display the contents of each of the file we just created I could run\n&gt;&gt;&gt; cat ~/Downloads/textfiles/*.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#removing-files",
+    "href": "linux.html#removing-files",
+    "title": "Command line basics",
+    "section": "Removing files",
+    "text": "Removing files\nRemoving files on the command line can be done with the rm command. Unlike when using a GUI, when you remove files on the command line you cannot get them back so use rm wisely. To remove one of the empty files I just created I can use\n&gt;&gt;&gt; rm ~/Downloads/textfiles/A1.txt\nIf I want to remove the entire “textfiles” directory I can use the -r, or recursive flag with rm.\nrm -r ~/Downloads/textfiles\nBe careful when using rm. A simple space can mean removing entire file systems by mistake!",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#finding-files",
+    "href": "linux.html#finding-files",
+    "title": "Command line basics",
+    "section": "Finding files",
+    "text": "Finding files\n&gt;&gt;&gt; find\nFinding and doing\n&gt;&gt;&gt; find . -name \"*.txt\" -type f -exec echo {} \\;",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#searching-the-contents-of-files",
+    "href": "linux.html#searching-the-contents-of-files",
+    "title": "Command line basics",
+    "section": "Searching the contents of files",
+    "text": "Searching the contents of files\n&gt;&gt;&gt; grep \"some pattern\" myfile.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#piping-commands",
+    "href": "linux.html#piping-commands",
+    "title": "Command line basics",
+    "section": "Piping commands",
+    "text": "Piping commands\nsort, uniq, and cut\n&gt;&gt;&gt; cut -d\",\" -f 1 some-file.tsv | sort -nr | uniq -c",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#for-loops",
+    "href": "linux.html#for-loops",
+    "title": "Command line basics",
+    "section": "For-loops",
+    "text": "For-loops\nfor F in {A..Z}{1..10}.txt; do \"sort $F | uniq -c\"; done",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#gnu-parallel",
+    "href": "linux.html#gnu-parallel",
+    "title": "Command line basics",
+    "section": "GNU parallel",
+    "text": "GNU parallel\nparallel \"sort {} | uniq -c\" ::: {A..Z}{1..10}.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#downloading-files",
+    "href": "linux.html#downloading-files",
+    "title": "Command line basics",
+    "section": "Downloading files",
+    "text": "Downloading files\n&gt;&gt;&gt; curl\n&gt;&gt;&gt; wget",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#compressing-and-uncompressing",
+    "href": "linux.html#compressing-and-uncompressing",
+    "title": "Command line basics",
+    "section": "Compressing and uncompressing",
+    "text": "Compressing and uncompressing\n&gt;&gt;&gt; gzip somfile.txt\n&gt;&gt;&gt; gunzip somefile.txt.gz",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#replacing-file-contents",
+    "href": "linux.html#replacing-file-contents",
+    "title": "Command line basics",
+    "section": "Replacing file contents",
+    "text": "Replacing file contents\n&gt;&gt;&gt; sed 's/find/replace/' myfile.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
+  },
+  {
+    "objectID": "linux.html#editors",
+    "href": "linux.html#editors",
+    "title": "Command line basics",
+    "section": "Editors",
+    "text": "Editors\n&gt;&gt;&gt; vim\nHow do I get out of here?\n&gt;&gt;&gt; nano",
+    "crumbs": [
+      "Command line basics"
+    ]
   }
 ]

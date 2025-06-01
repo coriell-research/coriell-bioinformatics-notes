@@ -1,1 +1,373 @@
 # Command line basics {.unnumbered}
+
+Basic proficiency with the [Unix](https://en.wikipedia.org/wiki/Unix-like) shell 
+is essential for anyone who wants to start doing computational work outside of 
+their laptop and Excel. Unix shells provide an interface for interacting with 
+Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The [Unix philosopy](https://en.wikipedia.org/wiki/Unix_philosophy) is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they 
+can be strung together into what are called "pipes", is a powerful skill for
+developing quick and composable bioinformatics programs. Here, we'll describe 
+some essential commands to get you started using the command line. 
+
+## Accessing the terminal
+
+First, you'll have to open the Terminal application. If you're on Mac OS, the quickest way to access your terminal is: "command + space", typing "terminal" 
+and pressing Enter. On Windows, you'll have to install [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) which will allow
+you to interact with a (default) Ubuntu OS. 
+
+Once you've opened the terminal app, you're ready to start typing commands at
+the command line. 
+
+## Where am I?
+
+The first command you should know is `pwd`. `pwd` will print your current 
+working directory. This command is used to display where you are currently in 
+the file system. For example, if I open a terminal window in my "Downloads"
+directory and type and hit Enter:
+
+```
+>>> pwd 
+```
+
+It will return
+
+```
+/home/gennaro/Downloads
+```
+
+indicating that I am in my "Downloads" directory.
+
+## Listing files
+
+Now that I'm in my "Downloads" directory I want to see what files I've 
+downloaded. To do this, I can use the `ls` command to list files in the 
+directory. 
+
+```
+>>> ls
+```
+
+which returns:
+
+```
+BDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv
+```
+
+Your "Downloads" directory will of course have different files. If I need to 
+display more information about these files, such as the time that they were
+created or how large they are, I can supply the `ls` command with arguments. 
+
+For example
+
+```
+>>> ls -lah
+```
+
+Returns
+
+```
+total 15M
+drwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .
+drwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..
+-rw-rw-r--  1 gennaro gennaro 6.8K May 30 18:00 BDNF-data.tsv
+-rw-rw-r--  1 gennaro gennaro 973K May 30 17:34 CORI_Candidate_SNP_draft_250528_clean.docx
+-rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv
+```
+
+Which provides information about the file permissions, the file sizes, and when
+the files were created.
+
+### Learning more about a command
+
+To learn more about what arguments are available to any of the command line
+programs you run, you can use the `man`, or manual, command. This command will
+open the user manual for the given command. 
+
+Try typing
+
+```
+>>> man ls
+```
+
+to view all of the options available when listing files with `ls`.
+
+## Moving around
+
+Let's say I want to move from my "Downloads" directory to my "Documents" 
+directory. The command I have to use is `cd`, short for "change directory". We
+can use the `cd` command with the argument for the target directory we want to 
+go to. For example, to move to my "Documents" directory
+
+```
+>>> cd /home/gennaro/Documents
+```
+
+### Directory shortcuts
+
+The shell has a few shortcuts that make moving around a little easier. Running
+`cd` without any arguments will bring you back into your home directory. 
+
+
+```
+>>> cd
+```
+
+In Bash, there is an additional shortcut to specify the "/home" as well. You 
+can use `~` in place of "/home". For example, to move into my "Documents" 
+folder I can use
+
+```
+>>> cd ~/Documents
+```
+
+instead of typing the full path. To go up one level in the directory you can use
+`..`. So to go from my Documents directory 'up' into my "/home" directory I can 
+use
+
+```
+>>> cd ..
+```
+
+Finally, to go back to the same directory that you were just in you can use
+
+```
+>>> cd -
+```
+
+## Creating files
+
+You can create files with the `touch` command. For example, to create an empty 
+file in my "Downloads" directory called "A.txt" I can run
+
+```
+>>> touch ~/Downloads/A.txt
+```
+
+## Redirection
+
+I'll add some content to this file using the `echo` command. `echo` simply
+prints it's arguments back out to the terminal. I'll also use what is called
+redirection to append the results of the `echo` command into the text file. 
+
+Redirection is a core concept in Unix pipes. It allows you to take the output
+from one program and use it as input to another program. In this example, I'll
+take the output from `echo` and redirect it to the file "A.txt" that we just 
+created. 
+
+```
+>>> echo "This is a new line in the file" >> ~/Downloads/A.txt
+>>> echo "Here is another new line in the file" >> ~/Downloads/A.txt
+```
+
+The `>>` took the output of the `echo` command and inserted it as a new line in 
+"A.txt". Importantly, `>>` **appended** these lines into "A.txt". If I were 
+instead to use `>` like
+
+```
+>>> echo "This will replace the current contents of A.txt" > ~/Downloads/A.txt
+```
+
+"A.txt" will be overwritten with the new contents. The final essential 
+redirection operator is the pipe `|`. The pipe lets you take the output from one
+program and use it as input to another. I'll show an example of this later.
+
+## Displaying the content of files
+
+The simplest way to display the contents of a file on the command line is by 
+using the `cat` command. The `cat` command is actually designed to concatenate
+file together, but running it on a single file will print the entire contents 
+of the file to the command line. For example, to print the contents of "A.txt"
+
+```
+>>> cat ~/Downloads/A.txt
+```
+
+Will print
+
+```
+This will replace the current contents of A.txt
+```
+
+to the console. If you have a lot of text that you would like to display `cat`
+can result in too much information being displayed on the screen. Instead, you
+can use the `less` command. `less` will print the contents of the file as pages 
+on the screen. You can use the `d` key to scroll down a page, or the `u` key to
+scroll up a page. 
+
+Another way to display only some of the contents of a file is to use the `head`
+or `tail` commands. `head -n10` will print the first 10 lines of a file, whereas
+`tail -n10` can be used to print the last 10 lines of a file.
+
+## Copying files
+
+You can copy a file using the `cp` command. For example, to copy the "A.txt" 
+file into a new file "B.txt" I can use
+
+```
+>>> cp ~/Downloads/A.txt ~/Downloads/B.txt
+```
+
+To copy an entire directory you need to supply the `-r`, or recursive, argument
+to the `cp` command. For example, to create a copy of my Downloads directory
+inside of my Documents directory
+
+```
+>>> cp -r ~/Downloads ~/Documents/Downloads-copy
+```
+
+## Moving and renaming files
+
+The `mv` command can be used to move files and rename them. For example, to 
+move the "A.txt" file into my Documents directory I can use
+
+```
+>>> mv A.txt ~/Documents
+```
+
+If I now want to change the name of that file I can also use the `mv` command. 
+Now you need to specify the new file name instead of the location to move the 
+file to
+
+```
+>>> mv ~/Documents/A.txt ~/Documents/C.txt
+```
+
+## Making new directories
+
+To make a new directory you can use the `mkdir` command. To make a new directory
+inside of my Downloads directory I can use
+
+```
+>>> mkdir ~/Downloads/textfiles
+```
+
+By default, the `mkdir` command doesn't allow you to create nested directories. 
+To enable this, set the `mkdir -p` flag. For example I can create a parent 
+folder and subfolders using
+
+```
+>>> mkdir -p ~/Downloads/imagefiles/jpegs
+```
+
+### Shell expansion
+
+Another useful trick is to learn shell expansion. Shell expansion 'expands' the 
+arguments. Shell expansion can be a shortcut when creating new project 
+directories. For example
+
+```
+>>> mkdir -p data doc scripts results/{figures,data-files,rds-files}
+```
+
+The `results/{figures,data-files,rds-files}` expands this command into 
+
+```
+mkdir -p data doc scripts results/figures results/data-files results/rds-files
+```
+
+Which saves some typing. Shell expansion can also be used in other contexts. For
+example, I can create 260 empty text files using the following command
+
+```
+>>> touch ~/Downloads/textfiles/{A..Z}{1..10}.txt
+```
+
+Another useful shell expansion is `*`. For example, if I needed to display the
+contents of each of the file we just created I could run
+
+```
+>>> cat ~/Downloads/textfiles/*.txt
+```
+
+## Removing files
+
+Removing files on the command line can be done with the `rm` command. Unlike 
+when using a GUI, when you remove files on the command line you cannot get them
+back so use `rm` wisely. To remove one of the empty files I just created I can
+use
+
+```
+>>> rm ~/Downloads/textfiles/A1.txt
+```
+
+If I want to remove the entire "textfiles" directory I can use the `-r`, or 
+recursive flag with `rm`. 
+
+```
+rm -r ~/Downloads/textfiles
+```
+
+**Be careful when using `rm`**. A simple space can mean removing entire file 
+systems by mistake!
+
+## Finding files
+
+```
+>>> find
+```
+
+Finding and doing
+
+```
+>>> find . -name "*.txt" -type f -exec echo {} \;
+```
+
+## Searching the contents of files
+
+```
+>>> grep "some pattern" myfile.txt
+```
+
+## Piping commands
+
+`sort`, `uniq`, and `cut`
+
+```
+>>> cut -d"," -f 1 some-file.tsv | sort -nr | uniq -c
+```
+
+## For-loops
+
+```
+for F in {A..Z}{1..10}.txt; do "sort $F | uniq -c"; done
+```
+
+## GNU parallel
+
+```
+parallel "sort {} | uniq -c" ::: {A..Z}{1..10}.txt
+```
+
+## Downloading files
+
+```
+>>> curl
+>>> wget
+```
+
+## Compressing and uncompressing
+
+```
+>>> gzip somfile.txt
+```
+
+```
+>>> gunzip somefile.txt.gz
+```
+
+## Replacing file contents
+
+```
+>>> sed 's/find/replace/' myfile.txt
+```
+
+## Editors
+
+```
+>>> vim
+```
+
+[How do I get out of here?](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/)
+
+```
+>>> nano
+```

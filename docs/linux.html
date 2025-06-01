@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>command line bascis – 2025 Coriell Bioinformatics Internship</title>
+<title>Command line basics – 2025 Coriell Bioinformatics Internship</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -154,15 +154,49 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#accessing-the-terminal" id="toc-accessing-the-terminal" class="nav-link active" data-scroll-target="#accessing-the-terminal">Accessing the terminal</a></li>
+  <li><a href="#where-am-i" id="toc-where-am-i" class="nav-link" data-scroll-target="#where-am-i">Where am I?</a></li>
+  <li><a href="#listing-files" id="toc-listing-files" class="nav-link" data-scroll-target="#listing-files">Listing files</a>
+  <ul class="collapse">
+  <li><a href="#learning-more-about-a-command" id="toc-learning-more-about-a-command" class="nav-link" data-scroll-target="#learning-more-about-a-command">Learning more about a command</a></li>
+  </ul></li>
+  <li><a href="#moving-around" id="toc-moving-around" class="nav-link" data-scroll-target="#moving-around">Moving around</a>
+  <ul class="collapse">
+  <li><a href="#directory-shortcuts" id="toc-directory-shortcuts" class="nav-link" data-scroll-target="#directory-shortcuts">Directory shortcuts</a></li>
+  </ul></li>
+  <li><a href="#creating-files" id="toc-creating-files" class="nav-link" data-scroll-target="#creating-files">Creating files</a></li>
+  <li><a href="#redirection" id="toc-redirection" class="nav-link" data-scroll-target="#redirection">Redirection</a></li>
+  <li><a href="#displaying-the-content-of-files" id="toc-displaying-the-content-of-files" class="nav-link" data-scroll-target="#displaying-the-content-of-files">Displaying the content of files</a></li>
+  <li><a href="#copying-files" id="toc-copying-files" class="nav-link" data-scroll-target="#copying-files">Copying files</a></li>
+  <li><a href="#moving-and-renaming-files" id="toc-moving-and-renaming-files" class="nav-link" data-scroll-target="#moving-and-renaming-files">Moving and renaming files</a></li>
+  <li><a href="#making-new-directories" id="toc-making-new-directories" class="nav-link" data-scroll-target="#making-new-directories">Making new directories</a>
+  <ul class="collapse">
+  <li><a href="#shell-expansion" id="toc-shell-expansion" class="nav-link" data-scroll-target="#shell-expansion">Shell expansion</a></li>
+  </ul></li>
+  <li><a href="#removing-files" id="toc-removing-files" class="nav-link" data-scroll-target="#removing-files">Removing files</a></li>
+  <li><a href="#finding-files" id="toc-finding-files" class="nav-link" data-scroll-target="#finding-files">Finding files</a></li>
+  <li><a href="#searching-the-contents-of-files" id="toc-searching-the-contents-of-files" class="nav-link" data-scroll-target="#searching-the-contents-of-files">Searching the contents of files</a></li>
+  <li><a href="#piping-commands" id="toc-piping-commands" class="nav-link" data-scroll-target="#piping-commands">Piping commands</a></li>
+  <li><a href="#for-loops" id="toc-for-loops" class="nav-link" data-scroll-target="#for-loops">For-loops</a></li>
+  <li><a href="#gnu-parallel" id="toc-gnu-parallel" class="nav-link" data-scroll-target="#gnu-parallel">GNU parallel</a></li>
+  <li><a href="#downloading-files" id="toc-downloading-files" class="nav-link" data-scroll-target="#downloading-files">Downloading files</a></li>
+  <li><a href="#compressing-and-uncompressing" id="toc-compressing-and-uncompressing" class="nav-link" data-scroll-target="#compressing-and-uncompressing">Compressing and uncompressing</a></li>
+  <li><a href="#replacing-file-contents" id="toc-replacing-file-contents" class="nav-link" data-scroll-target="#replacing-file-contents">Replacing file contents</a></li>
+  <li><a href="#editors" id="toc-editors" class="nav-link" data-scroll-target="#editors">Editors</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">command line bascis</h1>
+<h1 class="title">Command line basics</h1>
 </div>
 
 
@@ -179,8 +213,170 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>Basic proficiency with the <a href="https://en.wikipedia.org/wiki/Unix-like">Unix</a> shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The <a href="https://en.wikipedia.org/wiki/Unix_philosophy">Unix philosopy</a> is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called “pipes”, is a powerful skill for developing quick and composable bioinformatics programs. Here, we’ll describe some essential commands to get you started using the command line.</p>
+<section id="accessing-the-terminal" class="level2">
+<h2 class="anchored" data-anchor-id="accessing-the-terminal">Accessing the terminal</h2>
+<p>First, you’ll have to open the Terminal application. If you’re on Mac OS, the quickest way to access your terminal is: “command + space”, typing “terminal” and pressing Enter. On Windows, you’ll have to install <a href="https://learn.microsoft.com/en-us/windows/wsl/install">Windows Subsystem for Linux</a> which will allow you to interact with a (default) Ubuntu OS.</p>
+<p>Once you’ve opened the terminal app, you’re ready to start typing commands at the command line.</p>
+</section>
+<section id="where-am-i" class="level2">
+<h2 class="anchored" data-anchor-id="where-am-i">Where am I?</h2>
+<p>The first command you should know is <code>pwd</code>. <code>pwd</code> will print your current working directory. This command is used to display where you are currently in the file system. For example, if I open a terminal window in my “Downloads” directory and type and hit Enter:</p>
+<pre><code>&gt;&gt;&gt; pwd </code></pre>
+<p>It will return</p>
+<pre><code>/home/gennaro/Downloads</code></pre>
+<p>indicating that I am in my “Downloads” directory.</p>
+</section>
+<section id="listing-files" class="level2">
+<h2 class="anchored" data-anchor-id="listing-files">Listing files</h2>
+<p>Now that I’m in my “Downloads” directory I want to see what files I’ve downloaded. To do this, I can use the <code>ls</code> command to list files in the directory.</p>
+<pre><code>&gt;&gt;&gt; ls</code></pre>
+<p>which returns:</p>
+<pre><code>BDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv</code></pre>
+<p>Your “Downloads” directory will of course have different files. If I need to display more information about these files, such as the time that they were created or how large they are, I can supply the <code>ls</code> command with arguments.</p>
+<p>For example</p>
+<pre><code>&gt;&gt;&gt; ls -lah</code></pre>
+<p>Returns</p>
+<pre><code>total 15M
+drwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .
+drwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..
+-rw-rw-r--  1 gennaro gennaro 6.8K May 30 18:00 BDNF-data.tsv
+-rw-rw-r--  1 gennaro gennaro 973K May 30 17:34 CORI_Candidate_SNP_draft_250528_clean.docx
+-rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv</code></pre>
+<p>Which provides information about the file permissions, the file sizes, and when the files were created.</p>
+<section id="learning-more-about-a-command" class="level3">
+<h3 class="anchored" data-anchor-id="learning-more-about-a-command">Learning more about a command</h3>
+<p>To learn more about what arguments are available to any of the command line programs you run, you can use the <code>man</code>, or manual, command. This command will open the user manual for the given command.</p>
+<p>Try typing</p>
+<pre><code>&gt;&gt;&gt; man ls</code></pre>
+<p>to view all of the options available when listing files with <code>ls</code>.</p>
+</section>
+</section>
+<section id="moving-around" class="level2">
+<h2 class="anchored" data-anchor-id="moving-around">Moving around</h2>
+<p>Let’s say I want to move from my “Downloads” directory to my “Documents” directory. The command I have to use is <code>cd</code>, short for “change directory”. We can use the <code>cd</code> command with the argument for the target directory we want to go to. For example, to move to my “Documents” directory</p>
+<pre><code>&gt;&gt;&gt; cd /home/gennaro/Documents</code></pre>
+<section id="directory-shortcuts" class="level3">
+<h3 class="anchored" data-anchor-id="directory-shortcuts">Directory shortcuts</h3>
+<p>The shell has a few shortcuts that make moving around a little easier. Running <code>cd</code> without any arguments will bring you back into your home directory.</p>
+<pre><code>&gt;&gt;&gt; cd</code></pre>
+<p>In Bash, there is an additional shortcut to specify the “/home” as well. You can use <code>~</code> in place of “/home”. For example, to move into my “Documents” folder I can use</p>
+<pre><code>&gt;&gt;&gt; cd ~/Documents</code></pre>
+<p>instead of typing the full path. To go up one level in the directory you can use <code>..</code>. So to go from my Documents directory ‘up’ into my “/home” directory I can use</p>
+<pre><code>&gt;&gt;&gt; cd ..</code></pre>
+<p>Finally, to go back to the same directory that you were just in you can use</p>
+<pre><code>&gt;&gt;&gt; cd -</code></pre>
+</section>
+</section>
+<section id="creating-files" class="level2">
+<h2 class="anchored" data-anchor-id="creating-files">Creating files</h2>
+<p>You can create files with the <code>touch</code> command. For example, to create an empty file in my “Downloads” directory called “A.txt” I can run</p>
+<pre><code>&gt;&gt;&gt; touch ~/Downloads/A.txt</code></pre>
+</section>
+<section id="redirection" class="level2">
+<h2 class="anchored" data-anchor-id="redirection">Redirection</h2>
+<p>I’ll add some content to this file using the <code>echo</code> command. <code>echo</code> simply prints it’s arguments back out to the terminal. I’ll also use what is called redirection to append the results of the <code>echo</code> command into the text file.</p>
+<p>Redirection is a core concept in Unix pipes. It allows you to take the output from one program and use it as input to another program. In this example, I’ll take the output from <code>echo</code> and redirect it to the file “A.txt” that we just created.</p>
+<pre><code>&gt;&gt;&gt; echo "This is a new line in the file" &gt;&gt; ~/Downloads/A.txt
+&gt;&gt;&gt; echo "Here is another new line in the file" &gt;&gt; ~/Downloads/A.txt</code></pre>
+<p>The <code>&gt;&gt;</code> took the output of the <code>echo</code> command and inserted it as a new line in “A.txt”. Importantly, <code>&gt;&gt;</code> <strong>appended</strong> these lines into “A.txt”. If I were instead to use <code>&gt;</code> like</p>
+<pre><code>&gt;&gt;&gt; echo "This will replace the current contents of A.txt" &gt; ~/Downloads/A.txt</code></pre>
+<p>“A.txt” will be overwritten with the new contents. The final essential redirection operator is the pipe <code>|</code>. The pipe lets you take the output from one program and use it as input to another. I’ll show an example of this later.</p>
+</section>
+<section id="displaying-the-content-of-files" class="level2">
+<h2 class="anchored" data-anchor-id="displaying-the-content-of-files">Displaying the content of files</h2>
+<p>The simplest way to display the contents of a file on the command line is by using the <code>cat</code> command. The <code>cat</code> command is actually designed to concatenate file together, but running it on a single file will print the entire contents of the file to the command line. For example, to print the contents of “A.txt”</p>
+<pre><code>&gt;&gt;&gt; cat ~/Downloads/A.txt</code></pre>
+<p>Will print</p>
+<pre><code>This will replace the current contents of A.txt</code></pre>
+<p>to the console. If you have a lot of text that you would like to display <code>cat</code> can result in too much information being displayed on the screen. Instead, you can use the <code>less</code> command. <code>less</code> will print the contents of the file as pages on the screen. You can use the <code>d</code> key to scroll down a page, or the <code>u</code> key to scroll up a page.</p>
+<p>Another way to display only some of the contents of a file is to use the <code>head</code> or <code>tail</code> commands. <code>head -n10</code> will print the first 10 lines of a file, whereas <code>tail -n10</code> can be used to print the last 10 lines of a file.</p>
+</section>
+<section id="copying-files" class="level2">
+<h2 class="anchored" data-anchor-id="copying-files">Copying files</h2>
+<p>You can copy a file using the <code>cp</code> command. For example, to copy the “A.txt” file into a new file “B.txt” I can use</p>
+<pre><code>&gt;&gt;&gt; cp ~/Downloads/A.txt ~/Downloads/B.txt</code></pre>
+<p>To copy an entire directory you need to supply the <code>-r</code>, or recursive, argument to the <code>cp</code> command. For example, to create a copy of my Downloads directory inside of my Documents directory</p>
+<pre><code>&gt;&gt;&gt; cp -r ~/Downloads ~/Documents/Downloads-copy</code></pre>
+</section>
+<section id="moving-and-renaming-files" class="level2">
+<h2 class="anchored" data-anchor-id="moving-and-renaming-files">Moving and renaming files</h2>
+<p>The <code>mv</code> command can be used to move files and rename them. For example, to move the “A.txt” file into my Documents directory I can use</p>
+<pre><code>&gt;&gt;&gt; mv A.txt ~/Documents</code></pre>
+<p>If I now want to change the name of that file I can also use the <code>mv</code> command. Now you need to specify the new file name instead of the location to move the file to</p>
+<pre><code>&gt;&gt;&gt; mv ~/Documents/A.txt ~/Documents/C.txt</code></pre>
+</section>
+<section id="making-new-directories" class="level2">
+<h2 class="anchored" data-anchor-id="making-new-directories">Making new directories</h2>
+<p>To make a new directory you can use the <code>mkdir</code> command. To make a new directory inside of my Downloads directory I can use</p>
+<pre><code>&gt;&gt;&gt; mkdir ~/Downloads/textfiles</code></pre>
+<p>By default, the <code>mkdir</code> command doesn’t allow you to create nested directories. To enable this, set the <code>mkdir -p</code> flag. For example I can create a parent folder and subfolders using</p>
+<pre><code>&gt;&gt;&gt; mkdir -p ~/Downloads/imagefiles/jpegs</code></pre>
+<section id="shell-expansion" class="level3">
+<h3 class="anchored" data-anchor-id="shell-expansion">Shell expansion</h3>
+<p>Another useful trick is to learn shell expansion. Shell expansion ‘expands’ the arguments. Shell expansion can be a shortcut when creating new project directories. For example</p>
+<pre><code>&gt;&gt;&gt; mkdir -p data doc scripts results/{figures,data-files,rds-files}</code></pre>
+<p>The <code>results/{figures,data-files,rds-files}</code> expands this command into</p>
+<pre><code>mkdir -p data doc scripts results/figures results/data-files results/rds-files</code></pre>
+<p>Which saves some typing. Shell expansion can also be used in other contexts. For example, I can create 260 empty text files using the following command</p>
+<pre><code>&gt;&gt;&gt; touch ~/Downloads/textfiles/{A..Z}{1..10}.txt</code></pre>
+<p>Another useful shell expansion is <code>*</code>. For example, if I needed to display the contents of each of the file we just created I could run</p>
+<pre><code>&gt;&gt;&gt; cat ~/Downloads/textfiles/*.txt</code></pre>
+</section>
+</section>
+<section id="removing-files" class="level2">
+<h2 class="anchored" data-anchor-id="removing-files">Removing files</h2>
+<p>Removing files on the command line can be done with the <code>rm</code> command. Unlike when using a GUI, when you remove files on the command line you cannot get them back so use <code>rm</code> wisely. To remove one of the empty files I just created I can use</p>
+<pre><code>&gt;&gt;&gt; rm ~/Downloads/textfiles/A1.txt</code></pre>
+<p>If I want to remove the entire “textfiles” directory I can use the <code>-r</code>, or recursive flag with <code>rm</code>.</p>
+<pre><code>rm -r ~/Downloads/textfiles</code></pre>
+<p><strong>Be careful when using <code>rm</code></strong>. A simple space can mean removing entire file systems by mistake!</p>
+</section>
+<section id="finding-files" class="level2">
+<h2 class="anchored" data-anchor-id="finding-files">Finding files</h2>
+<pre><code>&gt;&gt;&gt; find</code></pre>
+<p>Finding and doing</p>
+<pre><code>&gt;&gt;&gt; find . -name "*.txt" -type f -exec echo {} \;</code></pre>
+</section>
+<section id="searching-the-contents-of-files" class="level2">
+<h2 class="anchored" data-anchor-id="searching-the-contents-of-files">Searching the contents of files</h2>
+<pre><code>&gt;&gt;&gt; grep "some pattern" myfile.txt</code></pre>
+</section>
+<section id="piping-commands" class="level2">
+<h2 class="anchored" data-anchor-id="piping-commands">Piping commands</h2>
+<p><code>sort</code>, <code>uniq</code>, and <code>cut</code></p>
+<pre><code>&gt;&gt;&gt; cut -d"," -f 1 some-file.tsv | sort -nr | uniq -c</code></pre>
+</section>
+<section id="for-loops" class="level2">
+<h2 class="anchored" data-anchor-id="for-loops">For-loops</h2>
+<pre><code>for F in {A..Z}{1..10}.txt; do "sort $F | uniq -c"; done</code></pre>
+</section>
+<section id="gnu-parallel" class="level2">
+<h2 class="anchored" data-anchor-id="gnu-parallel">GNU parallel</h2>
+<pre><code>parallel "sort {} | uniq -c" ::: {A..Z}{1..10}.txt</code></pre>
+</section>
+<section id="downloading-files" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-files">Downloading files</h2>
+<pre><code>&gt;&gt;&gt; curl
+&gt;&gt;&gt; wget</code></pre>
+</section>
+<section id="compressing-and-uncompressing" class="level2">
+<h2 class="anchored" data-anchor-id="compressing-and-uncompressing">Compressing and uncompressing</h2>
+<pre><code>&gt;&gt;&gt; gzip somfile.txt</code></pre>
+<pre><code>&gt;&gt;&gt; gunzip somefile.txt.gz</code></pre>
+</section>
+<section id="replacing-file-contents" class="level2">
+<h2 class="anchored" data-anchor-id="replacing-file-contents">Replacing file contents</h2>
+<pre><code>&gt;&gt;&gt; sed 's/find/replace/' myfile.txt</code></pre>
+</section>
+<section id="editors" class="level2">
+<h2 class="anchored" data-anchor-id="editors">Editors</h2>
+<pre><code>&gt;&gt;&gt; vim</code></pre>
+<p><a href="https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/">How do I get out of here?</a></p>
+<pre><code>&gt;&gt;&gt; nano</code></pre>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
