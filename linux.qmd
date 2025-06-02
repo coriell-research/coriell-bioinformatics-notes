@@ -24,13 +24,13 @@ working directory. This command is used to display where you are currently in
 the file system. For example, if I open a terminal window in my "Downloads"
 directory and type and hit Enter:
 
-```
->>> pwd 
+```{.Bash}
+pwd 
 ```
 
 It will return
 
-```
+```{.Bash}
 /home/gennaro/Downloads
 ```
 
@@ -42,13 +42,13 @@ Now that I'm in my "Downloads" directory I want to see what files I've
 downloaded. To do this, I can use the `ls` command to list files in the 
 directory. 
 
-```
->>> ls
+```{.Bash}
+ls
 ```
 
 which returns:
 
-```
+```{.Bash}
 BDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv
 ```
 
@@ -58,13 +58,13 @@ created or how large they are, I can supply the `ls` command with arguments.
 
 For example
 
-```
->>> ls -lah
+```{.Bash}
+ls -lah
 ```
 
 Returns
 
-```
+```{.Bash}
 total 15M
 drwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .
 drwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..
@@ -84,8 +84,8 @@ open the user manual for the given command.
 
 Try typing
 
-```
->>> man ls
+```{.Bash}
+man ls
 ```
 
 to view all of the options available when listing files with `ls`.
@@ -97,8 +97,8 @@ directory. The command I have to use is `cd`, short for "change directory". We
 can use the `cd` command with the argument for the target directory we want to 
 go to. For example, to move to my "Documents" directory
 
-```
->>> cd /home/gennaro/Documents
+```{.Bash}
+cd /home/gennaro/Documents
 ```
 
 ### Directory shortcuts
@@ -107,30 +107,30 @@ The shell has a few shortcuts that make moving around a little easier. Running
 `cd` without any arguments will bring you back into your home directory. 
 
 
-```
->>> cd
+```{.Bash}
+cd
 ```
 
 In Bash, there is an additional shortcut to specify the "/home" as well. You 
 can use `~` in place of "/home". For example, to move into my "Documents" 
 folder I can use
 
-```
->>> cd ~/Documents
+```{.Bash}
+cd ~/Documents
 ```
 
 instead of typing the full path. To go up one level in the directory you can use
 `..`. So to go from my Documents directory 'up' into my "/home" directory I can 
 use
 
-```
->>> cd ..
+```{.Bash}
+cd ..
 ```
 
 Finally, to go back to the same directory that you were just in you can use
 
-```
->>> cd -
+```{.Bash}
+cd -
 ```
 
 ## Creating files
@@ -138,8 +138,8 @@ Finally, to go back to the same directory that you were just in you can use
 You can create files with the `touch` command. For example, to create an empty 
 file in my "Downloads" directory called "A.txt" I can run
 
-```
->>> touch ~/Downloads/A.txt
+```{.Bash}
+touch ~/Downloads/A.txt
 ```
 
 ## Redirection
@@ -153,17 +153,17 @@ from one program and use it as input to another program. In this example, I'll
 take the output from `echo` and redirect it to the file "A.txt" that we just 
 created. 
 
-```
->>> echo "This is a new line in the file" >> ~/Downloads/A.txt
->>> echo "Here is another new line in the file" >> ~/Downloads/A.txt
+```{.Bash}
+echo "This is a new line in the file" >> ~/Downloads/A.txt
+echo "Here is another new line in the file" >> ~/Downloads/A.txt
 ```
 
 The `>>` took the output of the `echo` command and inserted it as a new line in 
 "A.txt". Importantly, `>>` **appended** these lines into "A.txt". If I were 
 instead to use `>` like
 
-```
->>> echo "This will replace the current contents of A.txt" > ~/Downloads/A.txt
+```{.Bash}
+echo "This will replace the current contents of A.txt" > ~/Downloads/A.txt
 ```
 
 "A.txt" will be overwritten with the new contents. The final essential 
@@ -177,13 +177,13 @@ using the `cat` command. The `cat` command is actually designed to concatenate
 file together, but running it on a single file will print the entire contents 
 of the file to the command line. For example, to print the contents of "A.txt"
 
-```
->>> cat ~/Downloads/A.txt
+```{.Bash}
+cat ~/Downloads/A.txt
 ```
 
 Will print
 
-```
+```{.Bash}
 This will replace the current contents of A.txt
 ```
 
@@ -202,16 +202,16 @@ or `tail` commands. `head -n10` will print the first 10 lines of a file, whereas
 You can copy a file using the `cp` command. For example, to copy the "A.txt" 
 file into a new file "B.txt" I can use
 
-```
->>> cp ~/Downloads/A.txt ~/Downloads/B.txt
+```{.Bash}
+cp ~/Downloads/A.txt ~/Downloads/B.txt
 ```
 
 To copy an entire directory you need to supply the `-r`, or recursive, argument
 to the `cp` command. For example, to create a copy of my Downloads directory
 inside of my Documents directory
 
-```
->>> cp -r ~/Downloads ~/Documents/Downloads-copy
+```{.Bash}
+cp -r ~/Downloads ~/Documents/Downloads-copy
 ```
 
 ## Moving and renaming files
@@ -219,16 +219,16 @@ inside of my Documents directory
 The `mv` command can be used to move files and rename them. For example, to 
 move the "A.txt" file into my Documents directory I can use
 
-```
->>> mv A.txt ~/Documents
+```{.Bash}
+mv A.txt ~/Documents
 ```
 
 If I now want to change the name of that file I can also use the `mv` command. 
 Now you need to specify the new file name instead of the location to move the 
 file to
 
-```
->>> mv ~/Documents/A.txt ~/Documents/C.txt
+```{.Bash}
+mv ~/Documents/A.txt ~/Documents/C.txt
 ```
 
 ## Making new directories
@@ -236,16 +236,16 @@ file to
 To make a new directory you can use the `mkdir` command. To make a new directory
 inside of my Downloads directory I can use
 
-```
->>> mkdir ~/Downloads/textfiles
+```{.Bash}
+mkdir ~/Downloads/textfiles
 ```
 
 By default, the `mkdir` command doesn't allow you to create nested directories. 
 To enable this, set the `mkdir -p` flag. For example I can create a parent 
 folder and subfolders using
 
-```
->>> mkdir -p ~/Downloads/imagefiles/jpegs
+```{.Bash}
+mkdir -p ~/Downloads/imagefiles/jpegs
 ```
 
 ### Shell expansion
@@ -254,28 +254,28 @@ Another useful trick is to learn shell expansion. Shell expansion 'expands' the
 arguments. Shell expansion can be a shortcut when creating new project 
 directories. For example
 
-```
->>> mkdir -p data doc scripts results/{figures,data-files,rds-files}
+```{.Bash}
+mkdir -p data doc scripts results/{figures,data-files,rds-files}
 ```
 
 The `results/{figures,data-files,rds-files}` expands this command into 
 
-```
+```{.Bash}
 mkdir -p data doc scripts results/figures results/data-files results/rds-files
 ```
 
 Which saves some typing. Shell expansion can also be used in other contexts. For
 example, I can create 260 empty text files using the following command
 
-```
->>> touch ~/Downloads/textfiles/{A..Z}{1..10}.txt
+```{.Bash}
+touch ~/Downloads/textfiles/{A..Z}{1..10}.txt
 ```
 
 Another useful shell expansion is `*`. For example, if I needed to display the
 contents of each of the file we just created I could run
 
-```
->>> cat ~/Downloads/textfiles/*.txt
+```{.Bash}
+cat ~/Downloads/textfiles/*.txt
 ```
 
 ## Removing files
@@ -285,14 +285,14 @@ when using a GUI, when you remove files on the command line you cannot get them
 back so use `rm` wisely. To remove one of the empty files I just created I can
 use
 
-```
->>> rm ~/Downloads/textfiles/A1.txt
+```{.Bash}
+rm ~/Downloads/textfiles/A1.txt
 ```
 
 If I want to remove the entire "textfiles" directory I can use the `-r`, or 
 recursive flag with `rm`. 
 
-```
+```{.Bash}
 rm -r ~/Downloads/textfiles
 ```
 
@@ -301,73 +301,168 @@ systems by mistake!
 
 ## Finding files
 
-```
->>> find
-```
+One incredibly useful but often overlooked command line tools is `find`. `find`
+does exactly what you expect it to do, it finds files and folders. `find` has 
+many arguments but the simplest usage is for finding files using a specific 
+pattern. For example, to find all text (.txt) files in a particular directory
+and all of its subdirectories you can use:
 
-Finding and doing
-
-```
->>> find . -name "*.txt" -type f -exec echo {} \;
-```
-
-## Searching the contents of files
-
-```
->>> grep "some pattern" myfile.txt
+```{.Bash}
+find . -name "*.txt" -type f
 ```
 
-## Piping commands
+This command says, "find any file (-type f) that has a name like '.txt'". `find`
+is especially powerful when combined with the `-exec` argument. For example, 
+to remove all .txt file in a directory you can use:
 
-`sort`, `uniq`, and `cut`
-
-```
->>> cut -d"," -f 1 some-file.tsv | sort -nr | uniq -c
-```
-
-## For-loops
-
-```
-for F in {A..Z}{1..10}.txt; do "sort $F | uniq -c"; done
-```
-
-## GNU parallel
-
-```
-parallel "sort {} | uniq -c" ::: {A..Z}{1..10}.txt
+```{.Bash}
+find . -name "*.txt" -type f -exec rm {} \;
 ```
 
 ## Downloading files
 
-```
->>> curl
->>> wget
+`curl` and `wget` are both command line utilities for downloading files from
+remote resources. `curl` will download and stream the results to your terminal
+by default. `wget` will save the result to a file by default. 
+
+```{.Bash}
+curl https://www.gutenberg.org/cache/epub/100/pg100.txt
+wget https://www.gutenberg.org/cache/epub/100/pg100.txt
 ```
 
-## Compressing and uncompressing
+## Searching the contents of files
 
-```
->>> gzip somfile.txt
+`grep` is a tool that's use to search the contents of files for specific text 
+patterns. For example, if you wanted to find every line in a text file that 
+contains the word "the" you could use:
+
+```{.Bash}
+grep "the" pg100.txt
 ```
 
-```
->>> gunzip somefile.txt.gz
+`grep` also has many useful arguments. One of the most useful is that `grep`
+can return the count of the number of lines that are returned. For example, 
+to count the number of lines in a text file that contain the word "the":
+
+```{.Bash}
+grep -c "the" pg100.txt
 ```
 
 ## Replacing file contents
 
+```{.Bash}
+sed 's/find/replace/' myfile.txt
 ```
->>> sed 's/find/replace/' myfile.txt
+
+## Piping commands
+
+The Unix pipe is what makes the command line so powerful. You can string 
+together small programs to build up solutions to complex problems. The pipe 
+allows you to take the output from one program and use it as input to another
+program directly. 
+
+For example, suppose we wanted count the top 10 most frequently used words 
+across all of the works of Shakespeare
+
+```{.Bash}
+curl https://www.gutenberg.org/cache/epub/100/pg100.txt | \
+sed 's/[^a-zA-Z ]/ /g' | \
+tr 'A-Z ' 'a-z\n' | \
+grep '[a-z]' | \
+sort | \
+uniq -c | \
+sort -nr -k1 | \
+head -n10
+```
+
+- `curl` downloads the text file from Project Gutenberg and streams it to stdout
+- `sed` replaces all characters that are not spaces or letters, with spaces. 
+- `tr` changes all of the uppercase letters into lowercase and converts the spaces in the lines of text to newlines (each 'word' is now on a separate line)
+- `grep` includes only lines that contain at least one lowercase alphabetical character (removing any blank lines)
+- `sort` sorts the list of 'words' into alphabetical order
+- `uniq` counts the occurrences of each word
+- `sort` sorts the occurrences numerically in descending order
+- `head` shows the top 10 lines
+
+## Compressing and uncompressing
+
+Bioinformatics and command line tools can generally work with compressed data. 
+Data compression saves space which can be really beneficial when transferring 
+files over the internet. `gzip` is an old but commonly used compression utility
+that is compatible with many command line utilities. To compress a file for 
+example.
+
+```{.Bash}
+gzip pg100.txt
+```
+
+Will produce a compressed version of the "pg100.txt" file called "pg100.txt.gz".
+Many Unix tools can work directly with gzipped files. For example,
+
+```{.Bash}
+zcat pg100.txt.gz
+```
+
+Will unzip and print the contents of the file to the terminal and `zgrep` can
+be used to directly search the contents of a gzipped file without the need to
+decompress the entire file
+
+```{.Bash}
+zgrep -c "the" pg100.txt.gz
+```
+
+To decompress a file you use the 'un' version of the compression command, `gunzip`.
+
+```{.Bash}
+gunzip somefile.txt.gz
+```
+
+## For-loops
+
+The command line is also a scripting language and like any scripting language, 
+it provides some basic control flow utilities. One of the more useful of these
+is the basic for loop. In Bash, the for-loop takes the form of a for each loop. 
+the looping variable can be referred to in the loop by using the `$` syntax. 
+For example, to loop through 
+
+```{.Bash}
+for F in *.txt; do sort $F | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt; done
+```
+
+## GNU parallel
+
+[GNU parallel](https://www.gnu.org/software/parallel/) is a command line tool 
+that takes away the need to use for-loops entirely. `parallel` is extremely 
+powerful and feature filled. Importantly, it lets you run commands across 
+multiple jobs. For example, instead of writing a for loop we can process the 
+text files above using 8 jobs at once with `parallel`
+
+```{.Bash}
+parallel --jobs 8 "sort {} | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt" ::: *.txt
 ```
 
 ## Editors
 
-```
->>> vim
+You'll eventually need to edit some code or files from the terminal. Two 
+options for code editing from the command line are `vim` and `nano`. `vim` can
+be more difficult to use for a beginner but is very powerful. 
+
+```{.Bash}
+vim
 ```
 
-[How do I get out of here?](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/)
+Once you're in `vim` you can use the `i` key to enter "input" mode. "input" 
+mode let's you type in new characters. Once you've typed away, save your work 
+and exit with `esc + :wq`. `vim` can be difficult to get used to which lead to 
+the [most famous of StackOverflow questions](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/): 
+`nano` provides a more user friendly interface. 
 
+```{.Bash}
+nano
 ```
->>> nano
-```
+
+## Resources
+
+- [Terminus](https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html) is a fun game designed to get you comfortable navigating the command line
+- [OverTheWire](https://overthewire.org/wargames/bandit/) is another game designed to tech you command line tools through the lense of a 'hacker'
+- [vimtutor](https://vimschool.netlify.app/introduction/vimtutor/) can be used to learn `vim`
