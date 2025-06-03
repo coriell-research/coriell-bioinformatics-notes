@@ -13,6 +13,7 @@ book:
     - r-basics.qmd
     - data-viz.qmd
     - presenting-science.qmd
+    - summarized-experiments.qmd
     - references.qmd
 
 bibliography: references.bib
