@@ -208,13 +208,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#subsetting-lists" id="toc-subsetting-lists" class="nav-link" data-scroll-target="#subsetting-lists">Subsetting Lists</a></li>
   <li><a href="#subsetting-matrices" id="toc-subsetting-matrices" class="nav-link" data-scroll-target="#subsetting-matrices">Subsetting matrices</a></li>
   </ul></li>
-  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a>
   <ul class="collapse">
   <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">Data import</a></li>
-  <li><a href="#taking-a-look-at-the-data" id="toc-taking-a-look-at-the-data" class="nav-link" data-scroll-target="#taking-a-look-at-the-data">Taking a look at the data</a></li>
+  <li><a href="#viewing-data" id="toc-viewing-data" class="nav-link" data-scroll-target="#viewing-data">Viewing data</a></li>
   <li><a href="#splitting-data" id="toc-splitting-data" class="nav-link" data-scroll-target="#splitting-data">Splitting data</a></li>
-  <li><a href="#your-first-plot" id="toc-your-first-plot" class="nav-link" data-scroll-target="#your-first-plot">Your first plot</a></li>
+  <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data">Plotting data</a></li>
+  <li><a href="#filtering-data" id="toc-filtering-data" class="nav-link" data-scroll-target="#filtering-data">Filtering data</a></li>
+  <li><a href="#reordering-data" id="toc-reordering-data" class="nav-link" data-scroll-target="#reordering-data">Reordering data</a></li>
+  <li><a href="#selecting-columns-of-data" id="toc-selecting-columns-of-data" class="nav-link" data-scroll-target="#selecting-columns-of-data">Selecting columns of data</a></li>
+  <li><a href="#modifying-columns-of-data" id="toc-modifying-columns-of-data" class="nav-link" data-scroll-target="#modifying-columns-of-data">Modifying columns of data</a></li>
   </ul></li>
+  <li><a href="#string-operations" id="toc-string-operations" class="nav-link" data-scroll-target="#string-operations">String operations</a></li>
+  <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
+  <li><a href="#functional-programming" id="toc-functional-programming" class="nav-link" data-scroll-target="#functional-programming">Functional programming</a></li>
+  <li><a href="#tips-and-tricks" id="toc-tips-and-tricks" class="nav-link" data-scroll-target="#tips-and-tricks">Tips and tricks</a></li>
   </ul>
 </nav>
     </div>
@@ -282,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "G" "E" "N" "N" "A" "R" "O"</code></pre>
 </div>
 </div>
-<p>Vectors become really powerful when we start combining them with logical operations. R supports all of the usual logical and mathematical operators you can expect from a programming language, <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>%in%</code>, etc.</p>
+<p>Vectors become really powerful when we start combining them with logical operations. R supports all of the usual logical and comparison operators you can expect from a programming language, <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>%in%</code>, <code>&amp;</code> and <code>|</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>my_favorite_letters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -318,6 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [61]  744  838 1050  918  986 1020  906 1170  912  746  718  714  740</code></pre>
 </div>
 </div>
+<p>At this point it’s important to take a step back and appreciate what R is doing. Each of the comparison operators that we used above is <em>vectorized</em>. This means that the comparison is applied to all elements of the vector at one time. If you’re used to a programming language like Python this might seem foreign at first. In Python, you would have to write a list comprehension to filter observations from a list that meet a certain condition. For example, <code>[x for x in Nile if x &gt; 1200]</code>. However in R, most functions and operators are <em>vectorized</em> allowing us to do things like <code>Nile &gt; 1200</code> and have the comparison applied to all of the elements of the vector automatically.</p>
 </section>
 <section id="subsetting-data.frames" class="level3">
 <h3 class="anchored" data-anchor-id="subsetting-data.frames">Subsetting data.frames</h3>
@@ -582,9 +591,9 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 <p><em>There’s probably some kind of tidy solution using <code>across()</code> that I’m missing but this is how most of the tidy code in the wild that I have seen looks</em></p>
 </section>
 </section>
-<section id="exploratory-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
-<p>Now that we’ve got a handle on some different R data types, and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We’ll focus on using data.frames since they’re the primary workhorse of data analysis in R. But remember, data.frames are just lists of vectors with some special rules, so many concepts you learn which apply to data.frames, also apply to vectors and lists.</p>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h2>
+<p>Now that we’ve got a handle on some different R data types, and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We’ll focus on using data.frames since they’re the primary workhorse of data analysis in R. But remember, data.frames are just lists of vectors with some special rules, so many concepts you learn will apply to data.frames but also apply to vectors and lists.</p>
 <section id="data-import" class="level3">
 <h3 class="anchored" data-anchor-id="data-import">Data import</h3>
 <p>We’ll use the built in <code>penguins_raw</code> dataset to learn some basic data cleaning. This dataset is built into R version 4.5 so you can just load it by running <code>penguins_raw</code> if you have that R version installed. However, to illustrate data import, we’ll read in the data from an external source.</p>
@@ -595,8 +604,8 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 </div>
 <p>The <code>read.csv()</code> function has many options for reading in data. If you want to learn about all of the options any particular R function has, you can prefix the function name with a <code>?</code> like, <code>?read.csv()</code> to bring up the help documentation.</p>
 </section>
-<section id="taking-a-look-at-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="taking-a-look-at-the-data">Taking a look at the data</h3>
+<section id="viewing-data" class="level3">
+<h3 class="anchored" data-anchor-id="viewing-data">Viewing data</h3>
 <p>The code above read the data into data.frame that we called <code>penguins</code>. We can take a look at the first few rows of the <code>penguins</code> data.frame using the <code>head()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -693,6 +702,7 @@ Chinstrap penguin (Pygoscelis antarctica)
   172.0   190.0   197.0   200.9   213.0   231.0       2 </code></pre>
 </div>
 </div>
+<p>Finally, if you are using and IDE like Rstudio or Positron you can run the <code>View()</code> function on your data.frame. This will bring up an interactive data viewer.</p>
 </section>
 <section id="splitting-data" class="level3">
 <h3 class="anchored" data-anchor-id="splitting-data">Splitting data</h3>
@@ -711,23 +721,312 @@ Chinstrap penguin (Pygoscelis antarctica)
 </div>
 <p>The basic format of the <code>tapply()</code> function is</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="st">"data you want to compute"</span>, <span class="st">"what you want to group by"</span>, <span class="st">"function to apply"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="st">"data to split"</span>, <span class="st">"what to split by"</span>, <span class="st">"what to compute"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Splitting can also by applied directly to data.frames using the <code>split()</code> function. Let’s say we wanted to split the penguins data.frame into one data.frame for each species. We can use the <code>split()</code> function for this purpose.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>by_species <span class="ot">&lt;-</span> <span class="fu">split</span>(penguins, <span class="at">f =</span> penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This function returns a list of data.frames, one for each species in the original data.frame. Use the <code>names()</code> function to see what each list element is. To extract the first data.frame, which contains Adelie penguin data only, we can subset the list of data.frames.</p>
+<p>This function returns a list of data.frames, one for each species in the original data.frame. Use <code>names(by_species)</code> to see what each list element is named. To extract the first data.frame from this list, which contains Adelie penguin data only, we can subset the list of data.frames.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>adelie <span class="ot">&lt;-</span> by_species[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Performing operations on lists is such a common task in R that a function exists specifically to apply functions to list elements. This function is called <code>lapply()</code>. <code>lapply()</code> takes a list and a function and applies that function to each list element. The <code>lapply()</code> function returns the results as a list.</p>
+<p>For example, to see how many rows are in each of the data.frames in the “by_species” list:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(by_species, nrow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`Adelie Penguin (Pygoscelis adeliae)`
+[1] 152
+
+$`Chinstrap penguin (Pygoscelis antarctica)`
+[1] 68
+
+$`Gentoo penguin (Pygoscelis papua)`
+[1] 124</code></pre>
+</div>
+</div>
 </section>
-<section id="your-first-plot" class="level3">
-<h3 class="anchored" data-anchor-id="your-first-plot">Your first plot</h3>
-<p>Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you’re making in real time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://lattice.r-forge.r-project.org/">lattice</a> provide powerful alternatives to base R plots. We’ll cover <code>ggplot2</code> later. For now, base R plotting can provide all we need.</p>
+<section id="plotting-data" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-data">Plotting data</h3>
+<p>Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you’re making in real time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://lattice.r-forge.r-project.org/">lattice</a> provide powerful alternatives to base R plots. We’ll cover <code>ggplot2</code> later. For now, base R plotting can provide all we need for exploratory analyses.</p>
+<p>One of the most useful plots for numeric data is a histogram. Histograms bin the data and plot how many occurrences of a particular bin are present. This plot allows you to get an idea of the numeric summary of a variable. To plot a histogram of a numeric variable we can use the <code>hist()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The histogram has a few arguments we can use to adjust the plot. Use <code>?hist()</code> to see the full list. Below, we can adjust the axes to be more informative and modify the number of bins we’re computing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(penguins<span class="sc">$</span>Flipper.Length..mm., </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">30</span>,</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Flipper Length of All Palmer Penguins"</span>, </span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>,</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Count"</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The distribution appears to be bimodal. Is this because there are different species present in this plot? We can check by applying the <code>hist()</code> function to each of the groups using the list of data.frames from above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie penguins </span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">1</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Adelie"</span>, </span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap penguins</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">2</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Chinstrap"</span>, </span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo penguins</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">3</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Gentoo"</span>, </span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Histograms are useful for plotting the distribution of a single numeric variable. Often, we wish to see how two variables are related. The <code>plot()</code> function provides a way to create a scatter plot of two variables against each other on the same plot. For example, to plot the culmen length vs the culmen depth:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm., </span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Again, these data points seem to be split by the different species of penguins present in the dataset. We can color these points using an additional variable in the call to the <code>plot()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm., </span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">factor</span>(penguins<span class="sc">$</span>Species),</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You may have noticed that we did something special to that vector of species. We wrapped it in the <code>factor()</code> function. In R, factors are used when we have categorical values. R uses factors to represent the different levels of each category. It may not seem important now, but factors are very useful for statistical analysis. We’ll build on this topic shortly.</p>
+<p>The <code>plot()</code> function is very versatile. You can use it to create line plots as well, to show trends of variables over time. Here is a contrived example of using <code>plot()</code> to create a simple line chart.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> adelie<span class="sc">$</span>Sample.Number, </span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> adelie<span class="sc">$</span>Body.Mass..g., </span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>, </span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Body mass vs sample number in Adelie penguins"</span>,</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample Number"</span>,</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Body Mass (g)"</span></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Scatter plots are useful for displaying two numeric values against each other. However you’ll often want to compare numeric values across categorical values. One such plot for doing this is called a boxplot. Boxplots show the median and interquartile (IQR) range for a set of data. The ‘whiskers’ of the boxplot display the 1.5 x IQR of the data. We can plot a boxplot of the flipper length for each species using the <code>boxplot()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species, </span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins, </span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The <code>boxplot()</code> function is a little funny because it uses formula notation. Many functions in R accept formula notation as input. In this case, the formula notation means “plot the flipper length as a function of the species type”. You may have also noticed that we gave this function the penguins data.frame as the value for the <code>data=</code> argument. This allowed the boxplot function to use the column names without us having to explicitly say that they came from the penguins data.frame.</p>
+<p>If there’s not too much data, boxplots can actually hide a lot of information. In this case, another option is to use a stripchart. A stripchart shows every data point on the plot instead of a depiction of the distribution as in the boxplot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stripchart</span>(</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species, </span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins, </span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"jitter"</span>,</span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">1</span>,</span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span>,</span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertical =</span> <span class="cn">TRUE</span></span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Bar charts are another common way that people show summaries of data. To display a barplot of data, we can use the <code>barplot()</code> function. To create a barplot of the mean flipper length for each species we first need to summarize the flipper length for each group and then supply these summaries to the <code>barplot()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>species_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(penguins<span class="sc">$</span>Flipper.Length..mm., penguins<span class="sc">$</span>Species, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(species_means, <span class="at">main =</span> <span class="st">"Mean flipper length by species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There are many ways to modify these default plot types and make the charts look great. Take the time to look into some of base R graphing capabilities. A really good tutorial for learning about base R plotting can be found <a href="http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/">here</a>.</p>
+</section>
+<section id="filtering-data" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-data">Filtering data</h3>
+<p>We’ve already learned how to subset a data.frame but let’s just take a step back and quickly revisit subsetting data.frames. To subset a data.frame means to select rows of a data.frame based on some condition that you’re interested in. This subsetting can be accomplished using the <code>[</code> operator and setting conditions by specifying <code>df[the rows we want, the cols we want]</code> syntax.</p>
+<p>For example, in the above plots it looked like the Gentoo penguins typically had the largest flippers. It looked like a value &gt; 205 roughly separated the Gentoo penguins from the others. How could we select the rows where the flipper length is greater than or equal to 205 and count the species types?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>big_flippers <span class="ot">&lt;-</span> penguins[penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>, ]</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(big_flippers<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+      Adelie Penguin (Pygoscelis adeliae) 
+                                        3 
+Chinstrap penguin (Pygoscelis antarctica) 
+                                        8 
+        Gentoo penguin (Pygoscelis papua) 
+                                      122 </code></pre>
+</div>
+</div>
+<p>We can combine conditions as well to select on multiple conditions. For example, let’s select the female penguins with flippers &gt;= 205 mm.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[penguins<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"FEMALE"</span> <span class="sc">&amp;</span> penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    studyName Sample.Number                           Species Region Island
+NA       &lt;NA&gt;            NA                              &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
+153   PAL0708             1 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+155   PAL0708             3 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+158   PAL0708             6 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+159   PAL0708             7 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+161   PAL0708             9 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+                 Stage Individual.ID Clutch.Completion   Date.Egg
+NA                &lt;NA&gt;          &lt;NA&gt;              &lt;NA&gt;       &lt;NA&gt;
+153 Adult, 1 Egg Stage         N31A1               Yes 2007-11-27
+155 Adult, 1 Egg Stage         N32A1               Yes 2007-11-27
+158 Adult, 1 Egg Stage         N33A2               Yes 2007-11-18
+159 Adult, 1 Egg Stage         N34A1               Yes 2007-11-27
+161 Adult, 1 Egg Stage         N35A1               Yes 2007-11-27
+    Culmen.Length..mm. Culmen.Depth..mm. Flipper.Length..mm. Body.Mass..g.
+NA                  NA                NA                  NA            NA
+153               46.1              13.2                 211          4500
+155               48.7              14.1                 210          4450
+158               46.5              13.5                 210          4550
+159               45.4              14.6                 211          4800
+161               43.3              13.4                 209          4400
+       Sex Delta.15.N..o.oo. Delta.13.C..o.oo. Comments
+NA    &lt;NA&gt;                NA                NA     &lt;NA&gt;
+153 FEMALE           7.99300         -25.51390     &lt;NA&gt;
+155 FEMALE           8.14705         -25.46172     &lt;NA&gt;
+158 FEMALE           7.99530         -25.32829     &lt;NA&gt;
+159 FEMALE           8.24515         -25.46782     &lt;NA&gt;
+161 FEMALE           8.13643         -25.32176     &lt;NA&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="reordering-data" class="level3">
+<h3 class="anchored" data-anchor-id="reordering-data">Reordering data</h3>
+<p>We can also change the order of the rows in a data.frame. This is similar to subsetting but instead rearranges the data based on some condition. To reorder the data.frame we can use the <code>order()</code> function.</p>
+<p>For example, we can order the data by decreasing flipper length</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[<span class="fu">order</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    studyName Sample.Number                           Species Region Island
+216   PAL0809            64 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+154   PAL0708             2 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+186   PAL0708            34 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+218   PAL0809            66 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+228   PAL0809            76 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+242   PAL0910            90 Gentoo penguin (Pygoscelis papua) Anvers Biscoe
+                 Stage Individual.ID Clutch.Completion   Date.Egg
+216 Adult, 1 Egg Stage         N19A2               Yes 2008-11-13
+154 Adult, 1 Egg Stage         N31A2               Yes 2007-11-27
+186 Adult, 1 Egg Stage         N56A2               Yes 2007-12-03
+218 Adult, 1 Egg Stage         N20A2               Yes 2008-11-04
+228 Adult, 1 Egg Stage         N56A2               Yes 2008-11-06
+242 Adult, 1 Egg Stage         N14A2               Yes 2009-11-25
+    Culmen.Length..mm. Culmen.Depth..mm. Flipper.Length..mm. Body.Mass..g.  Sex
+216               54.3              15.7                 231          5650 MALE
+154               50.0              16.3                 230          5700 MALE
+186               59.6              17.0                 230          6050 MALE
+218               49.8              16.8                 230          5700 MALE
+228               48.6              16.0                 230          5800 MALE
+242               52.1              17.0                 230          5550 MALE
+    Delta.15.N..o.oo. Delta.13.C..o.oo. Comments
+216           8.49662         -26.84166     &lt;NA&gt;
+154           8.14756         -25.39369     &lt;NA&gt;
+186           7.76843         -25.68210     &lt;NA&gt;
+218           8.47067         -26.69166     &lt;NA&gt;
+228           8.59640         -26.71199     &lt;NA&gt;
+242           8.27595         -26.11657     &lt;NA&gt;</code></pre>
+</div>
+</div>
+<p>R also provides the <code>sort()</code> function. See if you can understand the difference between <code>order()</code> and <code>sort()</code>.</p>
+</section>
+<section id="selecting-columns-of-data" class="level3">
+<h3 class="anchored" data-anchor-id="selecting-columns-of-data">Selecting columns of data</h3>
+</section>
+<section id="modifying-columns-of-data" class="level3">
+<h3 class="anchored" data-anchor-id="modifying-columns-of-data">Modifying columns of data</h3>
+</section>
+</section>
+<section id="string-operations" class="level2">
+<h2 class="anchored" data-anchor-id="string-operations">String operations</h2>
+</section>
+<section id="functions" class="level2">
+<h2 class="anchored" data-anchor-id="functions">Functions</h2>
+</section>
+<section id="functional-programming" class="level2">
+<h2 class="anchored" data-anchor-id="functional-programming">Functional programming</h2>
+</section>
+<section id="tips-and-tricks" class="level2">
+<h2 class="anchored" data-anchor-id="tips-and-tricks">Tips and tricks</h2>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

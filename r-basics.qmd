@@ -78,9 +78,9 @@ LETTERS[c(7, 5, 14, 14, 1, 18, 15)]
 ```
 
 Vectors become really powerful when we start combining them with logical 
-operations. R supports all of the usual logical and mathematical operators 
-you can expect from a programming language, `<`, `>`, `==`, `<=`, `>=`, `%in%`, 
-etc.
+operations. R supports all of the usual logical and comparison operators 
+you can expect from a programming language, `<`, `>`, `==`, `!=`, `<=`, `>=`, 
+`%in%`, `&` and `|`.
 
 ```{r}
 my_favorite_letters <- c("A", "B", "C")
@@ -106,6 +106,16 @@ Nile[Nile > 1200]
 # Any even number - `%%` is the modulus operator
 Nile[Nile %% 2 == 0]
 ```
+
+At this point it's important to take a step back and appreciate what R is doing. 
+Each of the comparison operators that we used above is *vectorized*. This means
+that the comparison is applied to all elements of the vector at one time. If 
+you're used to a programming language like Python this might seem foreign at 
+first. In Python, you would have to write a list comprehension to filter 
+observations from a list that meet a certain condition. For example, 
+`[x for x in Nile if x > 1200]`. However in R, most functions and operators are 
+*vectorized* allowing us to do things like `Nile > 1200` and have the comparison 
+applied to all of the elements of the vector automatically.
 
 ### Subsetting data.frames
 
@@ -309,14 +319,14 @@ tidyr::as_tibble(m, rownames = "CpG") |>
 *There's probably some kind of tidy solution using `across()` that I'm missing 
 but this is how most of the tidy code in the wild that I have seen looks*
 
-## Exploratory Data Analysis
+## Data Wrangling
 
 Now that we've got a handle on some different R data types, and how to slice and 
 dice them, we can start learning basic data cleaning and exploratory data analysis. 
 We'll focus on using data.frames since they're the primary workhorse of data 
 analysis in R. But remember, data.frames are just lists of vectors with some 
-special rules, so many concepts you learn which apply to data.frames, also apply 
-to vectors and lists.
+special rules, so many concepts you learn will apply to data.frames but also 
+apply to vectors and lists.
 
 ### Data import
 
@@ -337,7 +347,7 @@ The `read.csv()` function has many options for reading in data. If you want to
 learn about all of the options any particular R function has, you can prefix the 
 function name with a `?` like, `?read.csv()` to bring up the help documentation.
 
-### Taking a look at the data
+### Viewing data
 
 The code above read the data into data.frame that we called `penguins`. We can
 take a look at the first few rows of the `penguins` data.frame using the `head()`
@@ -395,6 +405,10 @@ a numeric vector returns a lot of useful information.
 summary(penguins$Flipper.Length..mm., na.rm = TRUE)
 ```
 
+Finally, if you are using and IDE like Rstudio or Positron you can run the 
+`View()` function on your data.frame. This will bring up an interactive data 
+viewer.
+
 ### Splitting data
 
 You may have noticed above that we computed the mean flipper length across all
@@ -415,7 +429,7 @@ The basic format of the `tapply()` function is
 
 ```{r}
 #| eval: false
-tapply("data you want to compute", "what you want to group by", "function to apply")
+tapply("data to split", "what to split by", "what to compute")
 ```
 
 Splitting can also by applied directly to data.frames using the `split()` 
@@ -427,24 +441,238 @@ by_species <- split(penguins, f = penguins$Species)
 ```
 
 This function returns a list of data.frames, one for each species in the 
-original data.frame. Use the `names()` function to see what each list element 
-is. To extract the first data.frame, which contains Adelie penguin data only, 
-we can subset the list of data.frames. 
+original data.frame. Use `names(by_species)` to see what each list element 
+is named. To extract the first data.frame from this list, which contains Adelie 
+penguin data only, we can subset the list of data.frames.
 
 ```{r}
 adelie <- by_species[[1]]
 ```
 
-### Your first plot
+Performing operations on lists is such a common task in R that a function 
+exists specifically to apply functions to list elements. This function is 
+called `lapply()`. `lapply()` takes a list and a function and applies that
+function to each list element. The `lapply()` function returns the results as
+a list.
+
+For example, to see how many rows are in each of the data.frames in the 
+"by_species" list:
+
+```{r}
+lapply(by_species, nrow)
+```
+
+### Plotting data
 
 Data cleaning and data visualization go hand-in-hand. To effectively clean data,
 you should be examining the changes you're making in real time. Base R actually
 has very powerful graphics capabilities for quickly visualizing data. Packages
-like [ggplot2](https://ggplot2.tidyverse.org/) and [lattice](https://lattice.r-forge.r-project.org/) provide powerful alternatives
+like [ggplot2](https://ggplot2.tidyverse.org/) and 
+[lattice](https://lattice.r-forge.r-project.org/) provide powerful alternatives
 to base R plots. We'll cover `ggplot2` later. For now, base R plotting can 
-provide all we need. 
+provide all we need for exploratory analyses. 
 
+One of the most useful plots for numeric data is a histogram. Histograms bin the 
+data and plot how many occurrences of a particular bin are present. This plot 
+allows you to get an idea of the numeric summary of a variable. To plot a 
+histogram of a numeric variable we can use the `hist()` function. 
 
+```{r}
+hist(penguins$Flipper.Length..mm.)
+```
+
+The histogram has a few arguments we can use to adjust the plot. Use `?hist()` 
+to see the full list. Below, we can adjust the axes to be more informative and 
+modify the number of bins we're computing.
+
+```{r}
+hist(penguins$Flipper.Length..mm., 
+     breaks = 30,
+     main = "Flipper Length of All Palmer Penguins", 
+     xlab = "Flipper Length (mm)",
+     ylab = "Count"
+     )
+```
+
+The distribution appears to be bimodal. Is this because there are different 
+species present in this plot? We can check by applying the `hist()` function
+to each of the groups using the list of data.frames from above. 
+
+```{r}
+# Adelie penguins 
+hist(by_species[[1]]$Flipper.Length..mm., 
+     breaks = 20, 
+     main = "Adelie", 
+     xlab = "Flipper Length (mm)")
+
+# Chinstrap penguins
+hist(by_species[[2]]$Flipper.Length..mm., 
+     breaks = 20, 
+     main = "Chinstrap", 
+     xlab = "Flipper Length (mm)")
+
+# Gentoo penguins
+hist(by_species[[3]]$Flipper.Length..mm., 
+     breaks = 20, 
+     main = "Gentoo", 
+     xlab = "Flipper Length (mm)")
+```
+
+Histograms are useful for plotting the distribution of a single numeric 
+variable. Often, we wish to see how two variables are related. The `plot()` 
+function provides a way to create a scatter plot of two variables against each 
+other on the same plot. For example, to plot the culmen length vs the culmen 
+depth:
+
+```{r}
+plot(x = penguins$Culmen.Length..mm., 
+     y = penguins$Culmen.Depth..mm.,
+     xlab = "Culmen Length (mm)",
+     ylab = "Culmen Depth (mm)",
+     main = "Relationship between culmen length and depth"
+     )
+```
+
+Again, these data points seem to be split by the different species of penguins
+present in the dataset. We can color these points using an additional variable
+in the call to the `plot()` function.
+
+```{r}
+plot(x = penguins$Culmen.Length..mm., 
+     y = penguins$Culmen.Depth..mm.,
+     col = factor(penguins$Species),
+     xlab = "Culmen Length (mm)",
+     ylab = "Culmen Depth (mm)",
+     main = "Relationship between culmen length and depth"
+     )
+```
+
+You may have noticed that we did something special to that vector of species. We
+wrapped it in the `factor()` function. In R, factors are used when we have 
+categorical values. R uses factors to represent the different levels of each 
+category. It may not seem important now, but factors are very useful for 
+statistical analysis. We'll build on this topic shortly.   
+
+The `plot()` function is very versatile. You can use it to create line plots as 
+well, to show trends of variables over time. Here is a contrived example of using
+`plot()` to create a simple line chart. 
+
+```{r}
+plot(
+  x = adelie$Sample.Number, 
+  y = adelie$Body.Mass..g., 
+  type = "l", 
+  main = "Body mass vs sample number in Adelie penguins",
+  xlab = "Sample Number",
+  ylab = "Body Mass (g)"
+  )
+```
+
+Scatter plots are useful for displaying two numeric values against each other. 
+However you'll often want to compare numeric values across categorical values. 
+One such plot for doing this is called a boxplot. Boxplots show the median and
+interquartile (IQR) range for a set of data. The 'whiskers' of the boxplot display
+the 1.5 x IQR of the data. We can plot a boxplot of the flipper length for each 
+species using the `boxplot()` function.
+
+```{r}
+boxplot(
+  Flipper.Length..mm. ~ Species, 
+  data = penguins, 
+  main = "Flipper length by species"
+  )
+```
+
+The `boxplot()` function is a little funny because it uses formula notation. 
+Many functions in R accept formula notation as input. In this case, the formula
+notation means "plot the flipper length as a function of the species type". You 
+may have also noticed that we gave this function the penguins data.frame as the
+value for the `data=` argument. This allowed the boxplot function to use the 
+column names without us having to explicitly say that they came from the 
+penguins data.frame.
+
+If there's not too much data, boxplots can actually hide a lot of information. 
+In this case, another option is to use a stripchart. A stripchart shows every 
+data point on the plot instead of a depiction of the distribution as in the 
+boxplot.
+
+```{r}
+stripchart(
+  Flipper.Length..mm. ~ Species, 
+  data = penguins, 
+  method = "jitter",
+  pch = 1,
+  main = "Flipper length by species",
+  vertical = TRUE
+  )
+```
+
+Bar charts are another common way that people show summaries of data. To display 
+a barplot of data, we can use the `barplot()` function. To create a barplot of
+the mean flipper length for each species we first need to summarize the 
+flipper length for each group and then supply these summaries to the `barplot()`
+function.
+
+```{r}
+species_means <- tapply(penguins$Flipper.Length..mm., penguins$Species, mean, na.rm = TRUE)
+barplot(species_means, main = "Mean flipper length by species")
+```
+
+There are many ways to modify these default plot types and make the charts look
+great. Take the time to look into some of base R graphing capabilities. A really
+good tutorial for learning about base R plotting can be found [here](http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/). 
+
+### Filtering data
+
+We've already learned how to subset a data.frame but let's just take a step back
+and quickly revisit subsetting data.frames. To subset a data.frame means to 
+select rows of a data.frame based on some condition that you're interested in. 
+This subsetting can be accomplished using the `[` operator and setting 
+conditions by specifying `df[the rows we want, the cols we want]` syntax.
+
+For example, in the above plots it looked like the Gentoo penguins typically
+had the largest flippers. It looked like a value > 205 roughly separated the 
+Gentoo penguins from the others. How could we select the rows where the flipper 
+length is greater than or equal to 205 and count the species types?
+
+```{r}
+big_flippers <- penguins[penguins$Flipper.Length..mm. >= 205, ]
+table(big_flippers$Species)
+```
+
+We can combine conditions as well to select on multiple conditions. For example,
+let's select the female penguins with flippers >= 205 mm.
+
+```{r}
+head(penguins[penguins$Sex == "FEMALE" & penguins$Flipper.Length..mm. >= 205, ])
+```
+
+### Reordering data
+
+We can also change the order of the rows in a data.frame. This is similar to 
+subsetting but instead rearranges the data based on some condition. To reorder 
+the data.frame we can use the `order()` function. 
+
+For example, we can order the data by decreasing flipper length
+
+```{r}
+head(penguins[order(penguins$Flipper.Length..mm., decreasing = TRUE), ])
+```
+
+R also provides the `sort()` function. See if you can understand the difference 
+between `order()` and `sort()`.
+
+### Selecting columns of data
+
+### Modifying columns of data
+
+## String operations
+
+## Functions
+
+## Functional programming
+
+## Tips and tricks
 
 
 
