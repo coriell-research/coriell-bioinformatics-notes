@@ -213,7 +213,7 @@ l[["element1"]]
 l$element1
 ```
 
-What get returned if you only use the single bracket `[`? 
+What is returned if you only use the single bracket `[`? 
 
 ```{r}
 l[1]
@@ -309,20 +309,21 @@ tidyr::as_tibble(m, rownames = "CpG") |>
 *There's probably some kind of tidy solution using `across()` that I'm missing 
 but this is how most of the tidy code in the wild that I have seen looks*
 
-## Data transformation
+## Exploratory Data Analysis
 
 Now that we've got a handle on some different R data types, and how to slice and 
-dice them, we can start learning basic data cleaning. We'll focus on using 
-data.frames since they're the primary workhorse of data analysis in R. But 
-remember, data.frames are just lists of vectors with some special rules, so many
-concepts you learn which apply to data.frames, also apply to vectors and lists.
+dice them, we can start learning basic data cleaning and exploratory data analysis. 
+We'll focus on using data.frames since they're the primary workhorse of data 
+analysis in R. But remember, data.frames are just lists of vectors with some 
+special rules, so many concepts you learn which apply to data.frames, also apply 
+to vectors and lists.
 
 ### Data import
 
 We'll use the built in `penguins_raw` dataset to learn some basic data cleaning.
 This dataset is built into R version 4.5 so you can just load it by running 
-`penguins_raw`. However, to illustrate data import, we'll read in the data from
-an external source.
+`penguins_raw` if you have that R version installed. However, to illustrate 
+data import, we'll read in the data from an external source.
 
 The `read.csv()` function can read in comma-separated value files that are 
 located either on your local machine or from remote sources if provided a URL.
@@ -332,9 +333,13 @@ url <- "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads
 penguins <- read.csv(url)
 ```
 
+The `read.csv()` function has many options for reading in data. If you want to 
+learn about all of the options any particular R function has, you can prefix the 
+function name with a `?` like, `?read.csv()` to bring up the help documentation.
+
 ### Taking a look at the data
 
-The lines above read the data into data.frame that we called `penguins`. We can
+The code above read the data into data.frame that we called `penguins`. We can
 take a look at the first few rows of the `penguins` data.frame using the `head()`
 function.
 
@@ -350,6 +355,95 @@ str(penguins)
 
 There are a few external packages that are also very useful for getting summaries 
 of data.frames. `Hmsic::describe()` and `skimr::skim()` are two standouts.
+
+One of the most basic ways to get an idea of the data is to summarize each 
+variable. There are a few functions we can use to get summaries of the data. The 
+`table()` function will count the number of occurrences of each type in a vector.
+
+For example, how many observations of each species of penguin are in the dataset?
+
+```{r}
+table(penguins$Species)
+```
+
+R also provides the typical summary functions that you would expect from a 
+statistical programming language such as `mean()`, `median()`, `min()`, and 
+`max()`, and `length()`. 
+
+For example, what is the mean flipper length?
+
+```{r}
+mean(penguins$Flipper.Length..mm.)
+```
+
+On no! This returned NA but there is clearly data in this column. What happened?
+Missing data is commonly observed across all data domains. NAs simply represent
+unknown values in this context and it's impossible to know how to take the mean of
+a value that's known with a value that's unknown. It is for this reason that many 
+R functions have an argument called `na.rm=`. Setting `na.rm=TRUE` in these 
+functions tells R to ignore the NA values.
+
+```{r}
+mean(penguins$Flipper.Length..mm., na.rm = TRUE)
+```
+
+Now we can see that the mean flipper length is ~200 mm across all observations
+in the dataset. Another useful function is `summary()`. Running `summary()` on 
+a numeric vector returns a lot of useful information.
+
+```{r}
+summary(penguins$Flipper.Length..mm., na.rm = TRUE)
+```
+
+### Splitting data
+
+You may have noticed above that we computed the mean flipper length across all
+species of penguins. But do all species have the same mean? A common pattern
+in R is called "split-apply-combine". This pattern means, split the data into
+groups you're interested in, apply a function to each of those groups, and 
+combine the results. One such function that performs this operation is called
+`tapply()`. `tapply()` will split the data by a given variable into groups and 
+apply a function to each group.
+
+For example, to find the mean flipper length for each species we could use
+
+```{r}
+tapply(penguins$Flipper.Length..mm., penguins$Species, mean, na.rm = TRUE)
+```
+
+The basic format of the `tapply()` function is
+
+```{r}
+#| eval: false
+tapply("data you want to compute", "what you want to group by", "function to apply")
+```
+
+Splitting can also by applied directly to data.frames using the `split()` 
+function. Let's say we wanted to split the penguins data.frame into one 
+data.frame for each species. We can use the `split()` function for this purpose.
+
+```{r}
+by_species <- split(penguins, f = penguins$Species)
+```
+
+This function returns a list of data.frames, one for each species in the 
+original data.frame. Use the `names()` function to see what each list element 
+is. To extract the first data.frame, which contains Adelie penguin data only, 
+we can subset the list of data.frames. 
+
+```{r}
+adelie <- by_species[[1]]
+```
+
+### Your first plot
+
+Data cleaning and data visualization go hand-in-hand. To effectively clean data,
+you should be examining the changes you're making in real time. Base R actually
+has very powerful graphics capabilities for quickly visualizing data. Packages
+like [ggplot2](https://ggplot2.tidyverse.org/) and [lattice](https://lattice.r-forge.r-project.org/) provide powerful alternatives
+to base R plots. We'll cover `ggplot2` later. For now, base R plotting can 
+provide all we need. 
+
 
 
 

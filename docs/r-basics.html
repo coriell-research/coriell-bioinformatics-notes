@@ -208,10 +208,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#subsetting-lists" id="toc-subsetting-lists" class="nav-link" data-scroll-target="#subsetting-lists">Subsetting Lists</a></li>
   <li><a href="#subsetting-matrices" id="toc-subsetting-matrices" class="nav-link" data-scroll-target="#subsetting-matrices">Subsetting matrices</a></li>
   </ul></li>
-  <li><a href="#data-transformation" id="toc-data-transformation" class="nav-link" data-scroll-target="#data-transformation">Data transformation</a>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
   <ul class="collapse">
   <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">Data import</a></li>
   <li><a href="#taking-a-look-at-the-data" id="toc-taking-a-look-at-the-data" class="nav-link" data-scroll-target="#taking-a-look-at-the-data">Taking a look at the data</a></li>
+  <li><a href="#splitting-data" id="toc-splitting-data" class="nav-link" data-scroll-target="#splitting-data">Splitting data</a></li>
+  <li><a href="#your-first-plot" id="toc-your-first-plot" class="nav-link" data-scroll-target="#your-first-plot">Your first plot</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -453,7 +455,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code> [1]  1 10 12  3  6 12 13  2  5  6  3  7</code></pre>
 </div>
 </div>
-<p>What get returned if you only use the single bracket <code>[</code>?</p>
+<p>What is returned if you only use the single bracket <code>[</code>?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>l[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -580,21 +582,22 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 <p><em>There’s probably some kind of tidy solution using <code>across()</code> that I’m missing but this is how most of the tidy code in the wild that I have seen looks</em></p>
 </section>
 </section>
-<section id="data-transformation" class="level2">
-<h2 class="anchored" data-anchor-id="data-transformation">Data transformation</h2>
-<p>Now that we’ve got a handle on some different R data types, and how to slice and dice them, we can start learning basic data cleaning. We’ll focus on using data.frames since they’re the primary workhorse of data analysis in R. But remember, data.frames are just lists of vectors with some special rules, so many concepts you learn which apply to data.frames, also apply to vectors and lists.</p>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<p>Now that we’ve got a handle on some different R data types, and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We’ll focus on using data.frames since they’re the primary workhorse of data analysis in R. But remember, data.frames are just lists of vectors with some special rules, so many concepts you learn which apply to data.frames, also apply to vectors and lists.</p>
 <section id="data-import" class="level3">
 <h3 class="anchored" data-anchor-id="data-import">Data import</h3>
-<p>We’ll use the built in <code>penguins_raw</code> dataset to learn some basic data cleaning. This dataset is built into R version 4.5 so you can just load it by running <code>penguins_raw</code>. However, to illustrate data import, we’ll read in the data from an external source.</p>
+<p>We’ll use the built in <code>penguins_raw</code> dataset to learn some basic data cleaning. This dataset is built into R version 4.5 so you can just load it by running <code>penguins_raw</code> if you have that R version installed. However, to illustrate data import, we’ll read in the data from an external source.</p>
 <p>The <code>read.csv()</code> function can read in comma-separated value files that are located either on your local machine or from remote sources if provided a URL.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins_raw.csv"</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The <code>read.csv()</code> function has many options for reading in data. If you want to learn about all of the options any particular R function has, you can prefix the function name with a <code>?</code> like, <code>?read.csv()</code> to bring up the help documentation.</p>
 </section>
 <section id="taking-a-look-at-the-data" class="level3">
 <h3 class="anchored" data-anchor-id="taking-a-look-at-the-data">Taking a look at the data</h3>
-<p>The lines above read the data into data.frame that we called <code>penguins</code>. We can take a look at the first few rows of the <code>penguins</code> data.frame using the <code>head()</code> function.</p>
+<p>The code above read the data into data.frame that we called <code>penguins</code>. We can take a look at the first few rows of the <code>penguins</code> data.frame using the <code>head()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -653,6 +656,75 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 </div>
 </div>
 <p>There are a few external packages that are also very useful for getting summaries of data.frames. <code>Hmsic::describe()</code> and <code>skimr::skim()</code> are two standouts.</p>
+<p>One of the most basic ways to get an idea of the data is to summarize each variable. There are a few functions we can use to get summaries of the data. The <code>table()</code> function will count the number of occurrences of each type in a vector.</p>
+<p>For example, how many observations of each species of penguin are in the dataset?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+      Adelie Penguin (Pygoscelis adeliae) 
+                                      152 
+Chinstrap penguin (Pygoscelis antarctica) 
+                                       68 
+        Gentoo penguin (Pygoscelis papua) 
+                                      124 </code></pre>
+</div>
+</div>
+<p>R also provides the typical summary functions that you would expect from a statistical programming language such as <code>mean()</code>, <code>median()</code>, <code>min()</code>, and <code>max()</code>, and <code>length()</code>.</p>
+<p>For example, what is the mean flipper length?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p>On no! This returned NA but there is clearly data in this column. What happened? Missing data is commonly observed across all data domains. NAs simply represent unknown values in this context and it’s impossible to know how to take the mean of a value that’s known with a value that’s unknown. It is for this reason that many R functions have an argument called <code>na.rm=</code>. Setting <code>na.rm=TRUE</code> in these functions tells R to ignore the NA values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 200.9152</code></pre>
+</div>
+</div>
+<p>Now we can see that the mean flipper length is ~200 mm across all observations in the dataset. Another useful function is <code>summary()</code>. Running <code>summary()</code> on a numeric vector returns a lot of useful information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  172.0   190.0   197.0   200.9   213.0   231.0       2 </code></pre>
+</div>
+</div>
+</section>
+<section id="splitting-data" class="level3">
+<h3 class="anchored" data-anchor-id="splitting-data">Splitting data</h3>
+<p>You may have noticed above that we computed the mean flipper length across all species of penguins. But do all species have the same mean? A common pattern in R is called “split-apply-combine”. This pattern means, split the data into groups you’re interested in, apply a function to each of those groups, and combine the results. One such function that performs this operation is called <code>tapply()</code>. <code>tapply()</code> will split the data by a given variable into groups and apply a function to each group.</p>
+<p>For example, to find the mean flipper length for each species we could use</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(penguins<span class="sc">$</span>Flipper.Length..mm., penguins<span class="sc">$</span>Species, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Adelie Penguin (Pygoscelis adeliae) 
+                                 189.9536 
+Chinstrap penguin (Pygoscelis antarctica) 
+                                 195.8235 
+        Gentoo penguin (Pygoscelis papua) 
+                                 217.1870 </code></pre>
+</div>
+</div>
+<p>The basic format of the <code>tapply()</code> function is</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="st">"data you want to compute"</span>, <span class="st">"what you want to group by"</span>, <span class="st">"function to apply"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Splitting can also by applied directly to data.frames using the <code>split()</code> function. Let’s say we wanted to split the penguins data.frame into one data.frame for each species. We can use the <code>split()</code> function for this purpose.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>by_species <span class="ot">&lt;-</span> <span class="fu">split</span>(penguins, <span class="at">f =</span> penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This function returns a list of data.frames, one for each species in the original data.frame. Use the <code>names()</code> function to see what each list element is. To extract the first data.frame, which contains Adelie penguin data only, we can subset the list of data.frames.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>adelie <span class="ot">&lt;-</span> by_species[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="your-first-plot" class="level3">
+<h3 class="anchored" data-anchor-id="your-first-plot">Your first plot</h3>
+<p>Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you’re making in real time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://lattice.r-forge.r-project.org/">lattice</a> provide powerful alternatives to base R plots. We’ll cover <code>ggplot2</code> later. For now, base R plotting can provide all we need.</p>
 
 
 </section>
