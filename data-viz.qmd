@@ -1,1 +1,102 @@
 # Effective data visualizations {.unnumbered}
+
+Data visualization is one of the most important skills to develop as a data 
+scientist. We use graphs, instead of tables for instance, to clearly communicate
+patterns, trends, and comparisons in data in a way that is inherently more 
+interesting and informative than numbers in a grid. 
+
+Edward Tufte's, "The Visual Display of Quantitative Information", is probably
+the most famous text in all of data visualization (I'm guessing). In this text, 
+Tufte outlines a theory of graphics and provides extensive detail regarding 
+techniques for displaying data that maximizes clarity, precision, and 
+efficiency. Tufte describes *graphical excellence* by the following points:
+
+> * show the data
+> * induce the viewer to think about substance...
+> * avoid distorting what the data have to say
+> * present many numbers in a small space
+> * make large data sets coherent
+> * encourage the eye to compare different pieces of data
+> * reveal the data at several levels of detail, from a broad overview to the fine structure
+> * serve a reasonably clear purpose: description, exploration, tabulation, or decoration
+> * be closely integrated with the statistical and verbal descriptions of the dataset
+
+These points describe *how* to make good visualizations. However, some 
+visualizations are clearly better than others. Take a look at [this](https://sites.stat.columbia.edu/gelman/presentations/vistalk4.pdf) presentation by Andrew Gelmen and Antony Unwin. Here, they describe what makes some 
+visualizations effective vs. what makes others ineffective and distracting. I 
+think the main conclusion comes down to design vs decoration. Effective data 
+visualizations are intentionally designed to communicate a point in the 
+clearest possible way. Ineffective visualizations often contain clutter in the 
+form of decorations, unnecessary colors, patterns, lines, and unintuitive use 
+of shapes and sizes. 
+
+Outside of the design choices that go into creating effective 
+visualizations, there are also other expectations required of graphs. The data 
+points should be labelled so that the viewer immediately knows what they're 
+looking at. The axes should be labelled in a way that's easy to read and do not 
+distort the message. If using colors, the color palette should augment the 
+visualization in a way that enhances the display of information and not only 
+'looks pretty'. 
+
+There are probably thousands (millions?, infinite?) of types of visualizations
+in use today. However, in scientific communication, there are basically 5 types
+of graphs that are most commonly used; line graphs, bar graphs, histograms, 
+scatter plots, and pie charts. Most of these have persisted in the literature 
+(with the exception of pie charts) because of their ability to clearly and 
+quickly display visual information about quantitative data. Many other forms of 
+these basic charts exist primarily as variations on a theme but the core 
+display of information remains the same. 
+
+## Plotting with `ggplot2`
+
+We'll use the [ggplot2](https://ggplot2.tidyverse.org/) R package to 
+start creating effective visualizations. `ggplot2` works in a way that can feel
+a little strange at first, especially if you're used to creating plots in Python
+with `matplotlib`, for example. `ggplot2` implements ideas from Leland Wilkinson's, 
+["Grammar of Graphics"](https://link.springer.com/book/10.1007/0-387-28695-0). 
+`ggplot2`, breaks down a graphic into several key components that can be combined 
+in a layered fashion. These core components typically include:
+
+- **Data**: The dataset you want to visualize.
+- **Aesthetics (aes)**: How columns in your data map to visual properties of the 
+graphic. For example, mapping a 'temperature' column to the y-axis, a 'time' 
+column to the x-axis, and a 'city' column to color.
+- **Geometries (geoms)**: The visual elements used to represent the data, such as 
+points, lines, bars, histograms, etc.
+- **Scales**: Control how the aesthetic mappings translate to visual output (e.g., 
+how data values are converted to colors, sizes, or positions on an axis).
+- **Statistics (stats)**: Transformations of the data that are performed before 
+plotting (e.g., calculating a histogram, smoothing a line).
+- **Coordinates**: The coordinate system used for the plot (e.g., Cartesian, polar).
+- **Faceting**: Creating multiple subplots (a "trellis" or "lattice" plot) based on 
+subsets of the data.
+- **Theme**: Non-data elements like background, grid lines, and font choices.
+
+The power of this approach lies in its declarative nature. You specify *what* 
+you want to plot by defining these components, rather than detailing how to draw
+each element step-by-step (like in `matplotlib`). This makes it easier to build 
+complex visualizations and to switch between different representations of the 
+same data with minimal changes to the code. 
+
+## Line graphs
+
+## Bar graphs
+
+## Histograms
+
+## Scatter plots
+
+## Colors
+
+## Axes and legends
+
+## Image file formats
+
+## Resources
+
+- [ggplot2 Book](https://ggplot2-book.org/)
+- [Modern Data Visualization with R](https://rkabacoff.github.io/datavis/)
+- [R for Data Science Data Viz chapter](https://r4ds.had.co.nz/data-visualisation.html)
+- [Fundementals of Data Visualization](https://clauswilke.com/dataviz/)
+- [The Visual Display of Quantitative Information](https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/)
+- [R Graph Gallery](https://r-graph-gallery.com/)

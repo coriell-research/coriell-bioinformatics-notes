@@ -754,5 +754,68 @@
     "title": "R programming basics",
     "section": "Resources",
     "text": "Resources\nThis only scratches the surface of programming in R. Check out these resources for more information.\n\nfasteR\nR for Data Science\nAdvanced R 2nd Edition\nAdvanced R 1st Edition\nThe R Inferno"
+  },
+  {
+    "objectID": "data-viz.html#plotting-with-ggplot2",
+    "href": "data-viz.html#plotting-with-ggplot2",
+    "title": "Effective data visualizations",
+    "section": "Plotting with ggplot2",
+    "text": "Plotting with ggplot2\nWe’ll use the ggplot2 R package to start creating effective visualizations. ggplot2 works in a way that can feel a little strange at first, especially if you’re used to creating plots in Python with matplotlib, for example. ggplot2 implements ideas from Leland Wilkinson’s, “Grammar of Graphics”. ggplot2, breaks down a graphic into several key components that can be combined in a layered fashion. These core components typically include:\n\nData: The dataset you want to visualize.\nAesthetics (aes): How columns in your data map to visual properties of the graphic. For example, mapping a ‘temperature’ column to the y-axis, a ‘time’ column to the x-axis, and a ‘city’ column to color.\nGeometries (geoms): The visual elements used to represent the data, such as points, lines, bars, histograms, etc.\nScales: Control how the aesthetic mappings translate to visual output (e.g., how data values are converted to colors, sizes, or positions on an axis).\nStatistics (stats): Transformations of the data that are performed before plotting (e.g., calculating a histogram, smoothing a line).\nCoordinates: The coordinate system used for the plot (e.g., Cartesian, polar).\nFaceting: Creating multiple subplots (a “trellis” or “lattice” plot) based on subsets of the data.\nTheme: Non-data elements like background, grid lines, and font choices.\n\nThe power of this approach lies in its declarative nature. You specify what you want to plot by defining these components, rather than detailing how to draw each element step-by-step (like in matplotlib). This makes it easier to build complex visualizations and to switch between different representations of the same data with minimal changes to the code."
+  },
+  {
+    "objectID": "data-viz.html#resources",
+    "href": "data-viz.html#resources",
+    "title": "Effective data visualizations",
+    "section": "Resources",
+    "text": "Resources\n\nggplot2 Book\nModern Data Visualization with R\nR for Data Science Data Viz chapter\nFundementals of Data Visualization\nThe Visual Display of Quantitative Information\nR Graph Gallery"
+  },
+  {
+    "objectID": "data-viz.html#line-graphs",
+    "href": "data-viz.html#line-graphs",
+    "title": "Effective data visualizations",
+    "section": "Line graphs",
+    "text": "Line graphs"
+  },
+  {
+    "objectID": "data-viz.html#bar-graphs",
+    "href": "data-viz.html#bar-graphs",
+    "title": "Effective data visualizations",
+    "section": "Bar graphs",
+    "text": "Bar graphs"
+  },
+  {
+    "objectID": "data-viz.html#histograms",
+    "href": "data-viz.html#histograms",
+    "title": "Effective data visualizations",
+    "section": "Histograms",
+    "text": "Histograms"
+  },
+  {
+    "objectID": "data-viz.html#scatter-plots",
+    "href": "data-viz.html#scatter-plots",
+    "title": "Effective data visualizations",
+    "section": "Scatter plots",
+    "text": "Scatter plots"
+  },
+  {
+    "objectID": "data-viz.html#colors",
+    "href": "data-viz.html#colors",
+    "title": "Effective data visualizations",
+    "section": "Colors",
+    "text": "Colors"
+  },
+  {
+    "objectID": "data-viz.html#axes-and-legends",
+    "href": "data-viz.html#axes-and-legends",
+    "title": "Effective data visualizations",
+    "section": "Axes and legends",
+    "text": "Axes and legends"
+  },
+  {
+    "objectID": "data-viz.html#image-file-formats",
+    "href": "data-viz.html#image-file-formats",
+    "title": "Effective data visualizations",
+    "section": "Image file formats",
+    "text": "Image file formats"
   }
 ]
