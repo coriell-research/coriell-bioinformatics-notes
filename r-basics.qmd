@@ -407,7 +407,7 @@ summary(penguins$Flipper.Length..mm., na.rm = TRUE)
 
 Finally, if you are using and IDE like Rstudio or Positron you can run the 
 `View()` function on your data.frame. This will bring up an interactive data 
-viewer.
+viewer. 
 
 ### Splitting data
 
@@ -453,7 +453,7 @@ Performing operations on lists is such a common task in R that a function
 exists specifically to apply functions to list elements. This function is 
 called `lapply()`. `lapply()` takes a list and a function and applies that
 function to each list element. The `lapply()` function returns the results as
-a list.
+a list. We'll learn more about this later in the functional programming section.
 
 For example, to see how many rows are in each of the data.frames in the 
 "by_species" list:
@@ -620,7 +620,9 @@ barplot(species_means, main = "Mean flipper length by species")
 
 There are many ways to modify these default plot types and make the charts look
 great. Take the time to look into some of base R graphing capabilities. A really
-good tutorial for learning about base R plotting can be found [here](http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/). 
+good tutorial for learning about base R plotting can be found [here](http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/).
+Also take a look at `?pairs()`, `?dotchart()`, and `?coplot()` for some other
+useful base R graphics functions for creating quick plots.
 
 ### Filtering data
 
@@ -647,6 +649,34 @@ let's select the female penguins with flippers >= 205 mm.
 head(penguins[penguins$Sex == "FEMALE" & penguins$Flipper.Length..mm. >= 205, ])
 ```
 
+Another important aspect of base R data.frames is that they can utilize 
+`rownames()`. Using `rownames()` is uncommon in workflows from the 
+`tidyverse` or even `data.table`. However, `rownames()` can be very useful when
+dealing with bioinformatics data. One R package that utilizes `rownames()` 
+extensively is the [SummarizedExperiment](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html). `SummarizedExperiment`s use
+rownames and colnames to ensure that data stays coordinated during an analysis. 
+
+You can view and set the `rownames()` on a data.frame using the `rownames()` 
+function. 
+
+```{r}
+# View the current rownames
+head(rownames(penguins))
+
+# Set the rownames based on a new value - we'll go over what paste() does shortly
+rownames(penguins) <- paste("row_number", 1:nrow(penguins), sep = ".")
+
+# View the new rownames
+head(rownames(penguins))
+```
+
+Above, we filtered by a column in the data.frame. We can also filter by 
+selecting rownames.
+
+```{r}
+penguins[c("row_number.1", "row_number.5"), ]
+```
+
 ### Reordering data
 
 We can also change the order of the rows in a data.frame. This is similar to 
@@ -662,17 +692,311 @@ head(penguins[order(penguins$Flipper.Length..mm., decreasing = TRUE), ])
 R also provides the `sort()` function. See if you can understand the difference 
 between `order()` and `sort()`.
 
+Similar to filtering above, we can also reorder by the `rownames()`. 
+
+```{r}
+head(penguins[order(rownames(penguins)), ])
+```
+
+Can you figure out why the data.frame was sorted this way?
+
 ### Selecting columns of data
+
+Similarly to how we were able to select rows of data from the data.frame, we 
+can also select columns of the data.frame. First, to see what columns are in 
+our data.frame we can use the `colnames()` function. 
+
+```{r}
+colnames(penguins)
+```
+
+To select columns, we can either specify the columns we want by name
+
+```{r}
+head(penguins[, c("studyName", "Species")])
+```
+
+Or by the column index
+
+```{r}
+head(penguins[, c(1, 3)])
+```
+
+If we want to rename a column, we can use the `colnames()` function to reassign
+the column name with a new name. First, we can get the index of the column we 
+want to change. Then we can reassign that column with the new name.
+
+```{r}
+# This returns the index of the colnames() that matches "Species"
+which_col_to_change <- which(colnames(penguins) == "Species")
+
+# Rename "Species" to "species"
+colnames(penguins)[which_col_to_change] <- "species"
+```
+
+One tricky aspect of base R subsetting on data.frames has to do with selecting 
+a single column of data. If you select a single column of data from a data.frame
+what you get back is a vector. To ensure that you return a data.frame when 
+selecting a single column, add the `drop=FALSE` argument when selecting a single
+column.
+
+```{r}
+# Returns a vector
+class(penguins[, "species"])
+
+# Returns a data.frame
+class(penguins[, "species", drop = FALSE])
+```
 
 ### Modifying columns of data
 
+Adding or removing columns of data to a data.frame is as simple as specifying 
+the name of the column you want to add along with the data that you want to add.
+
+For example, if I wanted to convert the flipper length from mm to m I could 
+multiply each value of flipper length by 0.001. 
+
+```{r}
+penguins$flipper_length_m <- penguins$Flipper.Length..mm. * 0.001
+```
+
+The above data transformation works because of R's *vectorization* rule described 
+above. What if I wanted to define a new variable based on a logical condition? 
+For example, what if I wanted to create a new column based on whether or not 
+a penguin was and Adelie or any other kind? A useful function for performing this
+action is `ifelse()`. `ifelse()` evaluates a logical condition and returns a 
+value based on whether the condition evaluates to TRUE or FALSE.
+
+```{r}
+penguins$is_adelie <- ifelse(
+  penguins$species == "Adelie Penguin (Pygoscelis adeliae)", 
+  "Adelie", 
+  "Other"
+  )
+```
+
+If I want to remove a column from the data.frame I can set the value of the 
+column to `NULL`
+
+```{r}
+penguins$Flipper.Length..mm. <- NULL
+```
+
 ## String operations
+
+String operations are an important part of data cleaning. Base R supports many 
+functions for transforming strings. Again, these string functions are 
+typically *vectorized* meaning that they can easily be used to modify columns of 
+data.frames. 
+
+The "species" column of the penguins data.frame is annoying to work with. We can 
+simplify this column by creating simpler names for each species by excluding the 
+scientific name and the word 'penguin' (we know they're all penguins...)
+
+One base R function we can use to find and replace text is called `gsub()`. 
+`gsub()` takes what is called a [regular expression](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to find text inside of a string and then replaces the text it finds
+with the text you supply. Regular expressions can become incredibly complex. 
+With this complexity come a lot of power. It would be impossible to teach 
+regular expression in this tutorial. Taking some time to understand the basics
+of regular expressions can go a long way during data cleaning.
+
+```{r}
+# Replace a space followed by the word 'penguins' and any other character
+penguins$species_clean <- gsub(
+  pattern = " penguin.*", 
+  replacement = "", 
+  x = penguins$species, 
+  ignore.case = TRUE
+  )
+
+# Show the counts for these new categories
+table(penguins$species_clean)
+```
+
+Another base R function that is useful for extracting text is the `substr()` 
+function. `substr()` extracts sub-strings from the supplied text based on the
+index of the text. For example, to create an even simpler representation of 
+species we could extract only the first letter from the "species" column.
+
+```{r}
+penguins$species_simple <- substr(penguins$species, start = 1, stop = 1)
+table(penguins$species_simple)
+```
+
+A slightly more complicated string operation is extracting text from a string. 
+This involves two functions; one to find a match in the text and another to 
+extract it. Let's say we wanted to extract the word 'penguin' from each of the
+original species strings. We can do this with a combination of `regmatches()`
+and `regexpr()`.
+
+```{r}
+penguins$only_penguin <- regmatches(
+  x = penguins$species, 
+  m = regexpr(pattern = "penguin", 
+              text = penguins$species, 
+              ignore.case = TRUE)
+  )
+```
+
+R also supports basic operations on strings like making all characters upper or
+lowercase. For example, to ensure `only_penguin` contains 'penguin'
+(and not 'Penguin') we can convert the string to lowercase
+
+```{r}
+# lower case
+head(tolower(penguins$only_penguin))
+
+# or upper case
+head(toupper(penguins$only_penguin))
+```
+
+Another slightly complicated string operation is string splitting. String 
+splitting in base R can be accomplished using the `strsplit()` function. This 
+function is a little tricky because it returns a list. Here, we split the 
+"species" column on every space character. Using the results from the 
+`strsplit()` function most efficiently involves some advanced R skills. 
+
+```{r}
+split_species <- strsplit(
+  x = penguins$species, 
+  split = " "
+  )
+
+# strsplit returns a list of character vectors split on every space
+head(split_species)
+
+# To extract the species from this list, we can use a fancy trick
+# don't worry about what's happening here right now
+penguins$extracted_species <- sapply(split_species, `[[`, 1)
+```
+
+## Control flow
+
+R contains all of the typical control flow you expect from a programming 
+language. 
+
+For-loops are somewhat under-utilized by many R users but can often be the 
+most clear for new (and experienced) users. one common for-loop idion in R is 
+to use a for-loop with the `seq_along()` function. `seq_along()` generates an 
+index of the given vector that you can use to loop over. 
+
+```{r}
+#| eval: false
+for (i in seq_along(x)) {
+  doSomething(x[i])
+}
+```
+
+Other looping operations in base R include `while` and `repeat`. 
+
+Conditional statements can be tested using if statements. These follow a familiar 
+syntax
+
+```{r}
+x <- 10
+if (x == 10) {
+  print("the value of x is 10")
+} else {
+  print("the value of x is something else")
+}
+```
+
+If statements in R are *not* vectorized. Use `ifelse()` to perform a vectorized
+if statement as demonstrated above. 
+
+If statements are often combined with for-loops. 
+
+```{r}
+# Make some space to save the result
+result <- vector("character", length = 10)
+
+# Determine if the number is even or odd
+for (i in 1:10) {
+  if (i %% 2 == 0) {
+    result[i] <- "even"
+  } else {
+    result[i] <- "odd"
+  }
+}
+
+result
+```
+
+R also contains a `switch()` statement which can be very useful when programming
+new functions. 
 
 ## Functions
 
+Eventually you'll want to create your own functions to do stuff. Functions
+can be defined in R using the following syntax
+
+```{r}
+#| eval: false
+f <- function(args) {
+  expr
+}
+```
+
+To make this a little more concrete, let's define a function that classifies
+a penguin based on it's flipper size. Our function will take in a flipper size
+and a threshold value for determining whether or not the penguin is "large" or "small" based on this flipper size. The function will return the resulting size 
+designation.
+
+```{r}
+determine_size <- function(flipper_size, threshold = 0.2) {
+  if (flipper_size >= threshold) {
+    size_category <- "large"
+  } else {
+    size_category <- "small"
+  }
+  
+  return(size_category)
+}
+
+# Is a 0.5 meter flipper length large or small?
+determine_size(flipper_size = 0.5)
+```
+
 ## Functional programming
 
-## Tips and tricks
+For-loops in R are very simple to understand but most R programmers use 
+functions in the `apply()` family. These functions supply abstractions over 
+common for-loops that make applying functions over lists much easier in R. 
 
+The most commonly used functional programming paradigm in R is the use of the 
+`lapply()` function. The `lapply()` function takes a list as input, applies a 
+function to each element of that list, and returns the results as a list. For 
+example, above we split the penguins data.frame into a list of smaller 
+data.frames for each species. Instead of repeating the code to create a 
+histogram from each data.frame, let's define a function that plots a histogram 
+using a data.frame and then apply that function to every data.frame in our 
+"by_species" list of data.frames
+ 
+```{r}
+# Define a function for plotting a histogram of flipper lengths
+plot_histogram <- function(df) {
+  hist(df[, "Flipper.Length..mm."], breaks=20)
+}
 
+# Apply this function to every data.frame
+# invisible() is used to hide the output from the hist() function
+invisible(
+  lapply(X = by_species, FUN = plot_histogram)
+  )
+```
 
+R includes some other specialized functions for functional programming. Be sure
+to explore `apply()` for computing over rows/columns of matrices, `sapply()`and 
+`vapply()` for applying functions over lists and returning vectors, `mapply()` 
+for supplying multiple arguments to a list. 
+
+## Resources
+
+This only scratches the surface of programming in R. Check out these resources
+for more information.
+
+- [fasteR](https://github.com/matloff/fasteR)
+- [R for Data Science](https://r4ds.had.co.nz/)
+- [Advanced R 2nd Edition](https://adv-r.hadley.nz/)
+- [Advanced R 1st Edition](http://adv-r.had.co.nz/)
+- [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
