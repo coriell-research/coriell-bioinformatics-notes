@@ -14,6 +14,7 @@ book:
     - data-viz.qmd
     - presenting-science.qmd
     - summarized-experiments.qmd
+    - intro-to-bioinfo.qmd
     - references.qmd
 
 bibliography: references.bib

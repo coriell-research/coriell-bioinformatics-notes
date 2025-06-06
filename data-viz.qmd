@@ -78,25 +78,315 @@ each element step-by-step (like in `matplotlib`). This makes it easier to build
 complex visualizations and to switch between different representations of the 
 same data with minimal changes to the code. 
 
-## Line graphs
+## General design guidelines for plots
 
-## Bar graphs
+- Don't use a special color for the background color. Use the same color as 
+your presentation background. Generally, either white or black backgrounds are 
+best
+- Axes colors should be high contrast relative to the background. This means 
+black axes on white backgrounds and white axes on black backgrounds.
+- Use tick marks that have whole-number intervals. e.g. don't use axis ticks 
+that are 1.33, 2.75, 3.38, .... Instead, use numbers that people use naturally 
+when counting, e.g. 1, 2, 3 or 2, 4, 6, etc.
+- Axes need to be legible. The default font size is often too small. At least 12 
+point font.
+- Axes labels should clearly communicate what is being plotted on each axis. 
+Always show units. 
+- If showing a plot title, use the title to tell the user what the conclusion 
+is, not simply describing the data on each axis.
+- If using multiple colors, they should contrast well with each other. Warm 
+colors (reds, yellows) can be used to emphasize selected data. 
+- Keep colors consistent across graphs. If you use the color "red" to represent
+treated samples in one plot, use the color "red" in all other plots where the 
+treated samples are present.
+- Use colors to communicate. Hues are not emotionally neutral. A good color 
+palette can affect the audience's perception of the figure (just like a bad 
+one can).
+- Only use gridlines if you need them, most of the time they're not needed.
+- If using gridlines, be judicious. Their color should be subtle and not 
+obscure the data. Only use grids that matter for the data.
+- Choose fonts that are easy to read. sans serif fonts are best. Helvetica or 
+Arial are good default choices
+- When drawing error bars, don't make them so wide/large as to obscure the data
 
-## Histograms
+## A basic ggplot
+
+```{r}
+#| eval: true
+#| include: false
+suppressPackageStartupMessages(library(ggplot2))
+```
+
+`ggplot()` constructs a plot from data, what it calls aesthetic mappings, and 
+layers. Aesthetic mappings describe how variables in the data are mapped to 
+visual properties (aesthetics) of geoms. geoms then determine *how* the data
+is displayed. The other parts of the ggplot object have been handled 
+automatically (i.e. scales, stats, coordinates, and theme). These, however, can 
+be modified to enhance the plot. Check out the [ggplot2 homepage](https://ggplot2.tidyverse.org/articles/ggplot2.html) for an overview or
+the [ggplot2 book](https://ggplot2-book.org/) for details.
+
+The code below demonstrates the most basic way of creating a plot with `ggplot2`.
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+This plot is okay but can be improved. Let's improve this plot by removing the 
+grey background and gridlines, increasing the font size of the 
+axis ticks, improving the axis labels, and creating an informative title.
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) +
+  geom_point(size = 2) +        # increase the size of the points
+  labs(                         # labs() can be used to modify axis label text
+    title = "Fuel Efficiency Decreases with Increasing Weight",    
+    x  = "Weight (1000 lbs)",
+    y = "Fuel Efficiency (mpg)") +
+  theme_classic() +             # Removes grey background and gridlines
+  theme(                        # Adjust the plot and axes titles, and text
+    plot.title = element_text(size = 18, face = "bold", color = "black"),
+    axis.title = element_text(size = 14, color = "black"),
+    axis.text = element_text(size = 12, color = "black")
+  )
+```
+
+### Saving themes
+
+If you're going to be using the same theme elements often, it can be helpful
+to save those as a new custom theme. *You don't have to understand exactly how
+this function works right now - simply modify the arguments to the `theme()` 
+function and figure this out as you improve*
+
+```{r}
+theme_clean <- function(...) {
+  ggplot2::theme_classic(...) %+replace%
+  ggplot2::theme(
+      text = ggplot2::element_text(family = "Helvetica"),
+      plot.title = ggplot2::element_text(size = 18, face = "bold", color = "black", hjust = 0),
+      axis.title = ggplot2::element_text(size = 14, color = "black"),
+      axis.text = ggplot2::element_text(size = 12, color = "black")
+    )
+}
+
+# The new theme can be applied to other plots
+ggplot(data = mtcars, mapping = aes(x = wt, y = mpg)) +
+  geom_point() +        
+  theme_clean()
+```
+
+
+This plot is contains the same information but more quickly and clearly 
+communicates the message by just modifying the design. What other element 
+could be added to this plot to make the trend more apparent?
 
 ## Scatter plots
 
-## Colors
+We already showed a basic example of creating a scatter plot above. You can use
+that as a starting point for generating scatter plots. However, one common
+issue when designing scatter plots is *overplotting*, or, showing so many 
+points that the data is cluttered. Below is an example of overplotting. 
 
-## Axes and legends
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_point() +
+  theme_clean()
+```
+
+One technique to overcome overplotting is to add transparency to the points
+
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_point(alpha = 0.05) +
+  theme_clean()
+```
+
+Another is to change the point type. Here, we plot each point as a single dot
+
+```{r}
+ggplot(diamonds, aes(carat, price)) +
+  geom_point(shape = ".") +
+  theme_clean()
+```
+
+And another is random subsampling.
+
+```{r}
+random_rows <- sample.int(nrow(diamonds), size = 500)
+
+ggplot(diamonds[random_rows, ], aes(carat, price)) +
+  geom_point() +
+  theme_clean()
+```
+
+The density of the points could also be summarized. For example, explore 
+`geom_hex()` or `geom_density2d()` geoms.
+
+Let's make a final version of this plot by cleaning up the background, axes, and 
+titles. We'll add a trendline to emphasize the relationship and we'll also use a
+function to transform the y-axis to dollar format.
+
+```{r}
+ggplot(diamonds[random_rows, ], aes(carat, price)) +
+  geom_point() +
+  geom_smooth(se = FALSE, color = "red") +   # Adds a smooth trendline
+  labs(
+    title = "Larger Diamonds are More Expensive",    
+    x  = "Carat",
+    y = "Price ($)") +
+  scale_y_continuous(             # Formats the y-axis labels as dollar amounts
+    labels = scales::dollar_format()
+    )  +
+  theme_clean()
+```
+
+## Line graphs
+
+Line graphs are meant to emphasize change in the y-variable over the x-variable. 
+When designing line graphs:
+
+- Take advantage the range of the data. Data should take up about 3/4 of the 
+y-axis. `ggplot` has pretty good defaults for this automatically.
+- Choose line weights that do not overshadow points (if present)
+- Dashed lines can be hard to read. Use contrasting colors instead
+- If presenting two graphs next to each other be sure to match the axes ranges
+
+```{r}
+ggplot(economics, aes(date, unemploy)) + 
+  geom_line() +
+  labs(
+    title = "Unemployed Individuals Over Time",
+    x = "Year", 
+    y = "Thousands of Persons"
+    ) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ",")) +
+  theme_clean()
+```
+
+We can also explore adding multiple colors to the plot to compare values. 
+Another useful technique is to add the legend to the plot area. 
+
+```{r}
+econ_2 <- economics_long[!economics_long$variable %in% c("pce", "pop"), ]
+
+ggplot(econ_2, aes(date, value01, colour = variable)) +
+  geom_line() +
+  labs(
+    x = "Year", 
+    y = "Variable",
+    color = NULL
+    ) +
+  scale_color_brewer(                             # Add better colors and labels
+    palette = "Set1", 
+    breaks = c("psavert", "uempmed", "unemploy"),
+    labels = c("Savings", "Duration", "Unemployed")
+    ) +
+  scale_y_continuous(labels = scales::number_format(big.mark = ",")) +
+  guides(color = guide_legend(position = "inside")) +  # add the legend inside the plot
+  theme_clean() +
+  theme(
+    legend.position.inside = c(0.5, 0.85),      # specify where to put the legend
+    legend.text = element_text(size = 12)
+    )
+```
+
+## Bar graphs
+
+People generally use bar graphs to display a mean and some variation around the
+mean. Filled bar plots can also be used to show proportions. 
+
+- If there are relatively few data points, consider showing all points and a 
+crossbar for the mean and error instead. For example, as a beeswarm plot. 
+If there are many points, consider a boxplot. 
+- In most cases, it's usually best to start the y-axis at 0 if the data has a 
+natural 0. The exception is for charts where 0 does not indicate 'nothing' but 
+rather exists on a continuum, for example, temperature in Fahrenheit. 
+- Don't have bars with too thick of outlines
+- Avoid bars that are too thin. Aim for about 1/3 width of the bar as space 
+between bars
+- Place extra space between categories if showing bars next to each other
+- If showing statistical information try not to overwhelm the data. Use subtle 
+thin lines for comparisons and asterisks for significance.
+
+Activity: Make this example plot better.
+
+```{r}
+df <- data.frame(trt = c("a", "b", "c"), outcome = c(2.3, 1.9, 3.2))
+
+ggplot(df, aes(trt, outcome)) +
+  geom_col() +
+  theme_clean()
+```
+
+## Histograms
+
+Histograms are used to show distributions of data with their relative 
+frequencies. 
+
+- The number of bins influences the interpretation of the data. Play around 
+with the number of bins to ensure the best display
+- Don't assign different colors to different bins - it doesn't add any information
+- Don't add spaces between bins, as in a bar plot
+- If displaying two datasets, you can either overlay each with a different fill 
+and some transparency or split into two histograms with the same y-axis.
+
+Activity: Make this example plot better.
+
+```{r}
+ggplot(diamonds, aes(carat)) +
+  geom_histogram() +
+  theme_clean()
+```
+
+## Saving images
+
+Using `ggplot2` you can save images with the `ggsave()` function. `ggsave()` 
+can automatically detect the image format by the file extension. The `ggsave()`
+function works by saving the last plot created. 
+
+```{r}
+#| eval: false
+
+ggplot(data, aes(x, y)) + 
+  geom_point()
+
+ggsave("my-pretty-plot.pdf", width = 8, height = 6)
+```
+
+If using base R, you typically open the graphics device (`png()`, `pdf()`, 
+`jpeg()`, etc.) first, depending on the file format you want to save, then 
+create the plot, and close the plot device. 
+
+```{r}
+#| eval: false
+
+pdf("another-pretty-plot.pdf", width = 8, height = 6)
+plot(x, y)
+dev.off()
+```
 
 ## Image file formats
 
+- Save your images in .pdf format or .svg format. These formats are called 
+[vector graphics](https://en.wikipedia.org/wiki/Vector_graphics). Vector 
+graphics are infinitely scalable. They never lose resolution no matter the 
+zoom level.
+- Vector graphics don't play nicely with Word documents. If you need to share 
+images that will be used in Word docs, save your image as a high-quality .png. 
+.png files are [raster graphics](https://en.wikipedia.org/wiki/Raster_graphics). 
+Raster based images store actual pixel values so they cannot be infinitely 
+zoomed. They lose quality at high magnification. Consider at least a dpi of 300 
+when saving .pngs.
+- Vector graphics are also editable using a program like [Inkscape](https://inkscape.org/). 
+Often, you may need to add some custom color or annotations using an illustrator 
+program. Vector graphics allow you to do this.
+
 ## Resources
 
+- [Learning ggplot](https://ggplot2.tidyverse.org/index.html?q=geom_point()#learning-ggplot2)
 - [ggplot2 Book](https://ggplot2-book.org/)
 - [Modern Data Visualization with R](https://rkabacoff.github.io/datavis/)
 - [R for Data Science Data Viz chapter](https://r4ds.had.co.nz/data-visualisation.html)
-- [Fundementals of Data Visualization](https://clauswilke.com/dataviz/)
+- [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/)
 - [The Visual Display of Quantitative Information](https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/)
 - [R Graph Gallery](https://r-graph-gallery.com/)
