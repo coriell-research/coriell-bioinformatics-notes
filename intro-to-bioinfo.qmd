@@ -126,4 +126,6 @@ se <- summarizeOverlaps(
     ignore.strand = TRUE,
     fragments = TRUE
 )
+
+colData(se) <- DataFrame(sampleTable)
 ```
