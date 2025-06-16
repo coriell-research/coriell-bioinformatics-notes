@@ -1,1 +1,97 @@
 # Introduction to Bioinformatics {.unnumbered}
+
+```{.Bash}
+#!/usr/bin/env bash
+#
+# Obtain fastq files from SRA using prefetch + fasterq-dump
+#
+# ----------------------------------------------
+SAMPLES=sra-names.txt # A text file listing SRR ID's from SRA Run Selector
+OUT=/path/to/put/00_fastq
+
+mkdir -p $OUT
+
+for SAMPLE in $(cat $SAMPLES)
+do
+    prefetch $SAMPLE
+    fasterq-dump $SAMPLE
+done
+```
+
+```{.Bash}
+#!/usr/bin/env bash
+#
+# Obtain metadata for fastq files from SRA using esearch + efetch
+#
+# ----------------------------------------------
+PRJ=PRJNA229998 # A text file listing SRR ID's from SRA Run Selector
+OUT=/docs/metadata
+
+mkdir -p $OUT
+
+esearch -db sra -query $PRJ | efetch -format runinfo > RunInfo.csv
+```
+
+```{.Bash}
+#!/usr/bin/env bash
+#
+# Run fastp on the raw fastq files
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+FQ=/path/to/00_fastq       # Directory containing raw fastq files
+SAMPLES=sample-names.txt   # A text file listing basenames of fastq files
+OUT=/path/to/put/01_fastp  # Where to save the fastp results
+THREADS=8
+
+mkdir -p $OUT
+
+for SAMPLE in $(cat $SAMPLES)
+do
+    fastp -i $FQ/${SAMPLE}_R1.fq.gz \
+          -I $FQ/${SAMPLE}_R2.fq.gz \
+          -o $OUT/${SAMPLE}.trimmed.1.fq.gz \
+          -O $OUT/${SAMPLE}.trimmed.2.fq.gz \
+          -h $OUT/${SAMPLE}.fastp.html \
+          -j $OUT/${SAMPLE}.fastp.json \
+          -w $THREADS
+done
+```
+
+```{.Bash}
+#!/usr/bin/env bash
+#
+# Align reads with STAR
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=sample-names.txt   # Same sample-names.txt file as above
+FQ=/path/to/01_fastp       # Directory containing the fastp output
+OUT=/path/to/03_STAR_outs  # Where to save the STAR results
+IDX=/path/to/STAR-idx      # Index used by STAR for alignment
+THREADS=24
+
+mkdir -p $OUT
+
+for SAMPLE in $(cat $SAMPLES)
+do
+  STAR --runThreadN $THREADS \
+       --genomeDir $IDX \
+       --readFilesIn ${FQ}/${SAMPLE}.trimmed.1.fq.gz ${FQ}/${SAMPLE}.trimmed.2.fq.gz \
+       --readFilesCommand zcat \
+       --outFilterType BySJout \
+       --outFileNamePrefix ${OUT}/${SAMPLE}_ \
+       --alignSJoverhangMin 8 \
+       --alignSJDBoverhangMin 1 \
+       --outFilterMismatchNmax 999 \
+       --outFilterMismatchNoverReadLmax 0.04 \
+       --alignIntronMin 20 \
+       --alignIntronMax 1000000 \
+       --alignMatesGapMax 1000000 \
+       --outMultimapperOrder Random \
+       --outSAMtype BAM SortedByCoordinate \
+       --quantMode GeneCounts;
+done
+```
