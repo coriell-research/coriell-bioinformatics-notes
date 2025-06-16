@@ -1,6 +1,11 @@
 # Introduction to Bioinformatics {.unnumbered}
 
+Welcome! In this tutorial, we’ll walk through the common steps of an RNA‑seq analysis pipeline.
+
 ## Downloading FASTQ files from SRA
+
+First, we need to obtain the raw sequencing reads (FASTQ files) from the Sequence Read Archive (SRA). We’ll use prefetch to download data and fasterq-dump to extract FASTQ files.
+
 ```{.Bash}
 #!/usr/bin/env bash
 #
@@ -20,13 +25,16 @@ done
 ```
 
 ## Downloading metadata for the FASTQ files from SRA
+
+Next, it’s important to gather metadata (like sample descriptions) associated with our sequencing runs. We’ll query the SRA database by project ID and save the run information.
+
 ```{.Bash}
 #!/usr/bin/env bash
 #
 # Obtain metadata for fastq files from SRA using esearch + efetch
 #
 # ----------------------------------------------
-PRJ=PRJNA229998 # A text file listing SRR ID's from SRA Run Selector
+PRJ=PRJNA229998 # SRA project ID from SRA Run Selector
 OUT=/docs/metadata
 
 mkdir -p $OUT
@@ -35,6 +43,9 @@ esearch -db sra -query $PRJ | efetch -format runinfo > ${OUT}/RunInfo.csv
 ```
 
 ## Trimming and filtering reads
+
+We should remove adapters and low‑quality bases using fastp. This improves downstream alignment.
+
 ```{.Bash}
 #!/usr/bin/env bash
 #
@@ -63,6 +74,9 @@ done
 ```
 
 ## Aligning reads
+
+We’ll use STAR to perform splice-aware alignment, which is ideal for RNA‑seq data.
+
 ```{.Bash}
 #!/usr/bin/env bash
 #
@@ -101,6 +115,9 @@ done
 ```
 
 ## Counting reads
+
+We’ll use summarizeOverlaps in R to count reads overlapping exonic features.
+
 ```{r, echo=TRUE, eval=FALSE}
 library("GenomicFeatures")
 library("TxDb.Hsapiens.UCSC.hg38.knownGene")
