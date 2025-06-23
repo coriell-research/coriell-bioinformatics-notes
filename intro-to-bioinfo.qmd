@@ -163,7 +163,14 @@ se <- summarizeOverlaps(
     fragments = TRUE
 )
 
+# Annotate SummarizedExperiment with colData and rowData
+gtf_gr <- rtracklayer::import(gtf_file, format="gtf")
+genes <- subset(gtf_gr, type == "gene")
+names(genes) <- genes$gene_id
+
 colData(se) <- DataFrame(sampleTable)
+
+rowData(se) <- genes[rownames(se)]
 
 # Save your output
 dir.create("/path/to/03_RNAseq_counts", showWarnings = FALSE)
