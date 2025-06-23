@@ -120,17 +120,36 @@ We’ll use summarizeOverlaps in R to count reads overlapping exonic features.
 
 ```{r, echo=TRUE, eval=FALSE}
 library("GenomicFeatures")
-library("TxDb.Hsapiens.UCSC.hg38.knownGene")
 
-txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene
-exonsByGene <- exonsBy(txdb, by="gene")
+# Load in the genome txdb
+gtf_file <- "/path/to/gtf_file.gtf.gz"
+txdb <- makeTxDbFromGFF(gtf_file, format="gtf")
+exonsByGene <- exonsBy(txdb, by="gene", use.names = FALSE)
 
-sampleTable <- read.csv("path/to/RunInfo.csv")
-fls <- filepath("/path/to/03_STAR_outs", sampleTable$Run, ".bam")
+# Read in sra metadata and save it to a DataFrame called sampleTable
+sampleTable <- DataFrame(read.csv("./doc/metadata/RunInfo.csv"))
+rownames(sampleTable) <- sampleTable$Run
+
+# Load in alignment files
+fls <- fls <- list.files(
+  "/path/to/02_STAR_outs",
+  full.names = TRUE,
+  pattern = "*.bam$"
+)
 
 library("Rsamtools")
 bam_fls <- BamFileList(fls)
 
+# Extract sample IDs from file names
+names(fls) <- stringr::str_match(
+  fls,
+  "SRR[0-9]+"
+)[,1]
+
+# Only keep observations that you have in your experiment
+sampleTable <- sampleTable[names(fls),]
+
+# Quantify reads using GenomicAlignments package
 library("BiocParallel")
 register(MulticoreParam(workers=8))
 library("GenomicAlignments")
@@ -145,4 +164,8 @@ se <- summarizeOverlaps(
 )
 
 colData(se) <- DataFrame(sampleTable)
+
+# Save your output
+dir.create("/path/to/03_RNAseq_counts", showWarnings = FALSE)
+saveRDS(se, file = "/path/to/03_RNAseq_counts/se.rds")
 ```

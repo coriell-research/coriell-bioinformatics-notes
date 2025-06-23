@@ -15,6 +15,7 @@ book:
     - presenting-science.qmd
     - summarized-experiments.qmd
     - intro-to-bioinfo.qmd
+    - differential-expression-analysis.qmd
     - references.qmd
 
 bibliography: references.bib

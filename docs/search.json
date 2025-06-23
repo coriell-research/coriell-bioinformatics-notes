@@ -982,9 +982,159 @@
     "href": "intro-to-bioinfo.html#counting-reads",
     "title": "Introduction to Bioinformatics",
     "section": "Counting reads",
-    "text": "Counting reads\nWe’ll use summarizeOverlaps in R to count reads overlapping exonic features.\n\nlibrary(\"GenomicFeatures\")\nlibrary(\"TxDb.Hsapiens.UCSC.hg38.knownGene\")\n\ntxdb &lt;- TxDb.Hsapiens.UCSC.hg38.knownGene\nexonsByGene &lt;- exonsBy(txdb, by=\"gene\")\n\nsampleTable &lt;- read.csv(\"path/to/RunInfo.csv\")\nfls &lt;- filepath(\"/path/to/03_STAR_outs\", sampleTable$Run, \".bam\")\n\nlibrary(\"Rsamtools\")\nbam_fls &lt;- BamFileList(fls)\n\nlibrary(\"BiocParallel\")\nregister(MulticoreParam(workers=8))\nlibrary(\"GenomicAlignments\")\n\nse &lt;- summarizeOverlaps(\n    features = exonsByGene,\n    reads = bam_fls,\n    mod = \"Union\",\n    singleEnd = FALSE,\n    ignore.strand = TRUE,\n    fragments = TRUE\n)\n\ncolData(se) &lt;- DataFrame(sampleTable)",
+    "text": "Counting reads\nWe’ll use summarizeOverlaps in R to count reads overlapping exonic features.\n\nlibrary(\"GenomicFeatures\")\n\n# Load in the genome txdb\ngtf_file &lt;- \"/path/to/gtf_file.gtf.gz\"\ntxdb &lt;- makeTxDbFromGFF(gtf_file, format=\"gtf\")\nexonsByGene &lt;- exonsBy(txdb, by=\"gene\", use.names = FALSE)\n\n# Read in sra metadata and save it to a DataFrame called sampleTable\nsampleTable &lt;- DataFrame(read.csv(\"./doc/metadata/RunInfo.csv\"))\nrownames(sampleTable) &lt;- sampleTable$Run\n\n# Load in alignment files\nfls &lt;- fls &lt;- list.files(\n  \"/path/to/02_STAR_outs\",\n  full.names = TRUE,\n  pattern = \"*.bam$\"\n)\n\nlibrary(\"Rsamtools\")\nbam_fls &lt;- BamFileList(fls)\n\n# Extract sample IDs from file names\nnames(fls) &lt;- stringr::str_match(\n  fls,\n  \"SRR[0-9]+\"\n)[,1]\n\n# Only keep observations that you have in your experiment\nsampleTable &lt;- sampleTable[names(fls),]\n\n# Quantify reads using GenomicAlignments package\nlibrary(\"BiocParallel\")\nregister(MulticoreParam(workers=8))\nlibrary(\"GenomicAlignments\")\n\nse &lt;- summarizeOverlaps(\n    features = exonsByGene,\n    reads = bam_fls,\n    mod = \"Union\",\n    singleEnd = FALSE,\n    ignore.strand = TRUE,\n    fragments = TRUE\n)\n\ncolData(se) &lt;- DataFrame(sampleTable)\n\n# Save your output\ndir.create(\"/path/to/03_RNAseq_counts\", showWarnings = FALSE)\nsaveRDS(se, file = \"/path/to/03_RNAseq_counts/se.rds\")",
     "crumbs": [
       "Introduction to Bioinformatics"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html",
+    "href": "differential-expression-analysis.html",
+    "title": "Differential Expression Analysis",
+    "section": "",
+    "text": "Library QC\nWelcome! In this tutorial, we’ll walk through the common steps of differential expression analysis.\nBefore we perform differential expression analysis it is important to explore the samples’ library distributions in order to ensure good quality before downstream analysis. There are several diagnostic plots we can use for this purpose implemented in the coriell package. However, first we must remove any features that have too low of counts for meaningful differential expression analysis. This can be achieved using edgeR::filterByExpr().\nIf you’d like to use your data from the previous module please follow accordingly\nlibrary(edgeR)\n\n# Load in SummarizedExperiment from previous module\nse &lt;- readRDS(\"/path/to/03_RNAseq_counts/se.rds\")\n\n# Convert to a DGEList to be consistent with above steps\ny &lt;- SE2DGEList(airway)\nFor this module I will be using the airway dataset\n# Load the SummarizedExperiment object\ndata(airway)\n\n# Set the group levels\nairway$group &lt;- factor(airway$dex, levels = c(\"untrt\", \"trt\"))\n\n# Convert to a DGEList to be consistent with above steps\ny &lt;- SE2DGEList(airway)\n\n# Determine which genes have enough counts to keep around\nkeep &lt;- filterByExpr(y)\n\n# Remove the unexpressed genes\ny &lt;- y[keep,,keep.lib.sizes = FALSE]\nAt this stage it is often wise to perform library QC on the library size normalized counts. This will give us an idea about potential global expression differences and potential outliers before introducing normalization factors. We can use edgeR to generate log2 counts-per-million values for the retained genes.\nlogcounts &lt;- cpm(y, log = TRUE)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#relative-log-expression-boxplots",
+    "href": "differential-expression-analysis.html#relative-log-expression-boxplots",
+    "title": "Differential Expression Analysis",
+    "section": "Relative log expression boxplots",
+    "text": "Relative log expression boxplots\nThe first diagnostic plot we can look at is a plot of the relative log expression values. RLE plots are good diagnostic tools for evaluating unwanted variation in libraries.\n\nlibrary(ggplot2)\nlibrary(coriell)\n\n\nplot_boxplot(logcounts, metadata = y$samples, fillBy = \"group\",\n             rle = TRUE, outliers = FALSE) +\n  labs(title = \"Relative Log Expression\",\n       x = NULL,\n       y = \"RLE\",\n       color = \"Treatment Group\")",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#library-density-plots",
+    "href": "differential-expression-analysis.html#library-density-plots",
+    "title": "Differential Expression Analysis",
+    "section": "Library density plots",
+    "text": "Library density plots\nLibrary density plots show the density of reads corresponding to a particular magnitude of counts. Shifts of these curves should align with group differences and generally samples from the same group should have overlapping density curves\n\nplot_density(logcounts, metadata = y$samples, colBy = \"group\") +\n  labs(title = \"Library Densities\",\n       x = \"logCPM\",\n       y = \"Density\",\n       color = \"Treatment Group\")",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#sample-vs-sample-distances",
+    "href": "differential-expression-analysis.html#sample-vs-sample-distances",
+    "title": "Differential Expression Analysis",
+    "section": "Sample vs Sample Distances",
+    "text": "Sample vs Sample Distances\nWe can also calculate the euclidean distance between all pairs of samples and display this on a heatmap. Again, samples from the same group should show smaller distances than sample pairs from differing groups.\n\nplot_dist(logcounts, metadata = y$samples[, \"group\", drop = FALSE])",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#parallel-coordinates-plot",
+    "href": "differential-expression-analysis.html#parallel-coordinates-plot",
+    "title": "Differential Expression Analysis",
+    "section": "Parallel coordinates plot",
+    "text": "Parallel coordinates plot\nParallel coordinates plots are useful for giving you an idea of how the most variable genes change between treatment groups. These plots show the expression of each gene as a line on the y-axis traced between samples on the x-axis.\n\nplot_parallel(logcounts, y$samples, colBy = \"group\", \n              removeVar = 0.9, alpha = 0.05) +\n  labs(title = \"10% Most Variable Genes\",\n       x = \"Sample\",\n       y = \"logCPM\",\n       color = \"Treatment Group\")",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#correlations-between-samples",
+    "href": "differential-expression-analysis.html#correlations-between-samples",
+    "title": "Differential Expression Analysis",
+    "section": "Correlations between samples",
+    "text": "Correlations between samples\nWe can also plot the pairwise correlations between all samples. These plots can be useful for identifying technical replicates that deviate from the group\n\nplot_cor_pairs(logcounts, cex_labels = 1)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#pca",
+    "href": "differential-expression-analysis.html#pca",
+    "title": "Differential Expression Analysis",
+    "section": "PCA",
+    "text": "PCA\nPrincipal components analysis is an unsupervised method for reducing the dimensionality of a dataset while maintaining its fundamental structure. PCA biplots can be used to examine sample groupings following PCA. These biplots can reveal overall patterns of expression as well as potential problematic samples prior to downstream analysis. For simple analyses we expect to see the ‘main’ effect primarily along the first component.\nI like to use the PCAtools package for quickly computing and plotting principal components. For more complicated experiments I have also found UMAP (see coriell::UMAP()) to be useful for dimensionality reduction (although using UMAP is not without its problems for biologists).\n\nlibrary(PCAtools)\n\n\n# Perform PCA on the 20% most variable genes\n# Center and scale the variable after selecting most variable\npca_result &lt;- pca(\n  logcounts, \n  metadata = y$samples, \n  center = TRUE, \n  scale = TRUE, \n  removeVar = 0.8\n  )\n\n# Show the PCA biplot\nbiplot(\n  pca_result, \n  colby = \"group\", \n  hline = 0, \n  vline = 0, \n  hlineType = 2, \n  vlineType = 2, \n  legendPosition = \"bottom\",\n  title = \"PCA\",\n  caption = \"20% Most Variable Features\"\n  )",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#assessing-global-scaling-normalization-assumptions",
+    "href": "differential-expression-analysis.html#assessing-global-scaling-normalization-assumptions",
+    "title": "Differential Expression Analysis",
+    "section": "Assessing global scaling normalization assumptions",
+    "text": "Assessing global scaling normalization assumptions\nMost downstream differential expression testing methods apply a global scaling normalization factor to each library prior to DE testing. Applying these normalization factors when there are global expression differences can lead to spurious results. In typical experiments this is usually not a problem but when dealing with cancer or epigenetic drug treatment this can actually lead to many problems if not identified.\nIn order to identify potential violations of global scaling normalization I use the quantro R package. quantro uses two data driven approaches to assess the appropriateness of global scaling normalization. The first involves testing if the medians of the distributions differ between groups. These differences could indicate technical or real biological variation. The second test assesses the ratio of between group variability to within group variability using a permutation test similar to an ANOVA. If this value is large, it suggests global adjustment methods might not be appropriate.\n\nlibrary(quantro)\n\n\n# Initialize multiple (8) cores for permutation testing\ndoParallel::registerDoParallel(cores = 8)\n\n# Compute the qstat on the filtered libraries\nqtest &lt;- quantro(y$counts, groupFactor = y$samples$group, B = 500)\n\nNow we can assess the results. We can use anova() to test for differences in medians across groups. Here, they do not significantly differ.\n\nanova(qtest)\n\n#&gt; Analysis of Variance Table\n#&gt; \n#&gt; Response: objectMedians\n#&gt;             Df  Sum Sq Mean Sq F value Pr(&gt;F)\n#&gt; groupFactor  1  1984.5  1984.5  0.3813 0.5596\n#&gt; Residuals    6 31225.5  5204.3\n\nWe can also plot the results of the permutation test to see the between:within group ratios. Again, there are no large differences in this dataset suggesting that global scaling normalization such as TMM is appropriate.\n\nquantroPlot(qtest)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#differential-expression-testing-with-edger",
+    "href": "differential-expression-analysis.html#differential-expression-testing-with-edger",
+    "title": "Differential Expression Analysis",
+    "section": "Differential expression testing with edgeR",
+    "text": "Differential expression testing with edgeR\nAfter removing lowly expressed features and checking the assumptions of normalization we can perform downstream differential expression testing with edgeR. The edgeR manual contains a detailed explanation of all steps involved in differential expression testing.\nIn short, we need to specify the experimental design, estimate normalization factors, fit the models, and perform DE testing.",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#creating-the-experimental-design",
+    "href": "differential-expression-analysis.html#creating-the-experimental-design",
+    "title": "Differential Expression Analysis",
+    "section": "Creating the experimental design",
+    "text": "Creating the experimental design\nMaybe the most important step in DE analysis is properly constructing a design matrix. The details of design matrices are outside of the scope of this tutorial but a good overview can be found here. Generally, your samples will fall nicely into several well defined groups, facilitating the use of a design matrix without an intercept e.g. design ~ model.matrix(~0 + group, …). This kind of design matrix makes it relatively simple to construct contrasts that describe exactly what pairs of groups you want to compare.\nSince this example experiment is simply comparing treatments to control samples we can model the differences in means by using a model with an intercept where the intercept is the mean of the control samples and the 2nd coefficient represents the differences in the treatment group.\n\n# Model with intercept\ndesign &lt;- model.matrix(~group, data = y$samples)\n\nWe can make an equivalent model and test without an intercept like so:\n\n# A means model\ndesign_no_intercept &lt;- model.matrix(~0 + group, data = y$samples)\n\n# Construct contrasts to test the difference in means between the groups\ncm &lt;- makeContrasts(\n  Treatment_vs_Control = grouptrt - groupuntrt,\n  levels = design_no_intercept\n)\n\nThe choice of which design is up to you. I typically use whatever is clearer for the experiment at hand. In this case, that is the model with an intercept.",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#estimating-normalization-factors",
+    "href": "differential-expression-analysis.html#estimating-normalization-factors",
+    "title": "Differential Expression Analysis",
+    "section": "Estimating normalization factors",
+    "text": "Estimating normalization factors\nWe use edgeR to calculate trimmed mean of the M-value (TMM) normalization factors for each library.\n\n# Estimate TMM normalization factors\ny &lt;- normLibSizes(y)\n\nWe can check the normalization by creating MA plots for each library. The bulk of the data should be centered on zero without any obvious differences in the logFC as a function of average abundance.\n\npar(mfrow = c(2, 4))\nfor (i in 1:ncol(y)) {\n  plotMD(cpm(y, log = TRUE), column = i)\n  abline(h = 0, lty = 2, col = \"red2\")\n}",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#what-to-do-if-global-scaling-normalization-is-violated",
+    "href": "differential-expression-analysis.html#what-to-do-if-global-scaling-normalization-is-violated",
+    "title": "Differential Expression Analysis",
+    "section": "What to do if global scaling normalization is violated?",
+    "text": "What to do if global scaling normalization is violated?\nAbove I described testing for violations of global scaling normalization. So what should we do if these assumptions are violated and we don’t have a good set of control genes or spike-ins etc.?\nIf we believe that the differences we are observing are due to true biological phenomena (this is a big assumption) then we can try to apply a method such as smooth quantile normalization to the data using the qsmooth package.\nBelow I will show how to apply qsmooth to our filtered counts and then calculate offsets to be used in downstream DE analysis with edgeR. Please note this is not a benchmarked or ‘official’ workflow just a method that I have implemented based on reading forums and github issues.\n\nlibrary(qsmooth)\n\n\n# Compute the smooth quantile factors \nqs &lt;- qsmooth(y$counts, group_factor = y$samples$group)\n\n# Extract the qsmooth transformed data\nqsd &lt;- qsmoothData(qs)\n\n# Calculate offsets to be used by edgeR in place of norm.factors\n# Offsets are on the natural log scale. Add a small offset to avoid\n# taking logs of zero \noffset &lt;- log(y$counts + 0.1) - log(qsd + 0.1)\n\n# Scale the offsets for internal usage by the DGEList object\n# Now the object is ready for downstream analysis\ny &lt;- scaleOffset(y, offset = offset)\n\n# To create logCPM values with the new norm factors use\nlcpm &lt;- cpm(y, offset = y$offset, log = TRUE)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#fit-the-model",
+    "href": "differential-expression-analysis.html#fit-the-model",
+    "title": "Differential Expression Analysis",
+    "section": "Fit the model",
+    "text": "Fit the model\nNew in edgeR 4.0 is the ability to estimate dispersions while performing the model fitting step. I typically tend to ‘robustify’ the fit to outliers. Below I will perform dispersion estimation in legacy mode so that we can use competitive gene set testing later. If we want to use the new workflow we can use the following:\n\n# edgeR 4.0 workflow\nfit &lt;- glmQLFit(y, design, legacy = FALSE, robust = TRUE)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#test-for-differential-expression",
+    "href": "differential-expression-analysis.html#test-for-differential-expression",
+    "title": "Differential Expression Analysis",
+    "section": "Test for differential expression",
+    "text": "Test for differential expression\nNow that the models have been fit we can test for differential expression.\n\n# Test the treatment vs control condition\nqlf &lt;- glmQLFTest(fit, coef = 2)\n\nOften it is more biologically relevant to give more weight to higher fold changes. This can be achieved using glmTreat(). NOTE do not use glmQLFTest() and then filter by fold-change - you destroy the FDR correction!\nWhen testing against a fold-change we can use relatively modest values since the fold-change must exceed this threshold before being considered for significance. Values such as log2(1.2) or log2(1.5) work well in practice.\n\ntrt_vs_control_fc &lt;- glmTreat(fit, coef = 2, lfc = log2(1.2))\n\nIn any case, the results of the differential expression test can be extracted to a data.frame for downstream plotting with coriell::edger_to_df(). This function simply returns a data.frame of all results from the differential expression object in the same order as y. (i.e. topTags(…, n=Inf, sort.by=“none”))\n\nde_result &lt;- edger_to_df(qlf)",
+    "crumbs": [
+      "Differential Expression Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-expression-analysis.html#plotting-de-results",
+    "href": "differential-expression-analysis.html#plotting-de-results",
+    "title": "Differential Expression Analysis",
+    "section": "Plotting DE results",
+    "text": "Plotting DE results\nThe two most common plots for differential expression analysis results are the volcano plot and the MA plot. Volcano plots display the negative log10 of the significance value on the y-axis vs the log2 fold-change on the x-axis. MA plots show the average expression of the gene on the x-axis vs the log2 fold-change of the gene on the y-axis. The coriell package includes functions for producing both.\n\nlibrary(patchwork)\n\n\n# Create a volcano plot of the results\nv &lt;- plot_volcano(de_result, fdr = 0.05) \n\n# Create and MA plot of the results\nm &lt;- plot_md(de_result, fdr = 0.05) \n\n# Patch both plots together\n(v | m) + \n  plot_annotation(title = \"Treatment vs. Control\") &\n  theme_coriell()\n\n\nThe coriell package also has a function for quickly producing heatmaps with nice defaults for RNA-seq. Sometimes it’s useful to show the heatmaps of the DE genes.\n\n# Compute logCPM values after normalization\nlcpm &lt;- cpm(y, log = TRUE)\n\n# Determine which of the genes in the result were differentially expressed\nis_de &lt;- de_result$FDR &lt; 0.05\n\n# Produce a heatmap from the DE genes\nquickmap(\n  x = lcpm[is_de, ], \n  metadata = y$samples[, \"group\", drop = FALSE],\n  main = \"Differentially Expressed Genes\"\n  )",
+    "crumbs": [
+      "Differential Expression Analysis"
     ]
   }
 ]
