@@ -16,6 +16,7 @@ book:
     - summarized-experiments.qmd
     - intro-to-bioinfo.qmd
     - differential-expression-analysis.qmd
+    - differential-methylation-analysis.qmd
     - references.qmd
 
 bibliography: references.bib

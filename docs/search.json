@@ -1136,5 +1136,95 @@
     "crumbs": [
       "Differential Expression Analysis"
     ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html",
+    "href": "differential-methylation-analysis.html",
+    "title": "Differential Methylation Analysis",
+    "section": "",
+    "text": "Download the data\nWelcome! In this tutorial, we’ll walk through the common steps of differential methylation analysis.\nFirst we will download the data from “GSE86297”.\nThis study investigates the onset and progression of de novo methylation. Growing oocytes from pre-pubertal mouse ovaries (post-natal days 7-18) isolated and sorted into the following, non-overlapping size categories: 40-45, 50-55 and 60-65μm with two biological replicates in each.\nThe metadata of the samples is described as:\nDownload the metadata from github",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#download-the-data",
+    "href": "differential-methylation-analysis.html#download-the-data",
+    "title": "Differential Methylation Analysis",
+    "section": "",
+    "text": "#!/usr/bin/env bash\n#\n# Download the data from GEO\n#\n# ----------------------------------------------------------------------------\n\nwget https://ftp.ncbi.nlm.nih.gov/geo/series/GSE86nnn/GSE86297/suppl/GSE86297_RAW.tar\n\ntar -xvf GSE86297_RAW.tar\n\nGEO Source Group File\nGSM2299710 40-45um-A 40um GSM2299710_RRBS_40-45oocyte_LibA.cov.txt.gz\nGSM2299711 40-45um-B 40um GSM2299711_RRBS_40-45oocyte_LibB.cov.txt.gz\nGSM2299712 50-55um-A 50um GSM2299712_RRBS_50-55oocyte_LibA.cov.txt.gz\nGSM2299713 50-55um-B 50um GSM2299713_RRBS_50-55oocyte_LibB.cov.txt.gz\nGSM2299714 60-65um-A 60um GSM2299714_RRBS_60-65oocyte_LibA.cov.txt.gz\nGSM2299715 60-65um-B 60um GSM2299715_RRBS_60-65oocyte_LibB.cov.txt.gz\n\n#!/usr/bin/env bash\n#\n# Download the metadata from github\n#\n# ----------------------------------------------------------------------------\n\nwget https://github.com/coriell-research/2025-coriell-summer-internship/raw/refs/heads/main/MethylationMetadata.csv",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#the-bismark-cov.txt.gz-output-format",
+    "href": "differential-methylation-analysis.html#the-bismark-cov.txt.gz-output-format",
+    "title": "Differential Methylation Analysis",
+    "section": "The Bismark cov.txt.gz output format",
+    "text": "The Bismark cov.txt.gz output format\nThe Bismark coverage files include the data for each sample representing methylation in the CpG context. These files will contain 6 columns describing the: chromosome, start position, end position, methylation proportion in percentage, number of methylated C’s, and the number of unmethylated C’s.\n\ns1 &lt;- read.delim(\n  file=\"GSM2299710_RRBS_40-45oocyte_LibA.cov.txt.gz\", \n  header=FALSE, \n  nrows=6\n)\n\ns1\n\n&gt; s1\nV1 V2 V3 V4 V5 V6\n1 6 3121266 3121266 0.00 0 17\n2 6 3121296 3121296 0.00 0 17\n3 6 3179319 3179319 1.28 1 77\n4 6 3180316 3180316 4.55 1 21\n5 6 3182928 3182928 4.33 22 486\n6 6 3182937 3182937 5.37 61 1074",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#reading-in-the-data",
+    "href": "differential-methylation-analysis.html#reading-in-the-data",
+    "title": "Differential Methylation Analysis",
+    "section": "Reading in the data",
+    "text": "Reading in the data\nTo read in the data, we can use edgeR’s helper function readBismark2DGE\n\nmd &lt;- read.table(\"/path/to/metadata/MethylationMetadata.csv\", sep = \",\", header = TRUE)\nrownames(md) &lt;- md$Source\nmd$Filepath &lt;- vapply(\n  md$File,\n  function(x) list.files(\n    path = \"/path/to/geo/data\",\n    pattern = x,\n    recursive = TRUE,\n    full.names = TRUE\n  ),\n  character(1)\n)\nyall &lt;- edgeR::readBismark2DGE(md$Filepath, sample.names = md$Source)\n\nThe edgeR package will format this data such that in yall$counts for each sample you will have two columns called “Me” which corresponds to the methylated reads and “Un” which corresponds to the unmethylated reads. Each row correpsonds to a CpG locus found in the files. The genomic coordinates of the CpGs are stored in yall$genes. yall$samples corresponds to the metadata of the samples. It might be helpful to add the metadata you download to the samples component.\n\nyall$samples &lt;- cbind(yall$samples, md[md[rep(seq_len(nrow(md)), each = 2),],])\nyall$samples$methylation &lt;- rep(c(\"Me\", \"Un\"), length(unique(yall$samples$Source)))",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#filtering-and-normalization",
+    "href": "differential-methylation-analysis.html#filtering-and-normalization",
+    "title": "Differential Methylation Analysis",
+    "section": "Filtering and Normalization",
+    "text": "Filtering and Normalization\nFor this example we will remove the mitochondrial (MT) CpGs since they are typically not of interest.\n\ntable(yall$genes$Chr)\nyall &lt;- yall[yall$genes$Chr!=\"MT\", ]\n\nIt might be useful to order your chromosomes in genomic order.\n\nChrNames &lt;- c(1:19,\"X\",\"Y\")\nyall$genes$Chr &lt;- factor(yall$genes$Chr, levels=ChrNames)\no &lt;- order(yall$genes$Chr, yall$genes$Locus)\nyall &lt;- yall[o,]\n\nYou should also annotate your CpGs with the nearest gene transcription start site.\n\nTSS &lt;- nearestTSS(yall$genes$Chr, yall$genes$Locus, species=\"Mm\")\nyall$genes$EntrezID &lt;- TSS$gene_id\nyall$genes$Symbol &lt;- TSS$symbol\nyall$genes$Strand &lt;- TSS$strand\nyall$genes$Distance &lt;- TSS$distance\nyall$genes$Width &lt;- TSS$width\n\nThe Distance column will describe the genomic distance in base pairs of the nearest gene to the CpG. If the distance is negative the TSS is upstream of the CpG and positive distances are downstream.\nBefore we can examine the methylation of the samples, we should remove any CpGs that have low coverage. In order to do this we should sum the Me and Un columns for each sample to obtain the total coverage for the loci.\n\nMe &lt;- yall$counts[,yall$samples$methylation == \"Me\"]\nUn &lt;- yall$counts[,yall$samples$methylation == \"Un\"]\n\nCoverage &lt;- Me + Un\n\nTo be conservative in our filtering we can make sure every sample has sufficient coverage for it to be included.\n\nhasCoverage &lt;- rowSums(Coverage &gt;= 8) == 6\n\nIf you have an adequate number of CpGs to test, you may proceed. If the number of CpGs seems to low, maybe consider other filtering strategies.\nWe will also filer out CpGs that are never methylated or are always methylated because they will provide little information in the differential methylation and will dilute our testing.\n\nhasBoth &lt;- rowSums(Me) &gt; 0 & rowSums(Un) &gt; 0\n\nYou should check the table to get an understanding of how many CpGs fell into each category.\n\ntable(hasCoverage, hasBoth)\n\nNow you can filter your DGEList for the desired CpGs to test in downstream analysis.\n\ny &lt;- yall[hasCoverage & hasBoth,,keep.lib.sizes=FALSE]\n\nWe need to calculate the actual library sizes since the reads are divides into the Un and Me categories.\n\nTotalLibSize &lt;- 0.5 * y$samples$lib.size[y$samples$methylation == \"Me\"] + \n                0.5 * y$samples$lib.size[y$samples$methylation == \"Un\"]\n\ny$samples$lib.size &lt;- rep(TotalLibSize, each = 2)",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#quality-control",
+    "href": "differential-methylation-analysis.html#quality-control",
+    "title": "Differential Methylation Analysis",
+    "section": "Quality Control",
+    "text": "Quality Control\nTo observe the methylation/coverage distributions for a given sample we can plot histograms of each sample.\nYou can look at the sample distribution for coverage to see if there might be any max coverage you wish to filter for. This might be indicated by a secondary peak at the high coverage ranges.\n\nMe &lt;- y$counts[, y$samples$methylation == \"Me\"]\nUn &lt;- y$counts[, y$samples$methylation == \"Un\"]\nCoverage &lt;- Me + Un\n\npar(mfrow = c(2, 3))\nfor (i in md$Source) {\n  hist(Me/Coverage, breaks = 100, main = i)\n}\n\npar(mfrow = c(2, 3))\nfor (i in md$Source) {\n  hist(log10(Coverage), breaks = 100, main = i)\n}\n\n\n\n\nHistogram of Methylation\n\n\n\n\n\nHistogram of Coverage\n\n\nTo observe sample concordance you can use the plot_cor_pairs function in the coriell package.\n\ncoriell::plot_cor_pairs(Me/Coverage, cex_labels = 1)",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#data-exploration",
+    "href": "differential-methylation-analysis.html#data-exploration",
+    "title": "Differential Methylation Analysis",
+    "section": "Data Exploration",
+    "text": "Data Exploration\nThe data can be explored by generating PCA plots of the methylation level in the M-value format. More information of the M-value can be found “here”. An M-value is calculated by taking the log of the ratio of methylated and unmethylated C’s. This is equivalent to the difference between methylated to the difference between methylated and unmethylated C’s on the log-scale. A prior count of 2 is added to avoid taking the log of zero.\n\nMe &lt;- y$counts[, y$samples$methylation == \"Me\"]\nUn &lt;- y$counts[, y$samples$methylation == \"Un\"]\nM &lt;- log2(Me + 2) - log2(Un + 2)\ncolnames(M) &lt;- md$Source\n\nWe can now use these M-values to generate a PCA biplot using the PCAtools package.\n\npca &lt;- PCAtools::pca(\n  M,\n  metadata = md\n)\n\nPCAtools::biplot(\n  pca,\n  colby = \"Group\",\n  title = \"Principal Component Analysis of the M-values\"\n)\n\n\nIt might be of interest to observe the sample to sample distances as well.\n\ncoriell::plot_dist(M, metadata = md[, \"Group\", drop = FALSE])",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#design-matrix",
+    "href": "differential-methylation-analysis.html#design-matrix",
+    "title": "Differential Methylation Analysis",
+    "section": "Design Matrix",
+    "text": "Design Matrix\nOne aim of this study is to identify differentially methylated (DM) loci between the different cell populations. In edgeR, this can be done by fitting linear models under a specified design matrix and testing for corresponding coefficients or contrasts. A basic sample-level design matrix can be made as follows.\nWe then expand this to the full design which models sample and methylation effects.\nThe first six columns represent the sample coverage effects. The last three columns represent the methylation levels (in logit units) in the three groups.\n\ndesignSL &lt;- model.matrix(~0+Group, data=md)\ndesign &lt;- edgeR::modelMatrixMeth(designSL)",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
+  },
+  {
+    "objectID": "differential-methylation-analysis.html#differential-methylation-analysis-at-cpg-loci",
+    "href": "differential-methylation-analysis.html#differential-methylation-analysis-at-cpg-loci",
+    "title": "Differential Methylation Analysis",
+    "section": "Differential methylation analysis at CpG loci",
+    "text": "Differential methylation analysis at CpG loci\nFor simplicity, we only consider the CpG methylation in chromosome 1. We subset the coverage files so that they only contain methylation information of the first chromosome.\n\ny1 &lt;- y[y$genes$Chr==1,]\n\nThen we proceed to testing for differentially methylated CpG sites between different groups. We fit quasi NB GLM for all the CpG loci using the glmQLFit function.\n\nfit &lt;- glmQLFit(y1, design)\n\nWe identify differentially methylated CpG loci between the 40-45 and 60-65μm group using the likelihood-ratio test. The contrast corresponding to this comparison is constructed using the makeContrasts function.\n\ncontr &lt;- makeContrasts(Group60vs40 = Group60um - Group40um, levels=design)\nqlf &lt;- glmQLFTest(fit, contrast=contr)\n\nThe contrast object is a matrix showing the contrast desired\n&gt; contr\n           Contrasts\nLevels      Group60vs40\n  Sample1             0\n  Sample2             0\n  Sample3             0\n  Sample4             0\n  Sample5             0\n  Sample6             0\n  Group40um          -1\n  Group50um           0\n  Group60um           1\nWe could also make multiple contrasts in one go and then select the contrast we wish to use like this.\n\ncontr &lt;- makeContrasts(\n  Group60vs40 = Group60um - Group40um,\n  Group50vs40 = Group50um - Group40um, \n  levels=design\n)\nqlf &lt;- glmQLFTest(fit, contrast=contr[,\"Group60vs40\"])\n\n&gt; contr\n           Contrasts\nLevels      Group60vs40 Group50vs40\n  Sample1             0           0\n  Sample2             0           0\n  Sample3             0           0\n  Sample4             0           0\n  Sample5             0           0\n  Sample6             0           0\n  Group40um          -1          -1\n  Group50um           0           1\n  Group60um           1           0\nThe top set of most significant DMRs can be examined with topTags. Here, positive log-fold changes represent CpG sites that have higher methylation level in the 60-65μm group com- pared to the 40-45μm group. Multiplicity correction is performed by applying the Benjamini- Hochberg method on the p-values, to control the false discovery rate (FDR).\n\ntopTags(qlf)\n\n&gt; topTags(qlf)\nCoefficient:  -1*Group40um 1*Group60um \n            Chr     Locus     logFC   logCPM        F       PValue          FDR\n1-131987595   1 131987595 10.741404 2.698587 31.70873 1.850730e-08 0.0001409481\n1-120170060   1 120170060  7.855076 4.531948 31.23248 2.362954e-08 0.0001409481\n1-183357406   1 183357406  8.399456 4.272956 30.78670 2.970455e-08 0.0001409481\n1-172206570   1 172206570 10.110386 2.706416 29.93463 4.601316e-08 0.0001637493\n1-172206751   1 172206751 13.918907 1.294445 28.71671 8.607148e-08 0.0002302044\n1-120169950   1 120169950  9.231213 3.469975 28.21772 1.112752e-07 0.0002302044\n1-169954561   1 169954561 12.217222 2.352360 28.08869 1.189199e-07 0.0002302044\n1-141992739   1 141992739 11.276043 1.335515 27.73221 1.428846e-07 0.0002302044\n1-92943747    1  92943747  9.580566 2.358125 27.58701 1.539852e-07 0.0002302044\n1-36500213    1  36500213  9.957566 2.195456 27.49192 1.617172e-07 0.0002302044\nThe total number of DMRs in each direction at a FDR of 5% can be examined with decideTests.\n\nsummary(decideTests(qlf))\n\n&gt; summary(decideTests(qlf))\n       -1*Group40um 1*Group60um\nDown                          0\nNotSig                    13252\nUp                          983\nThe differential methylation results can be visualized using an MD plot. The difference of the M-value for each CpG site is plotted against the average abundance of that CpG site. Significantly DMRs at a FDR of 5% are highlighted.\n\nplotMD(qlf)\n\n\nWe can also plot volcanoes by calculating the difference in methylation of each group since log fold changes of these test might be hard to interpret as far as methylation levels go.\n\nMe &lt;- y1$counts[,y1$samples$methylation == \"Me\"]\nUn &lt;- y1$counts[,y1$samples$methylation == \"Un\"]\nCoverage &lt;- Me + Un\nBeta &lt;- Me/Coverage\ncolnames(Beta) &lt;- rownames(md)\n\ncontr &lt;- makeContrasts(\n  Group60vs40 = Group60um - Group40um,\n  levels=designSL\n)\ncontr &lt;- limma::contrastAsCoef(designSL, contr)\ngroup1Methylation &lt;- rowMeans(Beta[,which(contr$design[,\"Group60vs40\"] &lt; 0)])\ngroup2Methylation &lt;- rowMeans(Beta[,which(contr$design[,\"Group60vs40\"] &gt; 0)])\ndiffMethylation &lt;- group1Methylation - group2Methylation\n\ndataframe &lt;- coriell::edger_to_df(qlf)\ndataframe$group1 &lt;- group1Methylation\ndataframe$group2 &lt;- group2Methylation\ndataframe$diffmeth &lt;- diffMethylation\n\nUsing these values we can plot a volcano plot using the coriell package.\n\ncoriell::plot_volcano(dataframe, x = \"diffmeth\", y = \"FDR\", lfc = 0, fdr = 0.05) +\n  coord_cartesian(xlim = c(-1,1))",
+    "crumbs": [
+      "Differential Methylation Analysis"
+    ]
   }
 ]
