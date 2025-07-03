@@ -363,8 +363,8 @@ contr <- makeContrasts(
   levels=designSL
 )
 contr <- limma::contrastAsCoef(designSL, contr)
-group1Methylation <- rowMeans(Beta[,which(contr$design[,"Group60vs40"] < 0)])
-group2Methylation <- rowMeans(Beta[,which(contr$design[,"Group60vs40"] > 0)])
+group1Methylation <- rowMeans(Beta[,which(contr$design[,"Group60vs40"] > 0)])
+group2Methylation <- rowMeans(Beta[,which(contr$design[,"Group60vs40"] < 0)])
 diffMethylation <- group1Methylation - group2Methylation
 
 dataframe <- coriell::edger_to_df(qlf)
