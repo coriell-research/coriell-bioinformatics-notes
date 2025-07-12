@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.37">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -21,8 +21,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -64,17 +65,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro-to-bioinfo.html" rel="next">
+<link href="./differential-expression-analysis.html" rel="next">
 <link href="./presenting-science.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-29e2c20b02301cfff04dc8050bf30c7e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a164172ce2dc118a4c59b276f36d6ccc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-128e0f949f8f902082bc899829804d79.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -106,7 +108,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -184,8 +186,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro-to-bioinfo.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction to Bioinformatics</span></a>
+  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential Expression Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./differential-methylation-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential Methylation Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -313,11 +321,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>counts[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Sample1 Sample2 Sample3 Sample4 Sample5
-Gene1      55     106     305      51     136
-Gene2     109      80      37      62     101
-Gene3      58      50      83      78      96
-Gene4     139      73     143      62      16
-Gene5      60     159      26      50      86</code></pre>
+Gene1      33     231     266     198      88
+Gene2     112     157      27      13      39
+Gene3      85      71     214     183     306
+Gene4      45      65      67     208      99
+Gene5     222     198      50      46       9</code></pre>
 </div>
 </div>
 </section>
@@ -336,12 +344,12 @@ Gene5      60     159      26      50      86</code></pre>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>coldata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        SampleName Treatment Age
-Sample1    Sample1   Control  42
-Sample2    Sample2   Control  83
-Sample3    Sample3   Control   6
-Sample4    Sample4 Treatment  70
-Sample5    Sample5 Treatment  95
-Sample6    Sample6 Treatment  26</code></pre>
+Sample1    Sample1   Control  44
+Sample2    Sample2   Control  77
+Sample3    Sample3   Control  34
+Sample4    Sample4 Treatment  67
+Sample5    Sample5 Treatment  60
+Sample6    Sample6 Treatment  66</code></pre>
 </div>
 </div>
 <p>Notice that all of the rownames of the metadata are in the same order as the colnames of the counts matrix. <strong>This is necessary</strong>.</p>
@@ -365,17 +373,17 @@ Sample6    Sample6 Treatment  26</code></pre>
 <pre><code>GRanges object with 200 ranges and 2 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt;
-    Gene1     chr1 952383-952482      + |       ID001 protein_coding
-    Gene2     chr1 152251-152350      - |       ID002         lncRNA
-    Gene3     chr1 583313-583412      - |       ID003 protein_coding
-    Gene4     chr1 486004-486103      + |       ID004 repeat_element
-    Gene5     chr1 497793-497892      + |       ID005         lncRNA
+    Gene1     chr1 770423-770522      - |       ID001         lncRNA
+    Gene2     chr1 356436-356535      + |       ID002 protein_coding
+    Gene3     chr1 770530-770629      - |       ID003 repeat_element
+    Gene4     chr1 352668-352767      - |       ID004         lncRNA
+    Gene5     chr1 522006-522105      + |       ID005 repeat_element
       ...      ...           ...    ... .         ...            ...
-  Gene196     chr2 515102-515201      + |       ID196 repeat_element
-  Gene197     chr2 459126-459225      + |       ID197 repeat_element
-  Gene198     chr2 630631-630730      + |       ID198 repeat_element
-  Gene199     chr2 943520-943619      - |       ID199         lncRNA
-  Gene200     chr2 666585-666684      - |       ID200 protein_coding
+  Gene196     chr2 253162-253261      - |       ID196         lncRNA
+  Gene197     chr2 175394-175493      + |       ID197 protein_coding
+  Gene198     chr2 710446-710545      - |       ID198 repeat_element
+  Gene199     chr2 901476-901575      + |       ID199         lncRNA
+  Gene200     chr2 800990-801089      + |       ID200         lncRNA
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -416,12 +424,12 @@ colData names(3): SampleName Treatment Age</code></pre>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(se, <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Sample1 Sample2 Sample3 Sample4 Sample5 Sample6
-Gene1      55     106     305      51     136      70
-Gene2     109      80      37      62     101      72
-Gene3      58      50      83      78      96     170
-Gene4     139      73     143      62      16     163
-Gene5      60     159      26      50      86       4
-Gene6     243     103     199      50      34     123</code></pre>
+Gene1      33     231     266     198      88      25
+Gene2     112     157      27      13      39      12
+Gene3      85      71     214     183     306      36
+Gene4      45      65      67     208      99     132
+Gene5     222     198      50      46       9      44
+Gene6      42     129      45      81      95      19</code></pre>
 </div>
 </div>
 <p>To see what assays are available you can use the <code>assays()</code> function</p>
@@ -441,12 +449,12 @@ names(1): counts</code></pre>
 <pre><code>DataFrame with 6 rows and 3 columns
          SampleName Treatment       Age
         &lt;character&gt;  &lt;factor&gt; &lt;integer&gt;
-Sample1     Sample1 Control          42
-Sample2     Sample2 Control          83
-Sample3     Sample3 Control           6
-Sample4     Sample4 Treatment        70
-Sample5     Sample5 Treatment        95
-Sample6     Sample6 Treatment        26</code></pre>
+Sample1     Sample1 Control          44
+Sample2     Sample2 Control          77
+Sample3     Sample3 Control          34
+Sample4     Sample4 Treatment        67
+Sample5     Sample5 Treatment        60
+Sample6     Sample6 Treatment        66</code></pre>
 </div>
 </div>
 </section>
@@ -458,17 +466,17 @@ Sample6     Sample6 Treatment        26</code></pre>
 <pre><code>GRanges object with 200 ranges and 2 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt;
-    Gene1     chr1 952383-952482      + |       ID001 protein_coding
-    Gene2     chr1 152251-152350      - |       ID002         lncRNA
-    Gene3     chr1 583313-583412      - |       ID003 protein_coding
-    Gene4     chr1 486004-486103      + |       ID004 repeat_element
-    Gene5     chr1 497793-497892      + |       ID005         lncRNA
+    Gene1     chr1 770423-770522      - |       ID001         lncRNA
+    Gene2     chr1 356436-356535      + |       ID002 protein_coding
+    Gene3     chr1 770530-770629      - |       ID003 repeat_element
+    Gene4     chr1 352668-352767      - |       ID004         lncRNA
+    Gene5     chr1 522006-522105      + |       ID005 repeat_element
       ...      ...           ...    ... .         ...            ...
-  Gene196     chr2 515102-515201      + |       ID196 repeat_element
-  Gene197     chr2 459126-459225      + |       ID197 repeat_element
-  Gene198     chr2 630631-630730      + |       ID198 repeat_element
-  Gene199     chr2 943520-943619      - |       ID199         lncRNA
-  Gene200     chr2 666585-666684      - |       ID200 protein_coding
+  Gene196     chr2 253162-253261      - |       ID196         lncRNA
+  Gene197     chr2 175394-175493      + |       ID197 protein_coding
+  Gene198     chr2 710446-710545      - |       ID198 repeat_element
+  Gene199     chr2 901476-901575      + |       ID199         lncRNA
+  Gene200     chr2 800990-801089      + |       ID200         lncRNA
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -483,17 +491,17 @@ Sample6     Sample6 Treatment        26</code></pre>
 <pre><code>DataFrame with 200 rows and 2 columns
          feature_id      gene_type
         &lt;character&gt;    &lt;character&gt;
-Gene1         ID001 protein_coding
-Gene2         ID002         lncRNA
-Gene3         ID003 protein_coding
-Gene4         ID004 repeat_element
-Gene5         ID005         lncRNA
+Gene1         ID001         lncRNA
+Gene2         ID002 protein_coding
+Gene3         ID003 repeat_element
+Gene4         ID004         lncRNA
+Gene5         ID005 repeat_element
 ...             ...            ...
-Gene196       ID196 repeat_element
-Gene197       ID197 repeat_element
+Gene196       ID196         lncRNA
+Gene197       ID197 protein_coding
 Gene198       ID198 repeat_element
 Gene199       ID199         lncRNA
-Gene200       ID200 protein_coding</code></pre>
+Gene200       ID200         lncRNA</code></pre>
 </div>
 </div>
 </section>
@@ -533,7 +541,7 @@ names(3): counts cpm logcounts</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>Age</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 42 83  6 70 95 26</code></pre>
+<pre><code>[1] 44 77 34 67 60 66</code></pre>
 </div>
 </div>
 <p>If we want to add a new column we simply create the new column in the same way</p>
@@ -546,12 +554,12 @@ names(3): counts cpm logcounts</code></pre>
 <pre><code>DataFrame with 6 rows and 4 columns
          SampleName Treatment       Age    Batch
         &lt;character&gt;  &lt;factor&gt; &lt;integer&gt; &lt;factor&gt;
-Sample1     Sample1 Control          42        A
-Sample2     Sample2 Control          83        B
-Sample3     Sample3 Control           6        C
-Sample4     Sample4 Treatment        70        A
-Sample5     Sample5 Treatment        95        B
-Sample6     Sample6 Treatment        26        C</code></pre>
+Sample1     Sample1 Control          44        A
+Sample2     Sample2 Control          77        B
+Sample3     Sample3 Control          34        C
+Sample4     Sample4 Treatment        67        A
+Sample5     Sample5 Treatment        60        B
+Sample6     Sample6 Treatment        66        C</code></pre>
 </div>
 </div>
 </section>
@@ -566,17 +574,17 @@ Sample6     Sample6 Treatment        26        C</code></pre>
 <pre><code>DataFrame with 200 rows and 3 columns
          feature_id      gene_type      Keep
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-Gene1         ID001 protein_coding      TRUE
-Gene2         ID002         lncRNA     FALSE
-Gene3         ID003 protein_coding      TRUE
-Gene4         ID004 repeat_element     FALSE
-Gene5         ID005         lncRNA     FALSE
+Gene1         ID001         lncRNA     FALSE
+Gene2         ID002 protein_coding      TRUE
+Gene3         ID003 repeat_element     FALSE
+Gene4         ID004         lncRNA     FALSE
+Gene5         ID005 repeat_element     FALSE
 ...             ...            ...       ...
-Gene196       ID196 repeat_element     FALSE
-Gene197       ID197 repeat_element     FALSE
+Gene196       ID196         lncRNA     FALSE
+Gene197       ID197 protein_coding      TRUE
 Gene198       ID198 repeat_element     FALSE
 Gene199       ID199         lncRNA     FALSE
-Gene200       ID200 protein_coding      TRUE</code></pre>
+Gene200       ID200         lncRNA     FALSE</code></pre>
 </div>
 </div>
 </section>
@@ -607,13 +615,13 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(trt, <span class="st">"logcounts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       Sample4  Sample5   Sample6
-Gene1 11.27098 12.77363 11.793480
-Gene2 11.64803 12.37114 11.834195
-Gene3 11.97157 12.24916 13.007944
-Gene4 11.66713  9.66427 13.042564
-Gene5 11.30805 12.02482  7.686164
-Gene6 11.30813 10.78130 12.655444</code></pre>
+<pre><code>        Sample4  Sample5   Sample6
+Gene1 13.311441 11.89383 10.225176
+Gene2  9.319622 10.93453  9.256861
+Gene3 12.950103 13.83871 10.852010
+Gene4 13.349571 12.30126 12.663576
+Gene5 11.104882  8.85201 10.893834
+Gene6 12.011749 12.18904  9.897059</code></pre>
 </div>
 </div>
 <p>Of course you can combine multiple conditions as well</p>
@@ -621,12 +629,12 @@ Gene6 11.30813 10.78130 12.655444</code></pre>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>se[, se<span class="sc">$</span>Batch <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"C"</span>) <span class="sc">&amp;</span> se<span class="sc">$</span>Age <span class="sc">&gt;</span> <span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 200 3 
+dim: 200 4 
 metadata(0):
 assays(3): counts cpm logcounts
 rownames(200): Gene1 Gene2 ... Gene199 Gene200
 rowData names(3): feature_id gene_type Keep
-colnames(3): Sample2 Sample5 Sample6
+colnames(4): Sample2 Sample3 Sample5 Sample6
 colData names(4): SampleName Treatment Age Batch</code></pre>
 </div>
 </div>
@@ -653,10 +661,10 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>(coding <span class="ot">&lt;-</span> se[<span class="fu">rowData</span>(se)<span class="sc">$</span>Keep, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 54 6 
+dim: 70 6 
 metadata(0):
 assays(3): counts cpm logcounts
-rownames(54): Gene1 Gene3 ... Gene192 Gene200
+rownames(70): Gene2 Gene8 ... Gene195 Gene197
 rowData names(3): feature_id gene_type Keep
 colnames(6): Sample1 Sample2 ... Sample5 Sample6
 colData names(4): SampleName Treatment Age Batch</code></pre>
@@ -666,33 +674,33 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowData</span>(coding)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>DataFrame with 54 rows and 3 columns
+<pre><code>DataFrame with 70 rows and 3 columns
          feature_id      gene_type      Keep
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-Gene1         ID001 protein_coding      TRUE
-Gene3         ID003 protein_coding      TRUE
-Gene9         ID009 protein_coding      TRUE
+Gene2         ID002 protein_coding      TRUE
+Gene8         ID008 protein_coding      TRUE
 Gene10        ID010 protein_coding      TRUE
-Gene12        ID012 protein_coding      TRUE
+Gene20        ID020 protein_coding      TRUE
+Gene21        ID021 protein_coding      TRUE
 ...             ...            ...       ...
-Gene182       ID182 protein_coding      TRUE
-Gene187       ID187 protein_coding      TRUE
+Gene189       ID189 protein_coding      TRUE
 Gene191       ID191 protein_coding      TRUE
-Gene192       ID192 protein_coding      TRUE
-Gene200       ID200 protein_coding      TRUE</code></pre>
+Gene194       ID194 protein_coding      TRUE
+Gene195       ID195 protein_coding      TRUE
+Gene197       ID197 protein_coding      TRUE</code></pre>
 </div>
 </div>
 <p>Each assay also reflects this operation</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(coding, <span class="st">"cpm"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        Sample1    Sample2   Sample3   Sample4    Sample5   Sample6
-Gene1  2664.987  5457.7283 15466.531  2471.170  7002.3684  3549.696
-Gene3  2986.304  2535.4970  4021.708  4016.064  4868.1542  8237.232
-Gene9  3243.744 11561.8661  8527.958  2728.864 11916.8357  4845.431
-Gene10 2202.990   507.1251  3261.038 11959.087   862.1127 14286.454
-Gene12 7759.014  4865.6763  4248.623  4716.264  5486.8264  7710.464
-Gene17 5273.834  4651.6135  6384.512  3194.726  4167.0705  2368.448</code></pre>
+<pre><code>         Sample1   Sample2  Sample3   Sample4   Sample5    Sample6
+Gene2  5505.0381  7878.757 1376.498  638.9776  1957.144   611.7767
+Gene8  5701.6466  1806.594 6831.507 3293.1924  4416.119  1682.3859
+Gene10  652.3812  5455.009 4374.539 5269.2327 12898.292 16269.3536
+Gene20 6635.5370 10237.366 4894.214 7569.4274  8129.673  3313.7905
+Gene21 7437.8378  2729.101 5031.576 3502.7027  5218.807  3542.6400
+Gene24 2345.1440  1425.412 4365.936 2243.1812 20152.372  2057.5099</code></pre>
 </div>
 </div>
 </section>
@@ -726,27 +734,27 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
 Gene51        ID051 repeat_element     FALSE
 Gene52        ID052         lncRNA     FALSE
-Gene53        ID053 protein_coding      TRUE
-Gene54        ID054 repeat_element     FALSE
-Gene55        ID055         lncRNA     FALSE
+Gene53        ID053         lncRNA     FALSE
+Gene54        ID054         lncRNA     FALSE
+Gene55        ID055 protein_coding      TRUE
 ...             ...            ...       ...
-Gene196       ID196 repeat_element     FALSE
-Gene197       ID197 repeat_element     FALSE
+Gene196       ID196         lncRNA     FALSE
+Gene197       ID197 protein_coding      TRUE
 Gene198       ID198 repeat_element     FALSE
 Gene199       ID199         lncRNA     FALSE
-Gene200       ID200 protein_coding      TRUE</code></pre>
+Gene200       ID200         lncRNA     FALSE</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(chr2, <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Sample1 Sample2 Sample3 Sample4 Sample5 Sample6
-Gene51     176      95     273     120      87     185
-Gene52     156      26      94     151      33      34
-Gene53     228     131      13      42      95       5
-Gene54      80     209     101      33     211     116
-Gene55      69     250     116     134      81     149
-Gene56      19      87      12      62      55     170</code></pre>
+Gene51      55     158      32      32      11     126
+Gene52      83      65     155      75      54     119
+Gene53      70      89      37      81      73     252
+Gene54     148     174      12     109      45     130
+Gene55      76     106      74     278      55     191
+Gene56      89      21      74     161      66     295</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -755,17 +763,17 @@ Gene56      19      87      12      62      55     170</code></pre>
 <pre><code>GRanges object with 150 ranges and 3 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type      Keep
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-   Gene51     chr2 416048-416147      + |       ID051 repeat_element     FALSE
-   Gene52     chr2 435782-435881      - |       ID052         lncRNA     FALSE
-   Gene53     chr2 230798-230897      - |       ID053 protein_coding      TRUE
-   Gene54     chr2 340617-340716      - |       ID054 repeat_element     FALSE
-   Gene55     chr2 762324-762423      - |       ID055         lncRNA     FALSE
+   Gene51     chr2 682015-682114      + |       ID051 repeat_element     FALSE
+   Gene52     chr2 505622-505721      - |       ID052         lncRNA     FALSE
+   Gene53     chr2 572809-572908      + |       ID053         lncRNA     FALSE
+   Gene54     chr2 239876-239975      + |       ID054         lncRNA     FALSE
+   Gene55     chr2 394726-394825      - |       ID055 protein_coding      TRUE
       ...      ...           ...    ... .         ...            ...       ...
-  Gene196     chr2 515102-515201      + |       ID196 repeat_element     FALSE
-  Gene197     chr2 459126-459225      + |       ID197 repeat_element     FALSE
-  Gene198     chr2 630631-630730      + |       ID198 repeat_element     FALSE
-  Gene199     chr2 943520-943619      - |       ID199         lncRNA     FALSE
-  Gene200     chr2 666585-666684      - |       ID200 protein_coding      TRUE
+  Gene196     chr2 253162-253261      - |       ID196         lncRNA     FALSE
+  Gene197     chr2 175394-175493      + |       ID197 protein_coding      TRUE
+  Gene198     chr2 710446-710545      - |       ID198 repeat_element     FALSE
+  Gene199     chr2 901476-901575      + |       ID199         lncRNA     FALSE
+  Gene200     chr2 800990-801089      + |       ID200         lncRNA     FALSE
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -790,10 +798,10 @@ Gene56      19      87      12      62      55     170</code></pre>
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 71 1 
+dim: 63 1 
 metadata(0):
 assays(3): counts cpm logcounts
-rownames(71): Gene4 Gene6 ... Gene197 Gene198
+rownames(63): Gene3 Gene5 ... Gene193 Gene198
 rowData names(3): feature_id gene_type Keep
 colnames(1): Sample1
 colData names(4): SampleName Treatment Age Batch</code></pre>
@@ -839,236 +847,242 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
+      return false;
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
         }
-        return container.innerHTML
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1076,185 +1090,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./presenting-science.html" class="pagination-link" aria-label="Scientific presentations">
@@ -1262,8 +1252,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro-to-bioinfo.html" class="pagination-link" aria-label="Introduction to Bioinformatics">
-        <span class="nav-page-text">Introduction to Bioinformatics</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./differential-expression-analysis.html" class="pagination-link" aria-label="Differential Expression Analysis">
+        <span class="nav-page-text">Differential Expression Analysis</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
