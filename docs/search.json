@@ -1018,5 +1018,35 @@
     "crumbs": [
       "Differential Expression Analysis"
     ]
+  },
+  {
+    "objectID": "presenting-science.html",
+    "href": "presenting-science.html",
+    "title": "Scientific presentations",
+    "section": "",
+    "text": "General tips\nA science presentation is more than just displaying your results on a slide deck. Good content doesn’t speak for itself. A good science presentation is more like a story that weaves together a problem (gap in knowledge), a logical thought process for solving that problem (hypothesis), data that supports your claims (figures), and a compelling delivery. The structure of your presentation, the design of the slides, the flow of information from one slide to the next, and your delivery of that information, are all aspects that your need to consider if you want to create informative and interesting presentations. Like everything else in life, this takes time and practice. Below are a few tips that I have learned. For a good book on this topic check out Designing Science Presentations by Matt Carter.",
+    "crumbs": [
+      "Scientific presentations"
+    ]
+  },
+  {
+    "objectID": "presenting-science.html#general-tips",
+    "href": "presenting-science.html#general-tips",
+    "title": "Scientific presentations",
+    "section": "",
+    "text": "Keep it simple. Well designed presentations translate complex information into simple messages. Richard Feyman was famous for this ability.\nSubtract! It’s easy to keep adding information, text, images, etc. to a presentation. It’s much harder to know what information to take away. Generally, try to deliberately take away any elements of your presentation that don’t add value. Simple is not boring, it’s focused.\nYour presentation is about the audience. Determine who your audience is and what they are likely to know or not know. Design all aspects of your presentation with this in mind.\nLearn some principles of design and apply them to your presentations. Design is not decoration. Collect examples of good presentations and take notes from people who do it well.\nColor is a powerful tool for communication. Intentional color choices can draw attention to important data, emphasize points, and evoke emotions. Poorly chosen colors can be distracting and make your content unreadable\nFont choices matter. Fonts can convey tone and personality. Use a font that increases readability. Use italics or bolding to emphasize important ideas.\nWords matter. Choose words that express your ideas precisely, concisely, and as clearly as possible.\nThere’s no correct number of slides. It comes down to your presentation and delivery.\nEverything doesn’t need to be shown - sometimes the best way of communicating an idea is by narration alone.",
+    "crumbs": [
+      "Scientific presentations"
+    ]
+  },
+  {
+    "objectID": "presenting-science.html#slide-presentation-tips",
+    "href": "presenting-science.html#slide-presentation-tips",
+    "title": "Scientific presentations",
+    "section": "Slide presentation tips",
+    "text": "Slide presentation tips\nGenerally, you’ll want to design a slide presentation in a way that focuses on overall ideas rather than just moving from one slide to the next. Think about the structure of your presentation. This generally means following the scientific method.\nFor your internship presentations, the structure can be something like:\n\nIntroduction / background\n\nWhat is the context and why should we care about it?.\n\nWhat does the audience need to know in order to understand your conclusions later?\nImportantly, lead the audience in understanding the gap in knowledge. What problem are you trying to solve?. Clearly emphasize your goal.\nThink about the introduction like a funnel. Start with a broad topic and then narrow in on your what your focus will be for the remainder of the presentation. General –&gt; Specific.\n\nExperimental methods\n\nClearly explain how you’re going to solve the problem. What data you used, and what methods.\nExplain why you chose the methods you did and how they answer parts of your overall hypothesis.\nDon’t forget to mention the things that your methods lack.\n\nResults\n\nTake the audience through your data step-by-step, starting with the simplest results and building into more complex ideas.\nDon’t show too much on one slide. One (or two) figures is usually all you need.\nDon’t put anything on a slide that you aren’t going to discuss.\nExplain your figures if you put it on the slide, explain it. Tell the audience what the graph is showing, explain to them the conclusions you draw from it.\nBe sure to connect your data to the larger story of your presentation - how does this data relate to the information you talked about earlier?\n\nDiscussion / conclusions\n\nSpecific –&gt; General\nRecap the original problem.\nRecap your methods and why they are appropriate to solve this problem.\nPull out the main points and emphasize them. Tell the audience why they are important.\nMention any gaps or future work.\nConclude on broader implications.\n\n\nIn addition to this structure, sometimes it’s good to include some measure of progress in the form of slide numbers or a “home” slide - a slide that you come back to that is used to orient the audience to their place in the presentation.\n\nExample\nHere is a link to my PhD proposal slides presentation. I tried to incorporate good design principles when creating this. While it’s certainly not perfect and I’m certainly not the best presenter, here are a few of the design choices I tried to make to improve the presentation.\n\nslide 1: eye-catching background with presenter information in contrasting white font. Note that the same font is used throughout the presentation.\nslide 2: High contrast slides, modern black font (Helvetica Neue) on white inconspicuous background. Relatively few words on the slide. Give the audience an idea of the structure of the presentation.\nslide 3: Section header slide used to orient the audience. Section headers can be a good way to give structure to a presentation.\nslides 4-8: General information to specific problem. What are TEs? Why are they important for cancer? How do they contribute to immunotherapy response? Why is this difficult to study? General –&gt; Specific.\nslide 9: An entire slide dedicated to emphasizing the main point of the rest of the proposal.\nslide 11: The use of bolding in the bullet points to emphasize the main point of each. Layout of the slide is designed as question on the left and answer on the right in italics.\nslide 17-16: Results slides showing limited number of figures on each slide with clear data and axes labels. Each title reflects what I want the audience to take away from the figures.\nslide 22: Use color to emphasize the main paper of interest.\nslide 23: Repeat the question and answer structure\nslide 39: Conclusions recap the entire proposal. Bold text is used to emphasize where this proposal falls into the overall scientific goals.",
+    "crumbs": [
+      "Scientific presentations"
+    ]
   }
 ]
