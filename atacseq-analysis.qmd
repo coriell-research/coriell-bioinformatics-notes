@@ -1,0 +1,503 @@
+# ATAC-seq Analysis {.unnumbered}
+
+**Work in progress**
+
+## 1. Filter raw fastq files
+
+Use [fastp](https://github.com/OpenGene/fastp) to perform quality trimming
+on raw fastq files. Turn on adapter detection for paired end reads.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Run fastp on the raw fastq files
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+FQ=/path/to/raw-fastq/00_fastq
+SAMPLES=/path/to/sample-names.txt   
+OUT=/path/to/01_fastp
+THREADS=12
+
+mkdir -p $OUT
+
+for SAMPLE in $(cat $SAMPLES)
+do
+    fastp -i $FQ/${SAMPLE}_R1.fastq.gz \
+          -I $FQ/${SAMPLE}_R2.fastq.gz \
+          -o $OUT/${SAMPLE}.trimmed.1.fq.gz \
+          -O $OUT/${SAMPLE}.trimmed.2.fq.gz \
+          -h $OUT/${SAMPLE}.fastp.html \
+          -j $OUT/${SAMPLE}.fastp.json \
+	        --detect_adapter_for_pe \
+          -w $THREADS
+done
+```
+
+`sample-names.txt` is a plain text file listing the basenames for all samples. 
+For example, if you have "sample1_R1.fq.gz", "sample2_R1.fq.gz", 
+"sample3_R1.fq.gz" then `sample-names.txt` would be:
+
+```
+sample1
+sample2
+sample3
+```
+
+This file gets used throughout. 
+
+## 2. Perform alignment with Bowtie2
+
+Use `--very-sensitive` mode and set max insertion size to 1,000. The output is
+piped to `samtools` for sorting. Sorted BAMs are then indexed. It's assumed 
+that you have a bowtie2 index generated for your species of interest.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Align trimmed reads with bowtie2
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+FQ=/path/tp/01_fastp
+SAMPLES=/path/to/sample-names.txt   
+OUT=/path/to/02_align
+IDX=/path/to/bt2_idx
+INSERT=1000
+THREADS=12
+
+mkdir -p $OUT
+
+for SAMPLE in $(cat $SAMPLES)
+do
+  bowtie2 -x $IDX \
+    -1 $FQ/${SAMPLE}.trimmed.1.fq.gz \
+    -2 $FQ/${SAMPLE}.trimmed.2.fq.gz \
+    --very-sensitive \
+    --threads $THREADS \
+    --maxins $INSERT | samtools sort -o $OUT/${SAMPLE}.sorted.bam -
+done
+
+# Index the sorted bams
+parallel --jobs 6 "samtools index {}" ::: $OUT/*.bam
+```
+
+## 3. Filter alignments
+
+This is a `samtools` only pipeline for keeping reads that have aligned in 
+proper pairs, removing mitochondrial alignments, and marking duplicates. These
+steps can likely be optimized or replaced by `Picard` calls. Duplicates are 
+marked but kept in the BAMs so the library complexity analysis can be performed 
+later.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Filter the aligned ATAC-seq BAMs
+#
+# 1. Restrict to proper pairs & remove MT reads
+# 2. Name order to reads for fixmate
+# 3. Add MS and MC tags with fixmate 
+# 4. Position sort reads for markdup
+# 5. Mark and duplicates with markdup (do not remove)
+#
+# -----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt
+BAM=/path/to/02_align
+OUT=/path/to/03_filter
+JOBS=6
+
+mkdir -p $OUT
+
+echo "Filtering and removing mitochondrial reads..."
+parallel --jobs $JOBS "samtools view -bh -f3 -e 'rname != \"chrM\"' -o $OUT/{}.sorted.filt.noMT.bam $BAM/{}.sorted.bam" :::: $SAMPLES
+
+echo "Name sorting BAM files..."
+parallel --jobs $JOBS "samtools collate -o $OUT/{}.collated.bam $OUT/{}.sorted.filt.noMT.bam" :::: $SAMPLES
+
+echo "Adding mate tags..."
+parallel --jobs $JOBS "samtools fixmate -m $OUT/{}.collated.bam $OUT/{}.fixmate.bam" :::: $SAMPLES
+
+echo "Position sorting BAM files..."
+parallel --jobs $JOBS "samtools sort -m 1G -o $OUT/{}.positionsort.bam $OUT/{}.fixmate.bam" :::: $SAMPLES
+
+echo "Marking duplicates..."
+parallel --jobs $JOBS "samtools markdup $OUT/{}.positionsort.bam $OUT/{}.final.bam" :::: $SAMPLES
+
+echo "Indexing duplicate marked BAMs..."
+parallel --jobs $JOBS "samtools index $OUT/{}.final.bam" :::: $SAMPLES
+
+echo "Removing intermediate files..."
+find $OUT -name "*.sorted.filt.noMT.bam" -type f -delete
+find $OUT -name "*.collated.bam" -type f -delete
+find $OUT -name "*.fixmate.bam" -type f -delete
+find $OUT -name "*.positionsort.bam" -type f -delete
+```
+
+## 4. Call Peaks using `MACS3 hmmratac`
+
+Anecdotally, I have found that peak calls using `hmmratac` from MACS3 are 
+usually pretty good. The [MACS documentation](https://macs3-project.github.io/MACS/docs/hmmratac.html#choices-of-cutoff-values) 
+recommends running cutoff analysis prior to performing peak calling so that 
+optimal cutoff values can be used in the HMM peak caller. In my opinion, these
+guidelines are somewhat confusing when looking at real data. Also, I usually 
+need to increase the resolution of the cutoff analysis from the defaults and 
+then create plots of the cutoff results to see what the 'optimal' cutoff should
+be. 
+
+I have also found the 'poisson' emission model to give cleaner results than the 
+gaussian.
+
+The "excluderanges.bed" file below contains blacklisted regions. This BED file 
+can be created using the [excluderanges](https://www.bioconductor.org/packages/release/data/annotation/vignettes/excluderanges/inst/doc/excluderanges.html) R package. For example, to generate the excluded regions for
+mm39:
+
+```{r}
+#| eval: false
+suppressMessages(library(GenomicRanges))
+suppressMessages(library(AnnotationHub))
+
+ah <- AnnotationHub()
+query_data <- subset(ah, preparerclass == "excluderanges")
+mm39_exclude_gr <- query_data[["AH107321"]]
+rtracklayer::export.bed(mm39_exclude_gr, "mm39-excluderanges.bed")
+```
+
+You can first perform the cutoff analysis.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Call ATACseq peaks using MACS3 HMMRATAC
+#
+# 'macs3' conda env must be activated before running
+# -----------------------------------------------------------------------------
+SAMPLES=/path/to/sample-names.txt
+BLACKLIST=/path/to/excluderanges.bed
+BAM=/path/to/03_filter
+OUT=/path/to/04_callpeak
+MAX=200
+STEPS=400
+JOBS=6
+
+mkdir -p $OUT
+
+# Build models for each sample to determine cutoff values for peak calling
+parallel --jobs $JOBS \
+	 "macs3 hmmratac \
+	  -i $BAM/{}.final.bam \
+	  --format 'BAMPE' \
+	  --hmm-type 'poisson' \
+	  --remove-dup \
+	  --outdir $OUT \
+	  -n {} \
+	  --cutoff-analysis-only \
+	  --cutoff-analysis-max $MAX \
+	  --cutoff-analysis-steps $STEPS" :::: $SAMPLES
+```
+
+After the cutoff analysis completes, create plots and tables of the cutoff
+analysis results in R to visualize the 'optimal' cutoff values.
+
+```{r}
+#| eval: false
+library(here)
+library(data.table)
+library(tinyplot)
+
+
+# Collect the cutoff analysis results into a single data.table
+cutoff_files <- list.files(here("data", "04_callpeak"), pattern="*.tsv", full.names=TRUE)
+names(cutoff_files) <- gsub("_cutoff_analysis.tsv", "", basename(cutoff_files))
+dt <- rbindlist(lapply(cutoff_files, fread), idcol="sample")
+
+# Plot cutoffs
+plt(npeaks ~ score | sample, type = "l", data = dt, frame.plot = FALSE, xlim=c(0, 5))
+plt(avelpeak ~ score | sample, type = "l", data = dt, frame.plot = FALSE, xlim=c(0, 5))
+```
+
+Then you can run the actual peak calling.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Call ATACseq peaks using MACS3 HMMRATAC
+#
+# 'macs3' conda env must be activated before running
+# -----------------------------------------------------------------------------
+SAMPLES=/path/to/sample-names.txt
+BLACKLIST=/path/to/excluderanges.bed
+BAM=/path/to/03_filter
+OUT=/path/to/04_callpeak
+MAX=200
+STEPS=400
+JOBS=6
+
+mkdir -p $OUT
+
+# Refer to the cutoff-analysis script for details on parameters
+parallel --jobs $JOBS \
+  "macs3 hmmratac \
+    -i $BAM/{}.final.bam \
+    --outdir $OUT \
+    -n {} \
+    --format 'BAMPE' \
+    --hmm-type 'poisson' \
+    --remove-dup \
+    --prescan-cutoff <determine from cutoff analysis> \
+    --lower <determine from cutoff analysis> \
+    --upper <determine from cutoff analysis>" :::: $SAMPLES
+```
+
+## 5. Determine consensus peaks for replicate samples
+
+After peak calling finishes, I create consensus peak calls for replicate 
+samples. The consensus peak calls can be used in downstream differential 
+accessibility analysis or for visualization. Creating consensus peak calls
+can be done in R by requiring all or some peaks to be called across replicate
+samples.
+
+```{r}
+#| eval: false
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(GenomicRanges))
+
+
+# Read in peak calls
+peak_files <- list.files(here("data", "04_callpeak"), pattern="*.narrowPeak", full.names=TRUE)
+names(peak_files) <- gsub("_accessible_regions.narrowPeak", "", basename(peak_files))
+peak_calls <- lapply(peak_files, rtracklayer::import)
+
+# Separate into groups 
+control_calls <- peak_calls[c("control1", "control2", "control3")]
+treatment_calls <- peak_calls[c("treatment1", "treatment2", "treatment3")]
+control_calls <- GRangesList(control_calls)
+treatment_calls <- GRangesList(treatment_calls)
+
+# Compute coverage across ranges
+control_coverage <- coverage(control_calls)
+treatment_coverage <- coverage(treatment_calls)
+
+# Determine regions with coverage in N replicates -- here require all 3 to have the same peaks
+control_covered <- GRanges(slice(control_coverage, lower=length(control_calls), rangesOnly=TRUE))
+treatment_covered <- GRanges(slice(treatment_coverage, lower=length(treatment_calls), rangesOnly=TRUE))
+
+# Close gaps in the resulting regions -- min.gapwidth can be adjusted 
+control_consensus <- reduce(control_covered, min.gapwidth=301)
+treatment_consensus <- reduce(treatment_covered, min.gapwidth=301)
+all_consensus <- union(control_consensus, treatment_consensus)
+
+# Export as BED files
+rtracklayer::export.bed(control_consensus, here("data", "04_callpeak", "control-consensus.bed"))
+rtracklayer::export.bed(treatment_consensus, here("data", "04_callpeak", "treatment-consensus.bed"))
+rtracklayer::export.bed(all_consensus, here("data", "04_callpeak", "consensus.bed"))
+```
+
+## 6. Create TSS and region plots with `deeptools`
+
+[deeptools](https://deeptools.readthedocs.io/en/latest/) can be used to compute
+normalized coverage files in bigwig format for visualization in IGV. 
+Normalization in `deeptools` can be really context dependent and what 
+normalization strategy to use can often be [unclear](https://www.biostars.org/p/413626/#414440). 
+To get an idea of how the data is behaving, I tend to use CPM normalization 
+first and then perform other normalizations if needed (for example, 
+if performing DA analysis and computing TMM scaling factors).
+
+There's an interesting [discussion](https://www.biostars.org/p/422383/) 
+regarding what parameters to use for ATAC-seq in `deeptools` if you want to 
+accurately view cut sites. We tend to care about larger signals/peaks of 
+enrichment vs footprinting, however, so I tend to just use the entire fragment lengths.   
+
+For ATAC-seq, I plot the enrichment over the TSS region for each sample as 
+well as the coverage centered over the consensus peaks defined above. For 
+simplicity, I will also plot the TSS enrichment over protein coding genes. To 
+generate a BED file for protein coding gene regions in R:
+
+```{r}
+#| eval: false
+
+# Get mouse annotation GTF, for example
+url <- "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M37/gencode.vM37.annotation.gtf.gz"
+gtf <- rtracklayer::import(url)
+
+# Extract the protein coding gene ranges only
+coding <- gtf[gtf$gene_type == "protein_coding" & gtf$type == "gene", ]
+
+# rtracklayer complains if score is NA or non-numeric
+coding$score <- 1L
+
+# Export to a BED file for use in deeptools
+rtracklayer::export.bed(coding, here("doc", "gencode.vM37.coding.bed"))
+```
+
+Then you can run `deeptools` using the TSS regions of coding genes and called
+consensus peaks.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Compute coverage bigwigs for visualization
+#
+# 'deeptools' mamba env must be activated before running
+# -----------------------------------------------------------------------------
+SAMPLES=/path/to/sample-names.txt
+BLACKLIST=/path/to/excluderanges.bed
+CODING=/path/to/gencode.vM37.coding.bed
+BAM=/path/to/03_filter
+PEAKS=/path/to/consensus.bed
+OUT=/path/to/05_deeptools
+JOBS=6
+THREADS=4
+
+mkdir -p $OUT
+
+
+echo "Computing coverage over all BAM files..." 
+parallel --jobs $JOBS \
+    "bamCoverage --bam $BAM/{}.final.bam \
+                 --outFileName $OUT/{}.bw \
+                 --outFileFormat 'bigwig' \
+                 --binSize 1 \
+                 --blackListFileName $BLACKLIST \
+                 --numberOfProcessors $THREADS \
+                 --normalizeUsing 'CPM' \
+                 --ignoreDuplicates" :::: $SAMPLES
+
+echo "Computing matrix over TSS regions..."
+computeMatrix reference-point \
+ --regionsFileName  \
+ --scoreFileName $OUT/*.bw \
+ --outFileName $OUT/tss.mat.gz \
+ --referencePoint TSS \
+ --beforeRegionStartLength 3000 \
+ --afterRegionStartLength 3000 \
+ --blackListFileName $BLACKLIST \
+ --missingDataAsZero \
+ --numberOfProcessors $JOBS
+
+echo "Computing coverage over peak BEDs..."
+computeMatrix reference-point \
+  --regionsFileName $PEAKS \
+  --scoreFileName $OUT/*.bw \
+  --outFileName $OUT/peak.mat.gz \
+  --referencePoint 'center' \
+  --beforeRegionStartLength 3000 \
+  --afterRegionStartLength 3000 \
+  --blackListFileName $BLACKLIST \
+  --missingDataAsZero \
+  --numberOfProcessors $JOBS
+
+echo "Plotting heatmap of TSS enrichment..."
+plotHeatmap -m $OUT/tss.mat.gz \
+  -o $OUT/tss-heatmap.pdf \
+  --dpi 300 \
+  --colorMap "viridis" \
+  --boxAroundHeatmaps 'no' \
+  --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
+  --regionsLabel "Protein Coding Genes" \
+  --yAxisLabel "CPM" \
+  --perGroup \
+  --heatmapHeight 24 \
+  --heatmapWidth 8 \
+  --plotFileFormat "pdf"
+
+echo "Plotting heatmap of MACS peak enrichment..."
+plotHeatmap -m $OUT/peak.mat.gz \
+  -o $OUT/peak-heatmap.pdf \
+  --dpi 300 \
+  --colorMap "viridis" \
+  --boxAroundHeatmaps 'no' \
+  --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
+  --regionsLabel "Consensus Peak Calls" \
+  --refPointLabel "Center of Peak" \
+  --yAxisLabel "CPM" \
+  --perGroup \
+  --heatmapHeight 24 \
+  --heatmapWidth 8 \
+  --plotFileFormat "pdf"
+```
+
+## 7. ATACSeqQC
+
+**TODO: complete this section**
+
+The [ATACseqQC](https://bioconductor.org/packages/release/bioc/vignettes/ATACseqQC/inst/doc/ATACseqQC.html)
+R package can be used to calculate various QC stats on the filtered BAM files. 
+These should be assessed closely and compared to the 
+[ENCODE data standards](https://www.encodeproject.org/atac-seq/).
+
+## 8. Differential abundance using `csaw` and `edgeR`
+
+**TODO: elaborate on this section**
+
+[csaw](https://bioconductor.org/books/release/csawBook/) can be used to perform
+differential abundance over sliding windows *or* by counting reads in the 
+consensus peaks defined above. This [paper](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y) 
+contains some code for performing and assessing ATAC-seq DA analysis using both 
+methods.
+
+## 9. Motif analysis with `MEME`
+
+The [MEME suite](https://meme-suite.org/meme/) can be used to perform motif 
+analysis on peaks that have been determined to have differential abundance. 
+You can use R to generate fasta files for these regions based on GRanges 
+extracted from DA analysis. These fasta files can then be used as input to
+`XSTREME`, which performs de novo motif discovery, enrichment analysis, and 
+comparisons with known motif databases.
+
+For example, you can extract fasta regions like so (this uses hg38 
+rather than mm39 as in the above steps):
+
+```{r}
+#| eval: false
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(Biostrings))
+suppressPackageStartupMessages(library(BSgenome.Hsapiens.UCSC.hg38))
+suppressPackageStartupMessages(library(GenomicRanges))
+
+
+# Assuming you have a file from DA analysis that contains genomic coordinates
+# of peaks and annotations - for example from ChIPseeker::annotatePeak()
+peaks <- fread("annotated-peaks.tsv")
+peaks <- makeGRangesFromDataFrame(peaks, keep.extra.columns = TRUE)
+
+# Extract promoter peaks -- this can be any filtering you're interested in 
+promoter_peaks <- peaks[peaks$annotation %like% "Promoter"]
+
+# Extract and write out the hg38 sequences as fasta records
+pmtr_seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, promoter_peaks)
+writeXStringSet(pmtr_seqs, filepath = "promoter-peaks.fasta", format = "fasta")
+```
+
+These fasta records can then be used in `XSTREME` analysis from the MEME suite. The meme formatted databases of known motifs can be downloaded from MEME's [website](https://meme-suite.org/meme/db/motifs)
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Run XSTREME motif analysis on promoter peak sequences
+#
+# -------------------------------------------------------------------------------------------------
+FA=/path/to/promoter-peaks.fasta
+DB=/path/to/HUMAN/HOCOMOCOv11_core_HUMAN_mono_meme_format.meme
+OUT=/path/to/xstreme
+
+xstreme --oc $OUT --p $FA --seed 123 --m $DB --no-pgc --dna
+```

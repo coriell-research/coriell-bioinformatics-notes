@@ -16,6 +16,7 @@ book:
     - summarized-experiments.qmd
     - differential-expression-analysis.qmd
     - differential-methylation-analysis.qmd
+    - atacseq-analysis.qmd
     - references.qmd
 
 bibliography: references.bib
