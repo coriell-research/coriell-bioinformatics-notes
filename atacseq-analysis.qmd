@@ -225,7 +225,7 @@ consensus peaks.
 # -----------------------------------------------------------------------------
 SAMPLES=/path/to/sample-names.txt
 BLACKLIST=/path/to/excluderanges.bed
-CODING=/path/to/gencode.vM37.coding.bed
+CODING=/path/to/coding.bed
 BAM=/path/to/03_filter
 PEAKS=/path/to/consensus.bed
 OUT=/path/to/05_deeptools
@@ -241,6 +241,7 @@ parallel --jobs $JOBS \
                  --outFileName $OUT/{}.bw \
                  --outFileFormat 'bigwig' \
                  --binSize 1 \
+                 --extendReads \
                  --blackListFileName $BLACKLIST \
                  --numberOfProcessors $THREADS \
                  --normalizeUsing 'CPM' \
@@ -300,12 +301,11 @@ plotHeatmap -m $OUT/peak.mat.gz \
   --plotFileFormat "pdf"
 ```
 
-### Getting TSS region ranges
+### Getting TSS coding region ranges
 
 For ATAC-seq, I plot the enrichment over the TSS region for each sample as 
-well as the coverage centered over the consensus peaks defined above. For 
-simplicity, I will also plot the TSS enrichment over protein coding genes. To 
-generate a BED file for protein coding gene regions in R:
+well as the coverage centered over the consensus peaks. To generate a BED file 
+for protein coding gene regions ("coding.bed" above) in R:
 
 ```{r}
 #| eval: false
@@ -352,8 +352,7 @@ extracted from DA analysis. These fasta files can then be used as input to
 `XSTREME`, which performs de novo motif discovery, enrichment analysis, and 
 comparisons with known motif databases.
 
-For example, you can extract fasta regions like so (this uses hg38 
-rather than mm39 as in the above steps):
+For example, you can extract fasta regions like so (this uses hg38 as an example):
 
 ```{r}
 #| eval: false

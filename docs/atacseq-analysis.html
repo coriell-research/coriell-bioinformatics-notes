@@ -229,7 +229,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#determine-consensus-peaks-for-replicate-samples" id="toc-determine-consensus-peaks-for-replicate-samples" class="nav-link" data-scroll-target="#determine-consensus-peaks-for-replicate-samples">4. Determine consensus peaks for replicate samples</a></li>
   <li><a href="#create-tss-and-region-plots-with-deeptools" id="toc-create-tss-and-region-plots-with-deeptools" class="nav-link" data-scroll-target="#create-tss-and-region-plots-with-deeptools">5. Create TSS and region plots with <code>deeptools</code></a>
   <ul class="collapse">
-  <li><a href="#getting-tss-region-ranges" id="toc-getting-tss-region-ranges" class="nav-link" data-scroll-target="#getting-tss-region-ranges">Getting TSS region ranges</a></li>
+  <li><a href="#getting-tss-coding-region-ranges" id="toc-getting-tss-coding-region-ranges" class="nav-link" data-scroll-target="#getting-tss-coding-region-ranges">Getting TSS coding region ranges</a></li>
   </ul></li>
   <li><a href="#atacseqqc" id="toc-atacseqqc" class="nav-link" data-scroll-target="#atacseqqc">6. ATACSeqQC</a></li>
   <li><a href="#differential-abundance-using-csaw-and-edger" id="toc-differential-abundance-using-csaw-and-edger" class="nav-link" data-scroll-target="#differential-abundance-using-csaw-and-edger">7. Differential abundance using <code>csaw</code> and <code>edgeR</code></a></li>
@@ -430,7 +430,7 @@ sample3</code></pre>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------------------------------------------------------</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="va">SAMPLES</span><span class="op">=</span>/path/to/sample-names.txt</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLACKLIST</span><span class="op">=</span>/path/to/excluderanges.bed</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="va">CODING</span><span class="op">=</span>/path/to/gencode.vM37.coding.bed</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="va">CODING</span><span class="op">=</span>/path/to/coding.bed</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="va">BAM</span><span class="op">=</span>/path/to/03_filter</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="va">PEAKS</span><span class="op">=</span>/path/to/consensus.bed</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/05_deeptools</span>
@@ -446,67 +446,68 @@ sample3</code></pre>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileName </span><span class="va">$OUT</span><span class="st">/{}.bw </span><span class="dt">\</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileFormat 'bigwig' </span><span class="dt">\</span></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="st">                 --binSize 1 </span><span class="dt">\</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="st">                 --blackListFileName </span><span class="va">$BLACKLIST</span><span class="st"> </span><span class="dt">\</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="st">                 --numberOfProcessors </span><span class="va">$THREADS</span><span class="st"> </span><span class="dt">\</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="st">                 --normalizeUsing 'CPM' </span><span class="dt">\</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">                 --ignoreDuplicates"</span> :::: <span class="va">$SAMPLES</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing matrix over TSS regions..."</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a> <span class="at">--regionsFileName</span>  <span class="dt">\</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a> <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a> <span class="at">--outFileName</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a> <span class="at">--referencePoint</span> TSS <span class="dt">\</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a> <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a> <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a> <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a> <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a> <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over peak BEDs..."</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsFileName</span> <span class="va">$PEAKS</span> <span class="dt">\</span></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outFileName</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">--referencePoint</span> <span class="st">'center'</span> <span class="dt">\</span></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of TSS enrichment..."</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/tss-heatmap.pdf <span class="dt">\</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Protein Coding Genes"</span> <span class="dt">\</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of MACS peak enrichment..."</span></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/peak-heatmap.pdf <span class="dt">\</span></span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Consensus Peak Calls"</span> <span class="dt">\</span></span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">--refPointLabel</span> <span class="st">"Center of Peak"</span> <span class="dt">\</span></span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="st">                 --extendReads </span><span class="dt">\</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="st">                 --blackListFileName </span><span class="va">$BLACKLIST</span><span class="st"> </span><span class="dt">\</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="st">                 --numberOfProcessors </span><span class="va">$THREADS</span><span class="st"> </span><span class="dt">\</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">                 --normalizeUsing 'CPM' </span><span class="dt">\</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="st">                 --ignoreDuplicates"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing matrix over TSS regions..."</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a> <span class="at">--regionsFileName</span>  <span class="dt">\</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a> <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a> <span class="at">--outFileName</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a> <span class="at">--referencePoint</span> TSS <span class="dt">\</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a> <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a> <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a> <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a> <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a> <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over peak BEDs..."</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsFileName</span> <span class="va">$PEAKS</span> <span class="dt">\</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outFileName</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">--referencePoint</span> <span class="st">'center'</span> <span class="dt">\</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of TSS enrichment..."</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/tss-heatmap.pdf <span class="dt">\</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Protein Coding Genes"</span> <span class="dt">\</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of MACS peak enrichment..."</span></span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/peak-heatmap.pdf <span class="dt">\</span></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Consensus Peak Calls"</span> <span class="dt">\</span></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">--refPointLabel</span> <span class="st">"Center of Peak"</span> <span class="dt">\</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="getting-tss-region-ranges" class="level3">
-<h3 class="anchored" data-anchor-id="getting-tss-region-ranges">Getting TSS region ranges</h3>
-<p>For ATAC-seq, I plot the enrichment over the TSS region for each sample as well as the coverage centered over the consensus peaks defined above. For simplicity, I will also plot the TSS enrichment over protein coding genes. To generate a BED file for protein coding gene regions in R:</p>
+<section id="getting-tss-coding-region-ranges" class="level3">
+<h3 class="anchored" data-anchor-id="getting-tss-coding-region-ranges">Getting TSS coding region ranges</h3>
+<p>For ATAC-seq, I plot the enrichment over the TSS region for each sample as well as the coverage centered over the consensus peaks. To generate a BED file for protein coding gene regions (“coding.bed” above) in R:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get mouse annotation GTF, for example</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M37/gencode.vM37.annotation.gtf.gz"</span></span>
@@ -536,7 +537,7 @@ sample3</code></pre>
 <section id="motif-analysis-with-meme" class="level2">
 <h2 class="anchored" data-anchor-id="motif-analysis-with-meme">8. Motif analysis with <code>MEME</code></h2>
 <p>The <a href="https://meme-suite.org/meme/">MEME suite</a> can be used to perform motif analysis on peaks that have been determined to have differential abundance. You can use R to generate fasta files for these regions based on GRanges extracted from DA analysis. These fasta files can then be used as input to <code>XSTREME</code>, which performs de novo motif discovery, enrichment analysis, and comparisons with known motif databases.</p>
-<p>For example, you can extract fasta regions like so (this uses hg38 rather than mm39 as in the above steps):</p>
+<p>For example, you can extract fasta regions like so (this uses hg38 as an example):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(data.table))</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(Biostrings))</span>
