@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "2025 Coriell Bioinformatics Internship"
+  title: "Coriell Bioinformatics Notes"
   author: "Gennaro Calendo"
   date: "2025-05-20"
   chapters:

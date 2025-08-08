@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Welcome!</span></a>
+ <span class="menu-text">Bioinformatics Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -194,6 +194,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./differential-methylation-analysis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Differential Methylation Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./atacseq-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ATAC-seq Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -321,11 +327,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>counts[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Sample1 Sample2 Sample3 Sample4 Sample5
-Gene1      33     231     266     198      88
-Gene2     112     157      27      13      39
-Gene3      85      71     214     183     306
-Gene4      45      65      67     208      99
-Gene5     222     198      50      46       9</code></pre>
+Gene1      43     195     205      55      73
+Gene2      37     102      23     130      36
+Gene3      73      60      33      46      34
+Gene4     119     123     346      26     149
+Gene5     121      38     230     132     317</code></pre>
 </div>
 </div>
 </section>
@@ -344,12 +350,12 @@ Gene5     222     198      50      46       9</code></pre>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>coldata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        SampleName Treatment Age
-Sample1    Sample1   Control  44
-Sample2    Sample2   Control  77
-Sample3    Sample3   Control  34
-Sample4    Sample4 Treatment  67
-Sample5    Sample5 Treatment  60
-Sample6    Sample6 Treatment  66</code></pre>
+Sample1    Sample1   Control  32
+Sample2    Sample2   Control  96
+Sample3    Sample3   Control  41
+Sample4    Sample4 Treatment  48
+Sample5    Sample5 Treatment  52
+Sample6    Sample6 Treatment   2</code></pre>
 </div>
 </div>
 <p>Notice that all of the rownames of the metadata are in the same order as the colnames of the counts matrix. <strong>This is necessary</strong>.</p>
@@ -373,17 +379,17 @@ Sample6    Sample6 Treatment  66</code></pre>
 <pre><code>GRanges object with 200 ranges and 2 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt;
-    Gene1     chr1 770423-770522      - |       ID001         lncRNA
-    Gene2     chr1 356436-356535      + |       ID002 protein_coding
-    Gene3     chr1 770530-770629      - |       ID003 repeat_element
-    Gene4     chr1 352668-352767      - |       ID004         lncRNA
-    Gene5     chr1 522006-522105      + |       ID005 repeat_element
+    Gene1     chr1 257333-257432      - |       ID001 protein_coding
+    Gene2     chr1 543028-543127      + |       ID002 protein_coding
+    Gene3     chr1 463891-463990      + |       ID003 protein_coding
+    Gene4     chr1 679135-679234      + |       ID004         lncRNA
+    Gene5     chr1 829784-829883      - |       ID005 protein_coding
       ...      ...           ...    ... .         ...            ...
-  Gene196     chr2 253162-253261      - |       ID196         lncRNA
-  Gene197     chr2 175394-175493      + |       ID197 protein_coding
-  Gene198     chr2 710446-710545      - |       ID198 repeat_element
-  Gene199     chr2 901476-901575      + |       ID199         lncRNA
-  Gene200     chr2 800990-801089      + |       ID200         lncRNA
+  Gene196     chr2 723767-723866      - |       ID196         lncRNA
+  Gene197     chr2 673554-673653      + |       ID197 repeat_element
+  Gene198     chr2 593478-593577      - |       ID198 repeat_element
+  Gene199     chr2 543982-544081      + |       ID199         lncRNA
+  Gene200     chr2 114505-114604      - |       ID200 protein_coding
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -424,12 +430,12 @@ colData names(3): SampleName Treatment Age</code></pre>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(se, <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Sample1 Sample2 Sample3 Sample4 Sample5 Sample6
-Gene1      33     231     266     198      88      25
-Gene2     112     157      27      13      39      12
-Gene3      85      71     214     183     306      36
-Gene4      45      65      67     208      99     132
-Gene5     222     198      50      46       9      44
-Gene6      42     129      45      81      95      19</code></pre>
+Gene1      43     195     205      55      73     105
+Gene2      37     102      23     130      36      91
+Gene3      73      60      33      46      34     105
+Gene4     119     123     346      26     149      52
+Gene5     121      38     230     132     317      63
+Gene6      14      30      73      45     121      86</code></pre>
 </div>
 </div>
 <p>To see what assays are available you can use the <code>assays()</code> function</p>
@@ -449,12 +455,12 @@ names(1): counts</code></pre>
 <pre><code>DataFrame with 6 rows and 3 columns
          SampleName Treatment       Age
         &lt;character&gt;  &lt;factor&gt; &lt;integer&gt;
-Sample1     Sample1 Control          44
-Sample2     Sample2 Control          77
-Sample3     Sample3 Control          34
-Sample4     Sample4 Treatment        67
-Sample5     Sample5 Treatment        60
-Sample6     Sample6 Treatment        66</code></pre>
+Sample1     Sample1 Control          32
+Sample2     Sample2 Control          96
+Sample3     Sample3 Control          41
+Sample4     Sample4 Treatment        48
+Sample5     Sample5 Treatment        52
+Sample6     Sample6 Treatment         2</code></pre>
 </div>
 </div>
 </section>
@@ -466,17 +472,17 @@ Sample6     Sample6 Treatment        66</code></pre>
 <pre><code>GRanges object with 200 ranges and 2 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt;
-    Gene1     chr1 770423-770522      - |       ID001         lncRNA
-    Gene2     chr1 356436-356535      + |       ID002 protein_coding
-    Gene3     chr1 770530-770629      - |       ID003 repeat_element
-    Gene4     chr1 352668-352767      - |       ID004         lncRNA
-    Gene5     chr1 522006-522105      + |       ID005 repeat_element
+    Gene1     chr1 257333-257432      - |       ID001 protein_coding
+    Gene2     chr1 543028-543127      + |       ID002 protein_coding
+    Gene3     chr1 463891-463990      + |       ID003 protein_coding
+    Gene4     chr1 679135-679234      + |       ID004         lncRNA
+    Gene5     chr1 829784-829883      - |       ID005 protein_coding
       ...      ...           ...    ... .         ...            ...
-  Gene196     chr2 253162-253261      - |       ID196         lncRNA
-  Gene197     chr2 175394-175493      + |       ID197 protein_coding
-  Gene198     chr2 710446-710545      - |       ID198 repeat_element
-  Gene199     chr2 901476-901575      + |       ID199         lncRNA
-  Gene200     chr2 800990-801089      + |       ID200         lncRNA
+  Gene196     chr2 723767-723866      - |       ID196         lncRNA
+  Gene197     chr2 673554-673653      + |       ID197 repeat_element
+  Gene198     chr2 593478-593577      - |       ID198 repeat_element
+  Gene199     chr2 543982-544081      + |       ID199         lncRNA
+  Gene200     chr2 114505-114604      - |       ID200 protein_coding
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -491,17 +497,17 @@ Sample6     Sample6 Treatment        66</code></pre>
 <pre><code>DataFrame with 200 rows and 2 columns
          feature_id      gene_type
         &lt;character&gt;    &lt;character&gt;
-Gene1         ID001         lncRNA
+Gene1         ID001 protein_coding
 Gene2         ID002 protein_coding
-Gene3         ID003 repeat_element
+Gene3         ID003 protein_coding
 Gene4         ID004         lncRNA
-Gene5         ID005 repeat_element
+Gene5         ID005 protein_coding
 ...             ...            ...
 Gene196       ID196         lncRNA
-Gene197       ID197 protein_coding
+Gene197       ID197 repeat_element
 Gene198       ID198 repeat_element
 Gene199       ID199         lncRNA
-Gene200       ID200         lncRNA</code></pre>
+Gene200       ID200 protein_coding</code></pre>
 </div>
 </div>
 </section>
@@ -541,7 +547,7 @@ names(3): counts cpm logcounts</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>se<span class="sc">$</span>Age</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 44 77 34 67 60 66</code></pre>
+<pre><code>[1] 32 96 41 48 52  2</code></pre>
 </div>
 </div>
 <p>If we want to add a new column we simply create the new column in the same way</p>
@@ -554,12 +560,12 @@ names(3): counts cpm logcounts</code></pre>
 <pre><code>DataFrame with 6 rows and 4 columns
          SampleName Treatment       Age    Batch
         &lt;character&gt;  &lt;factor&gt; &lt;integer&gt; &lt;factor&gt;
-Sample1     Sample1 Control          44        A
-Sample2     Sample2 Control          77        B
-Sample3     Sample3 Control          34        C
-Sample4     Sample4 Treatment        67        A
-Sample5     Sample5 Treatment        60        B
-Sample6     Sample6 Treatment        66        C</code></pre>
+Sample1     Sample1 Control          32        A
+Sample2     Sample2 Control          96        B
+Sample3     Sample3 Control          41        C
+Sample4     Sample4 Treatment        48        A
+Sample5     Sample5 Treatment        52        B
+Sample6     Sample6 Treatment         2        C</code></pre>
 </div>
 </div>
 </section>
@@ -574,17 +580,17 @@ Sample6     Sample6 Treatment        66        C</code></pre>
 <pre><code>DataFrame with 200 rows and 3 columns
          feature_id      gene_type      Keep
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-Gene1         ID001         lncRNA     FALSE
+Gene1         ID001 protein_coding      TRUE
 Gene2         ID002 protein_coding      TRUE
-Gene3         ID003 repeat_element     FALSE
+Gene3         ID003 protein_coding      TRUE
 Gene4         ID004         lncRNA     FALSE
-Gene5         ID005 repeat_element     FALSE
+Gene5         ID005 protein_coding      TRUE
 ...             ...            ...       ...
 Gene196       ID196         lncRNA     FALSE
-Gene197       ID197 protein_coding      TRUE
+Gene197       ID197 repeat_element     FALSE
 Gene198       ID198 repeat_element     FALSE
 Gene199       ID199         lncRNA     FALSE
-Gene200       ID200         lncRNA     FALSE</code></pre>
+Gene200       ID200 protein_coding      TRUE</code></pre>
 </div>
 </div>
 </section>
@@ -615,13 +621,13 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(trt, <span class="st">"logcounts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        Sample4  Sample5   Sample6
-Gene1 13.311441 11.89383 10.225176
-Gene2  9.319622 10.93453  9.256861
-Gene3 12.950103 13.83871 10.852010
-Gene4 13.349571 12.30126 12.663576
-Gene5 11.104882  8.85201 10.893834
-Gene6 12.011749 12.18904  9.897059</code></pre>
+<pre><code>       Sample4  Sample5  Sample6
+Gene1 11.44995 11.80667 12.28449
+Gene2 12.58495 10.90951 12.07571
+Gene3 11.14041 10.65770 12.38284
+Gene4 10.44002 12.78708 11.26302
+Gene5 12.61464 13.97693 11.59412
+Gene6 11.05977 12.48145 12.16585</code></pre>
 </div>
 </div>
 <p>Of course you can combine multiple conditions as well</p>
@@ -629,12 +635,12 @@ Gene6 12.011749 12.18904  9.897059</code></pre>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>se[, se<span class="sc">$</span>Batch <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"B"</span>, <span class="st">"C"</span>) <span class="sc">&amp;</span> se<span class="sc">$</span>Age <span class="sc">&gt;</span> <span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 200 4 
+dim: 200 3 
 metadata(0):
 assays(3): counts cpm logcounts
 rownames(200): Gene1 Gene2 ... Gene199 Gene200
 rowData names(3): feature_id gene_type Keep
-colnames(4): Sample2 Sample3 Sample5 Sample6
+colnames(3): Sample2 Sample3 Sample5
 colData names(4): SampleName Treatment Age Batch</code></pre>
 </div>
 </div>
@@ -661,10 +667,10 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>(coding <span class="ot">&lt;-</span> se[<span class="fu">rowData</span>(se)<span class="sc">$</span>Keep, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 70 6 
+dim: 61 6 
 metadata(0):
 assays(3): counts cpm logcounts
-rownames(70): Gene2 Gene8 ... Gene195 Gene197
+rownames(61): Gene1 Gene2 ... Gene194 Gene200
 rowData names(3): feature_id gene_type Keep
 colnames(6): Sample1 Sample2 ... Sample5 Sample6
 colData names(4): SampleName Treatment Age Batch</code></pre>
@@ -674,33 +680,33 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowData</span>(coding)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>DataFrame with 70 rows and 3 columns
+<pre><code>DataFrame with 61 rows and 3 columns
          feature_id      gene_type      Keep
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
+Gene1         ID001 protein_coding      TRUE
 Gene2         ID002 protein_coding      TRUE
-Gene8         ID008 protein_coding      TRUE
-Gene10        ID010 protein_coding      TRUE
-Gene20        ID020 protein_coding      TRUE
-Gene21        ID021 protein_coding      TRUE
+Gene3         ID003 protein_coding      TRUE
+Gene5         ID005 protein_coding      TRUE
+Gene13        ID013 protein_coding      TRUE
 ...             ...            ...       ...
-Gene189       ID189 protein_coding      TRUE
+Gene188       ID188 protein_coding      TRUE
 Gene191       ID191 protein_coding      TRUE
+Gene193       ID193 protein_coding      TRUE
 Gene194       ID194 protein_coding      TRUE
-Gene195       ID195 protein_coding      TRUE
-Gene197       ID197 protein_coding      TRUE</code></pre>
+Gene200       ID200 protein_coding      TRUE</code></pre>
 </div>
 </div>
 <p>Each assay also reflects this operation</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(coding, <span class="st">"cpm"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>         Sample1   Sample2  Sample3   Sample4   Sample5    Sample6
-Gene2  5505.0381  7878.757 1376.498  638.9776  1957.144   611.7767
-Gene8  5701.6466  1806.594 6831.507 3293.1924  4416.119  1682.3859
-Gene10  652.3812  5455.009 4374.539 5269.2327 12898.292 16269.3536
-Gene20 6635.5370 10237.366 4894.214 7569.4274  8129.673  3313.7905
-Gene21 7437.8378  2729.101 5031.576 3502.7027  5218.807  3542.6400
-Gene24 2345.1440  1425.412 4365.936 2243.1812 20152.372  2057.5099</code></pre>
+<pre><code>        Sample1  Sample2   Sample3  Sample4   Sample5  Sample6
+Gene1  2187.182 9569.143  9740.105 2797.558  3582.295 4988.835
+Gene2  1748.665 5449.882  1091.030 6143.958  1923.488 4316.683
+Gene3  3582.295 2850.763  1678.535 2257.336  1615.432 5340.793
+Gene5  5749.038 1932.859 11286.682 6271.678 16124.110 3091.569
+Gene13 1678.535 5152.616  1140.305 5645.982  4858.180 2043.047
+Gene15 2748.062 7459.495  4323.499 3484.150  3658.479 3102.747</code></pre>
 </div>
 </div>
 </section>
@@ -732,29 +738,29 @@ colData names(4): SampleName Treatment Age Batch</code></pre>
 <pre><code>DataFrame with 150 rows and 3 columns
          feature_id      gene_type      Keep
         &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-Gene51        ID051 repeat_element     FALSE
-Gene52        ID052         lncRNA     FALSE
-Gene53        ID053         lncRNA     FALSE
-Gene54        ID054         lncRNA     FALSE
+Gene51        ID051 protein_coding      TRUE
+Gene52        ID052 protein_coding      TRUE
+Gene53        ID053 repeat_element     FALSE
+Gene54        ID054 repeat_element     FALSE
 Gene55        ID055 protein_coding      TRUE
 ...             ...            ...       ...
 Gene196       ID196         lncRNA     FALSE
-Gene197       ID197 protein_coding      TRUE
+Gene197       ID197 repeat_element     FALSE
 Gene198       ID198 repeat_element     FALSE
 Gene199       ID199         lncRNA     FALSE
-Gene200       ID200         lncRNA     FALSE</code></pre>
+Gene200       ID200 protein_coding      TRUE</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">assay</span>(chr2, <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Sample1 Sample2 Sample3 Sample4 Sample5 Sample6
-Gene51      55     158      32      32      11     126
-Gene52      83      65     155      75      54     119
-Gene53      70      89      37      81      73     252
-Gene54     148     174      12     109      45     130
-Gene55      76     106      74     278      55     191
-Gene56      89      21      74     161      66     295</code></pre>
+Gene51     231     173      57      66     138      48
+Gene52      40     120      60     126     223      80
+Gene53      47     155     109      54     138      48
+Gene54     107      95      93     120     134     198
+Gene55      89      33      87      67     171      85
+Gene56      35      65      96      61     160      95</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -763,17 +769,17 @@ Gene56      89      21      74     161      66     295</code></pre>
 <pre><code>GRanges object with 150 ranges and 3 metadata columns:
           seqnames        ranges strand |  feature_id      gene_type      Keep
              &lt;Rle&gt;     &lt;IRanges&gt;  &lt;Rle&gt; | &lt;character&gt;    &lt;character&gt; &lt;logical&gt;
-   Gene51     chr2 682015-682114      + |       ID051 repeat_element     FALSE
-   Gene52     chr2 505622-505721      - |       ID052         lncRNA     FALSE
-   Gene53     chr2 572809-572908      + |       ID053         lncRNA     FALSE
-   Gene54     chr2 239876-239975      + |       ID054         lncRNA     FALSE
-   Gene55     chr2 394726-394825      - |       ID055 protein_coding      TRUE
+   Gene51     chr2 199333-199432      + |       ID051 protein_coding      TRUE
+   Gene52     chr2 405579-405678      + |       ID052 protein_coding      TRUE
+   Gene53     chr2 753001-753100      - |       ID053 repeat_element     FALSE
+   Gene54     chr2 644644-644743      + |       ID054 repeat_element     FALSE
+   Gene55     chr2 115245-115344      - |       ID055 protein_coding      TRUE
       ...      ...           ...    ... .         ...            ...       ...
-  Gene196     chr2 253162-253261      - |       ID196         lncRNA     FALSE
-  Gene197     chr2 175394-175493      + |       ID197 protein_coding      TRUE
-  Gene198     chr2 710446-710545      - |       ID198 repeat_element     FALSE
-  Gene199     chr2 901476-901575      + |       ID199         lncRNA     FALSE
-  Gene200     chr2 800990-801089      + |       ID200         lncRNA     FALSE
+  Gene196     chr2 723767-723866      - |       ID196         lncRNA     FALSE
+  Gene197     chr2 673554-673653      + |       ID197 repeat_element     FALSE
+  Gene198     chr2 593478-593577      - |       ID198 repeat_element     FALSE
+  Gene199     chr2 543982-544081      + |       ID199         lncRNA     FALSE
+  Gene200     chr2 114505-114604      - |       ID200 protein_coding      TRUE
   -------
   seqinfo: 2 sequences from an unspecified genome; no seqlengths</code></pre>
 </div>
@@ -798,10 +804,10 @@ Gene56      89      21      74     161      66     295</code></pre>
 <span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class: RangedSummarizedExperiment 
-dim: 63 1 
+dim: 62 1 
 metadata(0):
 assays(3): counts cpm logcounts
-rownames(63): Gene3 Gene5 ... Gene193 Gene198
+rownames(62): Gene8 Gene9 ... Gene197 Gene198
 rowData names(3): feature_id gene_type Keep
 colnames(1): Sample1
 colData names(4): SampleName Treatment Age Batch</code></pre>

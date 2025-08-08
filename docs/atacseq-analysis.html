@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.313">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2025 Coriell Bioinformatics Internship - ATAC-seq Analysis</title>
+<title>ATAC-seq Analysis – Coriell Bioinformatics Notes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,9 +17,11 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +48,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -95,22 +67,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
 <link href="./differential-methylation-analysis.html" rel="prev">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-128e0f949f8f902082bc899829804d79.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -119,23 +98,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
 
 </head>
 
-<body class="nav-sidebar floating">
+<body class="nav-sidebar floating quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">ATAC-seq Analysis</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./atacseq-analysis.html">ATAC-seq Analysis</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -143,97 +129,113 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">2025 Coriell Bioinformatics Internship</a> 
+      <a href="./">Coriell Bioinformatics Notes</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">Bioinformatics Notes</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Bioinformatics Notes</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-best-practices.html" class="sidebar-item-text sidebar-link">‘Best’ practices for data projects</a>
+  <a href="./data-best-practices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">‘Best’ practices for data projects</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./linux.html" class="sidebar-item-text sidebar-link">Command line basics</a>
+  <a href="./linux.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Command line basics</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">R programming basics</a>
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R programming basics</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-viz.html" class="sidebar-item-text sidebar-link">Effective data visualizations</a>
+  <a href="./data-viz.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Effective data visualizations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./presenting-science.html" class="sidebar-item-text sidebar-link">Scientific presentations</a>
+  <a href="./presenting-science.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Scientific presentations</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summarized-experiments.html" class="sidebar-item-text sidebar-link">Practical introduction to SummarizedExperiments</a>
+  <a href="./summarized-experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Practical introduction to SummarizedExperiments</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link">Differential Expression Analysis</a>
+  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential Expression Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./differential-methylation-analysis.html" class="sidebar-item-text sidebar-link">Differential Methylation Analysis</a>
+  <a href="./differential-methylation-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Differential Methylation Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./atacseq-analysis.html" class="sidebar-item-text sidebar-link active">ATAC-seq Analysis</a>
+  <a href="./atacseq-analysis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">ATAC-seq Analysis</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
   </div>
 </li>
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#filter-raw-fastq-files" id="toc-filter-raw-fastq-files" class="nav-link active" data-scroll-target="#filter-raw-fastq-files">1. Filter raw fastq files</a></li>
-  <li><a href="#perform-alignment-with-bowtie2" id="toc-perform-alignment-with-bowtie2" class="nav-link" data-scroll-target="#perform-alignment-with-bowtie2">2. Perform alignment with Bowtie2</a></li>
-  <li><a href="#call-peaks-with-genrich" id="toc-call-peaks-with-genrich" class="nav-link" data-scroll-target="#call-peaks-with-genrich">3. Call peaks with <code>Genrich</code></a>
+  <li><a href="#filter-raw-fastq-files" id="toc-filter-raw-fastq-files" class="nav-link active" data-scroll-target="#filter-raw-fastq-files">Filter raw fastq files</a></li>
+  <li><a href="#perform-alignment-with-bowtie2" id="toc-perform-alignment-with-bowtie2" class="nav-link" data-scroll-target="#perform-alignment-with-bowtie2">Perform alignment with Bowtie2</a></li>
+  <li><a href="#call-peaks-with-genrich" id="toc-call-peaks-with-genrich" class="nav-link" data-scroll-target="#call-peaks-with-genrich">Call peaks with <code>Genrich</code></a>
   <ul class="collapse">
   <li><a href="#exclusion-lists" id="toc-exclusion-lists" class="nav-link" data-scroll-target="#exclusion-lists">Exclusion lists</a></li>
   </ul></li>
-  <li><a href="#determine-consensus-peaks-for-replicate-samples" id="toc-determine-consensus-peaks-for-replicate-samples" class="nav-link" data-scroll-target="#determine-consensus-peaks-for-replicate-samples">4. Determine consensus peaks for replicate samples</a></li>
-  <li><a href="#create-tss-and-region-plots-with-deeptools" id="toc-create-tss-and-region-plots-with-deeptools" class="nav-link" data-scroll-target="#create-tss-and-region-plots-with-deeptools">5. Create TSS and region plots with <code>deeptools</code></a>
+  <li><a href="#determine-consensus-peaks-for-replicate-samples" id="toc-determine-consensus-peaks-for-replicate-samples" class="nav-link" data-scroll-target="#determine-consensus-peaks-for-replicate-samples">Determine consensus peaks for replicate samples</a></li>
+  <li><a href="#create-raw-signal-tracks" id="toc-create-raw-signal-tracks" class="nav-link" data-scroll-target="#create-raw-signal-tracks">Create raw signal tracks</a>
+  <ul class="collapse">
+  <li><a href="#chrom-sizes-files" id="toc-chrom-sizes-files" class="nav-link" data-scroll-target="#chrom-sizes-files">Chrom sizes files</a></li>
+  </ul></li>
+  <li><a href="#atacseqqc" id="toc-atacseqqc" class="nav-link" data-scroll-target="#atacseqqc">ATACSeqQC</a></li>
+  <li><a href="#differential-abundance-using-csaw-and-edger" id="toc-differential-abundance-using-csaw-and-edger" class="nav-link" data-scroll-target="#differential-abundance-using-csaw-and-edger">Differential abundance using <code>csaw</code> and <code>edgeR</code></a></li>
+  <li><a href="#create-tss-and-region-plots-with-deeptools" id="toc-create-tss-and-region-plots-with-deeptools" class="nav-link" data-scroll-target="#create-tss-and-region-plots-with-deeptools">Create TSS and region plots with <code>deeptools</code></a>
   <ul class="collapse">
   <li><a href="#getting-tss-coding-region-ranges" id="toc-getting-tss-coding-region-ranges" class="nav-link" data-scroll-target="#getting-tss-coding-region-ranges">Getting TSS coding region ranges</a></li>
   </ul></li>
-  <li><a href="#atacseqqc" id="toc-atacseqqc" class="nav-link" data-scroll-target="#atacseqqc">6. ATACSeqQC</a></li>
-  <li><a href="#differential-abundance-using-csaw-and-edger" id="toc-differential-abundance-using-csaw-and-edger" class="nav-link" data-scroll-target="#differential-abundance-using-csaw-and-edger">7. Differential abundance using <code>csaw</code> and <code>edgeR</code></a></li>
-  <li><a href="#motif-analysis-with-meme" id="toc-motif-analysis-with-meme" class="nav-link" data-scroll-target="#motif-analysis-with-meme">8. Motif analysis with <code>MEME</code></a></li>
+  <li><a href="#motif-analysis-with-meme" id="toc-motif-analysis-with-meme" class="nav-link" data-scroll-target="#motif-analysis-with-meme">Motif analysis with <code>MEME</code></a></li>
   </ul>
 </nav>
     </div>
@@ -242,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">ATAC-seq Analysis</h1>
+<h1 class="title">ATAC-seq Analysis</h1>
 </div>
 
 
@@ -255,11 +257,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
   
 
+
 </header>
+
 
 <p><strong>Work in progress</strong></p>
 <section id="filter-raw-fastq-files" class="level2">
-<h2 class="anchored" data-anchor-id="filter-raw-fastq-files">1. Filter raw fastq files</h2>
+<h2 class="anchored" data-anchor-id="filter-raw-fastq-files">Filter raw fastq files</h2>
 <p>Use <a href="https://github.com/OpenGene/fastp">fastp</a> to perform quality trimming on raw fastq files. Turn on adapter detection for paired end reads.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
@@ -295,7 +299,7 @@ sample3</code></pre>
 <p>This file gets used throughout.</p>
 </section>
 <section id="perform-alignment-with-bowtie2" class="level2">
-<h2 class="anchored" data-anchor-id="perform-alignment-with-bowtie2">2. Perform alignment with Bowtie2</h2>
+<h2 class="anchored" data-anchor-id="perform-alignment-with-bowtie2">Perform alignment with Bowtie2</h2>
 <p>Use <code>--very-sensitive</code> mode and set max insertion size to 1,000. The output is piped to <code>samtools fixmate</code> for adding mate tag information and then to <code>samtools sort -n</code> to create name sorted BAM files.</p>
 <p>It’s assumed that you have a bowtie2 index generated for your species of interest. The number of jobs, threads, and memory allowed per thread will all be machine dependent.</p>
 <div class="cell">
@@ -328,7 +332,7 @@ sample3</code></pre>
 </div>
 </section>
 <section id="call-peaks-with-genrich" class="level2">
-<h2 class="anchored" data-anchor-id="call-peaks-with-genrich">3. Call peaks with <code>Genrich</code></h2>
+<h2 class="anchored" data-anchor-id="call-peaks-with-genrich">Call peaks with <code>Genrich</code></h2>
 <p><a href="https://github.com/jsh58/Genrich">Genrich</a> is a fast peak caller designed to work with single samples or replicates. It has a dedicated option for peak calling ATAC-seq samples.</p>
 <p>The options used below:</p>
 <ul>
@@ -379,7 +383,7 @@ sample3</code></pre>
 </section>
 </section>
 <section id="determine-consensus-peaks-for-replicate-samples" class="level2">
-<h2 class="anchored" data-anchor-id="determine-consensus-peaks-for-replicate-samples">4. Determine consensus peaks for replicate samples</h2>
+<h2 class="anchored" data-anchor-id="determine-consensus-peaks-for-replicate-samples">Determine consensus peaks for replicate samples</h2>
 <p>After peak calling finishes, I create consensus peak calls for replicate samples. The consensus peak calls can be used in downstream differential accessibility analysis or for visualization. Creating consensus peak calls can be done in R by requiring all or some peaks to be called across replicate samples.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(here))</span>
@@ -406,8 +410,8 @@ sample3</code></pre>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>treatment_covered <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="fu">slice</span>(treatment_coverage, <span class="at">lower=</span><span class="fu">length</span>(treatment_calls), <span class="at">rangesOnly=</span><span class="cn">TRUE</span>))</span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Close gaps in the resulting regions -- min.gapwidth can be adjusted </span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>control_consensus <span class="ot">&lt;-</span> <span class="fu">reduce</span>(control_covered, <span class="at">min.gapwidth=</span><span class="dv">301</span>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>treatment_consensus <span class="ot">&lt;-</span> <span class="fu">reduce</span>(treatment_covered, <span class="at">min.gapwidth=</span><span class="dv">301</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>control_consensus <span class="ot">&lt;-</span> <span class="fu">reduce</span>(control_covered, <span class="at">min.gapwidth=</span><span class="dv">101</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>treatment_consensus <span class="ot">&lt;-</span> <span class="fu">reduce</span>(treatment_covered, <span class="at">min.gapwidth=</span><span class="dv">101</span>)</span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>all_consensus <span class="ot">&lt;-</span> <span class="fu">union</span>(control_consensus, treatment_consensus)</span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Export as BED files</span></span>
@@ -416,159 +420,204 @@ sample3</code></pre>
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>rtracklayer<span class="sc">::</span><span class="fu">export.bed</span>(all_consensus, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"04_callpeak"</span>, <span class="st">"consensus.bed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="create-tss-and-region-plots-with-deeptools" class="level2">
-<h2 class="anchored" data-anchor-id="create-tss-and-region-plots-with-deeptools">5. Create TSS and region plots with <code>deeptools</code></h2>
-<p><a href="https://deeptools.readthedocs.io/en/latest/">deeptools</a> can be used to compute normalized coverage files in bigwig format for visualization in IGV. Normalization in <code>deeptools</code> can be really context dependent and what normalization strategy to use can often be <a href="https://www.biostars.org/p/413626/#414440">unclear</a>. To get an idea of how the data is behaving, I tend to use CPM normalization first and then perform other normalizations if needed (for example, if performing DA analysis and computing TMM scaling factors).</p>
-<p>There’s an interesting <a href="https://www.biostars.org/p/422383/">discussion</a> regarding what parameters to use for ATAC-seq in <code>deeptools</code> if you want to accurately view cut sites. We tend to care about larger signals/peaks of enrichment vs footprinting, however, so I tend to just use the entire fragment lengths.</p>
-<p>Then you can run <code>deeptools</code> using the TSS regions of coding genes and called consensus peaks.</p>
+<section id="create-raw-signal-tracks" class="level2">
+<h2 class="anchored" data-anchor-id="create-raw-signal-tracks">Create raw signal tracks</h2>
+<p>Genrich outputs a bedgraph-ish file using the <code>-k</code> flag that can be used to quickly create a a bigwig file of the raw signal which can be viewed in IGV. I find it useful to look at the raw signal tracks after peak calling so I can assess the absolute magnitude of the pileup that went into calling a peak. Then, if the peaks look too permissive or too stringent, adjust the peak calls.</p>
+<p>Creating bigwigs from the bedgraph-ish files can be accomplished using <code>awk</code> and <a href="https://www.encodeproject.org/software/bedgraphtobigwig/">bedGraphToBigWig</a> from UCSC.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute coverage bigwigs for visualization</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the pileups computed by Genrich from bedGraph-ish files to bigwigs</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'deeptools' mamba env must be activated before running</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------------------------------------------------------</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="va">SAMPLES</span><span class="op">=</span>/path/to/sample-names.txt</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLACKLIST</span><span class="op">=</span>/path/to/excluderanges.bed</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="va">CODING</span><span class="op">=</span>/path/to/coding.bed</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="va">BAM</span><span class="op">=</span>/path/to/03_filter</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="va">PEAKS</span><span class="op">=</span>/path/to/consensus.bed</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/05_deeptools</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="va">JOBS</span><span class="op">=</span>6</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="va">THREADS</span><span class="op">=</span>4</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-Eeou</span> pipefail</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="va">SAMPLES</span><span class="op">=</span>/path/to/sample-names.txt   </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="va">PEAKS</span><span class="op">=</span>/path/to/03_callpeak</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/04_bg2bw</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="va">CHROM_SIZES</span><span class="op">=</span>/path/to/chrom.sizes</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="va">JOBS</span><span class="op">=</span>6</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$OUT</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$OUT</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over all BAM files..."</span> </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="dt">\</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bamCoverage --bam </span><span class="va">$BAM</span><span class="st">/{}.final.bam </span><span class="dt">\</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileName </span><span class="va">$OUT</span><span class="st">/{}.bw </span><span class="dt">\</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileFormat 'bigwig' </span><span class="dt">\</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="st">                 --binSize 1 </span><span class="dt">\</span></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="st">                 --extendReads </span><span class="dt">\</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="st">                 --blackListFileName </span><span class="va">$BLACKLIST</span><span class="st"> </span><span class="dt">\</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="st">                 --numberOfProcessors </span><span class="va">$THREADS</span><span class="st"> </span><span class="dt">\</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">                 --normalizeUsing 'CPM' </span><span class="dt">\</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="st">                 --ignoreDuplicates"</span> :::: <span class="va">$SAMPLES</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing matrix over TSS regions..."</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a> <span class="at">--regionsFileName</span>  <span class="dt">\</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a> <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a> <span class="at">--outFileName</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a> <span class="at">--referencePoint</span> TSS <span class="dt">\</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a> <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a> <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a> <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a> <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a> <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over peak BEDs..."</span></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsFileName</span> <span class="va">$PEAKS</span> <span class="dt">\</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outFileName</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">--referencePoint</span> <span class="st">'center'</span> <span class="dt">\</span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of TSS enrichment..."</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/tss-heatmap.pdf <span class="dt">\</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Protein Coding Genes"</span> <span class="dt">\</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span>
-<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of MACS peak enrichment..."</span></span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/peak-heatmap.pdf <span class="dt">\</span></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Consensus Peak Calls"</span> <span class="dt">\</span></span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">--refPointLabel</span> <span class="st">"Center of Peak"</span> <span class="dt">\</span></span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"CPM"</span> <span class="dt">\</span></span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 24 <span class="dt">\</span></span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Extracting bedGraphs from experimental signal..."</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="dt">\</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"awk 'NR &gt; 2 { print </span><span class="dt">\$</span><span class="st">1, </span><span class="dt">\$</span><span class="st">2, </span><span class="dt">\$</span><span class="st">3, </span><span class="dt">\$</span><span class="st">4 }' </span><span class="va">$PEAKS</span><span class="st">/{}.pileup.txt | </span><span class="dt">\</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="st">  LC_ALL=C sort -k1,1 -k2,2n &gt; </span><span class="va">$OUT</span><span class="st">/{}.sorted.bedGraph"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Creating bigwigs from pileups..."</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="st">"bedGraphToBigWig </span><span class="va">$OUT</span><span class="st">/{}.sorted.bedGraph </span><span class="va">$CHROM_SIZES</span><span class="st"> </span><span class="va">$OUT</span><span class="st">/{}.bw"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Cleaning up intermediate bedGraphs..."</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> <span class="va">$OUT</span> <span class="at">-type</span> f <span class="at">-name</span> <span class="st">"*.bedGraph"</span> <span class="at">-delete</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="chrom-sizes-files" class="level3">
+<h3 class="anchored" data-anchor-id="chrom-sizes-files">Chrom sizes files</h3>
+<p>You can supply a URL to <code>bedGraphToBigWig</code> to get the chrom.sizes if you’re genome is supported. Otherwise, you can create a chrom.sizes file using another UCSC utility, <code>faSize</code>, and your genome fasta.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">faSize</span> <span class="at">-detailed</span> <span class="at">-tab</span> genome.fasta <span class="op">&gt;</span> genome.chrom.sizes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="atacseqqc" class="level2">
+<h2 class="anchored" data-anchor-id="atacseqqc">ATACSeqQC</h2>
+<p><strong>TODO: complete this section</strong></p>
+<p>The <a href="https://bioconductor.org/packages/release/bioc/vignettes/ATACseqQC/inst/doc/ATACseqQC.html">ATACseqQC</a> R package can be used to calculate various QC stats on the filtered BAM files. These should be assessed closely and compared to the <a href="https://www.encodeproject.org/atac-seq/">ENCODE data standards</a>.</p>
+</section>
+<section id="differential-abundance-using-csaw-and-edger" class="level2">
+<h2 class="anchored" data-anchor-id="differential-abundance-using-csaw-and-edger">Differential abundance using <code>csaw</code> and <code>edgeR</code></h2>
+<p><strong>TODO: elaborate on this section</strong></p>
+<p><a href="https://bioconductor.org/books/release/csawBook/">csaw</a> can be used to perform differential abundance over sliding windows <em>or</em> by counting reads in the consensus peaks defined above. This <a href="https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y">paper</a> contains some code for performing and assessing ATAC-seq DA analysis using both methods.</p>
+<p>I usually generate read counts over the consensus peaks using <code>featureCounts</code> from the <a href="https://bioconductor.org/packages/devel/bioc/vignettes/Rsubread/inst/doc/SubreadUsersGuide.pdf">Rsubread</a> package. An SAF formatted file can be generated easily from the “consensus.bed” file. To get the read counts to align with the Genrich called peaks, set the <code>-read2Pos 5</code> flag to count alignments over the 5’ end of reads.</p>
+</section>
+<section id="create-tss-and-region-plots-with-deeptools" class="level2">
+<h2 class="anchored" data-anchor-id="create-tss-and-region-plots-with-deeptools">Create TSS and region plots with <code>deeptools</code></h2>
+<p><a href="https://deeptools.readthedocs.io/en/latest/">deeptools</a> can be used to compute normalized coverage files in bigwig format for visualization in IGV. Normalization in <code>deeptools</code> can be really context dependent and what normalization strategy to use can often be unclear.</p>
+<p>If you’ve performed differential abundance analysis and have global scaling normalization factors, they can be used at this step to generate <a href="https://www.biostars.org/p/413626/#414440">TMM normalized</a> bigwigs. In the absence of scaling factors, I’ve seen people use RPGC normalization or CPM for ATAC-seq.</p>
+<p>Then you can run <code>deeptools</code> using the TSS regions of coding genes and called consensus peaks.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute normalized coverage bigwigs for visualization</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 'deeptools' mamba env must be activated before running</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------------------------------------------------------</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="va">SAMPLES</span><span class="op">=</span>/path/to/sample-names.txt</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLACKLIST</span><span class="op">=</span>/path/to/excluderanges.bed</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="va">CODING</span><span class="op">=</span>/path/to/coding.bed</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="va">BAM</span><span class="op">=</span>/path/to/02_align</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="va">PEAKS</span><span class="op">=</span>/path/to/consensus.bed</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/05_deeptools</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="va">GENOME_SIZE</span><span class="op">=</span>2654621783  <span class="co"># mm39 specific value, see https://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="va">JOBS</span><span class="op">=</span>6</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="va">THREADS</span><span class="op">=</span>4</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="va">$OUT</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Position sorting BAMs..."</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="st">"samtools sort -@</span><span class="va">$THREADS</span><span class="st"> -m4G -o </span><span class="va">$OUT</span><span class="st">/{}.sorted.bam </span><span class="va">$BAM</span><span class="st">/{}.bam"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="st">"samtools index </span><span class="va">$OUT</span><span class="st">/{}.sorted.bam"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over all BAM files..."</span> </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel</span> <span class="at">--jobs</span> <span class="va">$JOBS</span> <span class="dt">\</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"bamCoverage --bam </span><span class="va">$BAM</span><span class="st">/{}.sorted.bam </span><span class="dt">\</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileName </span><span class="va">$OUT</span><span class="st">/{}.bw </span><span class="dt">\</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="st">                 --outFileFormat 'bigwig' </span><span class="dt">\</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="st">                 --normalizeUsing 'RPGC' </span><span class="dt">\</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="st">                 --effectiveGenomeSize </span><span class="va">$GENOME_SIZE</span><span class="st"> </span><span class="dt">\</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="st">                 --binSize 1 </span><span class="dt">\</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="st">                 --extendReads </span><span class="dt">\</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="st">                 --blackListFileName </span><span class="va">$BLACKLIST</span><span class="st"> </span><span class="dt">\</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="st">                 --numberOfProcessors </span><span class="va">$THREADS</span><span class="st"> </span><span class="dt">\</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="st">                 --ignoreDuplicates"</span> :::: <span class="va">$SAMPLES</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing matrix over TSS regions..."</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a> <span class="at">--regionsFileName</span>  <span class="dt">\</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a> <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a> <span class="at">--outFileName</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a> <span class="at">--referencePoint</span> TSS <span class="dt">\</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a> <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a> <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a> <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a> <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a> <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Computing coverage over peak BEDs..."</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="ex">computeMatrix</span> reference-point <span class="dt">\</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsFileName</span> <span class="va">$PEAKS</span> <span class="dt">\</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">--scoreFileName</span> <span class="va">$OUT</span>/<span class="pp">*</span>.bw <span class="dt">\</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outFileName</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">--referencePoint</span> <span class="st">'center'</span> <span class="dt">\</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">--beforeRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">--afterRegionStartLength</span> 3000 <span class="dt">\</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blackListFileName</span> <span class="va">$BLACKLIST</span> <span class="dt">\</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">--missingDataAsZero</span> <span class="dt">\</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">--numberOfProcessors</span> <span class="va">$JOBS</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of TSS enrichment..."</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/tss.mat.gz <span class="dt">\</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/tss-heatmap.pdf <span class="dt">\</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Protein Coding Genes"</span> <span class="dt">\</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"RPGC"</span> <span class="dt">\</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 12 <span class="dt">\</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Plotting heatmap of MACS peak enrichment..."</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="ex">plotHeatmap</span> <span class="at">-m</span> <span class="va">$OUT</span>/peak.mat.gz <span class="dt">\</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> <span class="va">$OUT</span>/peak-heatmap.pdf <span class="dt">\</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">--dpi</span> 300 <span class="dt">\</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">--colorMap</span> <span class="st">"viridis"</span> <span class="dt">\</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>  <span class="at">--boxAroundHeatmaps</span> <span class="st">'no'</span> <span class="dt">\</span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">--samplesLabel</span> <span class="st">"Ctl 1"</span> <span class="st">"Ctl 2"</span> <span class="st">"Ctl 3"</span> <span class="st">"Trt 1"</span> <span class="st">"Trt 2"</span> <span class="st">"Trt 3"</span> <span class="dt">\</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>  <span class="at">--regionsLabel</span> <span class="st">"Consensus Peak Calls"</span> <span class="dt">\</span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">--refPointLabel</span> <span class="st">"Center of Peak"</span> <span class="dt">\</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">--yAxisLabel</span> <span class="st">"RPGC"</span> <span class="dt">\</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>  <span class="at">--perGroup</span> <span class="dt">\</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapHeight</span> 12 <span class="dt">\</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">--heatmapWidth</span> 8 <span class="dt">\</span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>  <span class="at">--plotFileFormat</span> <span class="st">"pdf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="getting-tss-coding-region-ranges" class="level3">
 <h3 class="anchored" data-anchor-id="getting-tss-coding-region-ranges">Getting TSS coding region ranges</h3>
 <p>For ATAC-seq, I plot the enrichment over the TSS region for each sample as well as the coverage centered over the consensus peaks. To generate a BED file for protein coding gene regions (“coding.bed” above) in R:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get mouse annotation GTF, for example</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M37/gencode.vM37.annotation.gtf.gz"</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>gtf <span class="ot">&lt;-</span> rtracklayer<span class="sc">::</span><span class="fu">import</span>(url)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the protein coding gene ranges only</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>coding <span class="ot">&lt;-</span> gtf[gtf<span class="sc">$</span>gene_type <span class="sc">==</span> <span class="st">"protein_coding"</span> <span class="sc">&amp;</span> gtf<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"gene"</span>, ]</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># rtracklayer complains if score is NA or non-numeric</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>coding<span class="sc">$</span>score <span class="ot">&lt;-</span> 1L</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to a BED file for use in deeptools</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>rtracklayer<span class="sc">::</span><span class="fu">export.bed</span>(coding, <span class="fu">here</span>(<span class="st">"doc"</span>, <span class="st">"gencode.vM37.coding.bed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get mouse annotation GTF, for example</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M37/gencode.vM37.annotation.gtf.gz"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>gtf <span class="ot">&lt;-</span> rtracklayer<span class="sc">::</span><span class="fu">import</span>(url)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the protein coding gene ranges only</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>coding <span class="ot">&lt;-</span> gtf[gtf<span class="sc">$</span>gene_type <span class="sc">==</span> <span class="st">"protein_coding"</span> <span class="sc">&amp;</span> gtf<span class="sc">$</span>type <span class="sc">==</span> <span class="st">"gene"</span>, ]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># rtracklayer complains if score is NA or non-numeric</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>coding<span class="sc">$</span>score <span class="ot">&lt;-</span> <span class="dv">1</span>L</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Export to a BED file for use in deeptools</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>rtracklayer<span class="sc">::</span><span class="fu">export.bed</span>(coding, <span class="fu">here</span>(<span class="st">"doc"</span>, <span class="st">"gencode.vM37.coding.bed"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
-<section id="atacseqqc" class="level2">
-<h2 class="anchored" data-anchor-id="atacseqqc">6. ATACSeqQC</h2>
-<p><strong>TODO: complete this section</strong></p>
-<p>The <a href="https://bioconductor.org/packages/release/bioc/vignettes/ATACseqQC/inst/doc/ATACseqQC.html">ATACseqQC</a> R package can be used to calculate various QC stats on the filtered BAM files. These should be assessed closely and compared to the <a href="https://www.encodeproject.org/atac-seq/">ENCODE data standards</a>.</p>
-</section>
-<section id="differential-abundance-using-csaw-and-edger" class="level2">
-<h2 class="anchored" data-anchor-id="differential-abundance-using-csaw-and-edger">7. Differential abundance using <code>csaw</code> and <code>edgeR</code></h2>
-<p><strong>TODO: elaborate on this section</strong></p>
-<p><a href="https://bioconductor.org/books/release/csawBook/">csaw</a> can be used to perform differential abundance over sliding windows <em>or</em> by counting reads in the consensus peaks defined above. This <a href="https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y">paper</a> contains some code for performing and assessing ATAC-seq DA analysis using both methods.</p>
-</section>
 <section id="motif-analysis-with-meme" class="level2">
-<h2 class="anchored" data-anchor-id="motif-analysis-with-meme">8. Motif analysis with <code>MEME</code></h2>
+<h2 class="anchored" data-anchor-id="motif-analysis-with-meme">Motif analysis with <code>MEME</code></h2>
 <p>The <a href="https://meme-suite.org/meme/">MEME suite</a> can be used to perform motif analysis on peaks that have been determined to have differential abundance. You can use R to generate fasta files for these regions based on GRanges extracted from DA analysis. These fasta files can then be used as input to <code>XSTREME</code>, which performs de novo motif discovery, enrichment analysis, and comparisons with known motif databases.</p>
 <p>For example, you can extract fasta regions like so (this uses hg38 as an example):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(data.table))</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(Biostrings))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(BSgenome.Hsapiens.UCSC.hg38))</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(GenomicRanges))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have a file from DA analysis that contains genomic coordinates</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># of peaks and annotations - for example from ChIPseeker::annotatePeak()</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>peaks <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"annotated-peaks.tsv"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>peaks <span class="ot">&lt;-</span> <span class="fu">makeGRangesFromDataFrame</span>(peaks, <span class="at">keep.extra.columns =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract promoter peaks -- this can be any filtering you're interested in </span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>promoter_peaks <span class="ot">&lt;-</span> peaks[peaks<span class="sc">$</span>annotation <span class="sc">%like%</span> <span class="st">"Promoter"</span>]</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract and write out the hg38 sequences as fasta records</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>pmtr_seqs <span class="ot">&lt;-</span> <span class="fu">getSeq</span>(BSgenome.Hsapiens.UCSC.hg38, promoter_peaks)</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">writeXStringSet</span>(pmtr_seqs, <span class="at">filepath =</span> <span class="st">"promoter-peaks.fasta"</span>, <span class="at">format =</span> <span class="st">"fasta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(data.table))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(Biostrings))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(BSgenome.Hsapiens.UCSC.hg38))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(GenomicRanges))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming you have a file from DA analysis that contains genomic coordinates</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># of peaks and annotations - for example from ChIPseeker::annotatePeak()</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>peaks <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"annotated-peaks.tsv"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>peaks <span class="ot">&lt;-</span> <span class="fu">makeGRangesFromDataFrame</span>(peaks, <span class="at">keep.extra.columns =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract promoter peaks -- this can be any filtering you're interested in </span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>promoter_peaks <span class="ot">&lt;-</span> peaks[peaks<span class="sc">$</span>annotation <span class="sc">%like%</span> <span class="st">"Promoter"</span>]</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract and write out the hg38 sequences as fasta records</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>pmtr_seqs <span class="ot">&lt;-</span> <span class="fu">getSeq</span>(BSgenome.Hsapiens.UCSC.hg38, promoter_peaks)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">writeXStringSet</span>(pmtr_seqs, <span class="at">filepath =</span> <span class="st">"promoter-peaks.fasta"</span>, <span class="at">format =</span> <span class="st">"fasta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>These fasta records can then be used in <code>XSTREME</code> analysis from the MEME suite. The meme formatted databases of known motifs can be downloaded from MEME’s <a href="https://meme-suite.org/meme/db/motifs">website</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run XSTREME motif analysis on promoter peak sequences</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------------------------------------------------------------------------</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="va">FA</span><span class="op">=</span>/path/to/promoter-peaks.fasta</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="va">DB</span><span class="op">=</span>/path/to/HUMAN/HOCOMOCOv11_core_HUMAN_mono_meme_format.meme</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/xstreme</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ex">xstreme</span> <span class="at">--oc</span> <span class="va">$OUT</span> <span class="at">--p</span> <span class="va">$FA</span> <span class="at">--seed</span> 123 <span class="at">--m</span> <span class="va">$DB</span> <span class="at">--no-pgc</span> <span class="at">--dna</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run XSTREME motif analysis on promoter peak sequences</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------------------------------------------------------------------------</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="va">FA</span><span class="op">=</span>/path/to/promoter-peaks.fasta</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="va">DB</span><span class="op">=</span>/path/to/HUMAN/HOCOMOCOv11_core_HUMAN_mono_meme_format.meme</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="va">OUT</span><span class="op">=</span>/path/to/xstreme</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">xstreme</span> <span class="at">--oc</span> <span class="va">$OUT</span> <span class="at">--p</span> <span class="va">$FA</span> <span class="at">--seed</span> 123 <span class="at">--m</span> <span class="va">$DB</span> <span class="at">--no-pgc</span> <span class="at">--dna</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -576,151 +625,418 @@ sample3</code></pre>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
     };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
-    });
-  }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
-    } else {
-      return undefined;
+      return false;
     }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
           }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
       });
     }
-  }
-});
-</script>
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./differential-methylation-analysis.html" class="pagination-link">
+      <a href="./differential-methylation-analysis.html" class="pagination-link" aria-label="Differential Methylation Analysis">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Differential Methylation Analysis</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./references.html" class="pagination-link">
+      <a href="./references.html" class="pagination-link" aria-label="References">
         <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 

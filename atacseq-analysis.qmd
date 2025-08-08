@@ -2,7 +2,7 @@
 
 **Work in progress**
 
-## 1. Filter raw fastq files
+## Filter raw fastq files
 
 Use [fastp](https://github.com/OpenGene/fastp) to perform quality trimming
 on raw fastq files. Turn on adapter detection for paired end reads.
@@ -49,7 +49,7 @@ sample3
 
 This file gets used throughout. 
 
-## 2. Perform alignment with Bowtie2
+## Perform alignment with Bowtie2
 
 Use `--very-sensitive` mode and set max insertion size to 1,000. The output is
 piped to `samtools fixmate` for adding mate tag information and then to 
@@ -90,7 +90,7 @@ parallel --jobs $JOBS \
     samtools sort -n -@$THREADS -m4G -o $OUT/{}.bam - " :::: $SAMPLES
 ```
 
-## 3. Call peaks with `Genrich`
+## Call peaks with `Genrich`
 
 [Genrich](https://github.com/jsh58/Genrich) is a fast peak caller designed to 
 work with single samples or replicates. It has a dedicated option for peak 
@@ -152,7 +152,7 @@ mm39_exclude_gr <- query_data[["AH107321"]]
 rtracklayer::export.bed(mm39_exclude_gr, "mm39-excluderanges.bed")
 ```
 
-## 4. Determine consensus peaks for replicate samples
+## Determine consensus peaks for replicate samples
 
 After peak calling finishes, I create consensus peak calls for replicate 
 samples. The consensus peak calls can be used in downstream differential 
@@ -186,8 +186,8 @@ control_covered <- GRanges(slice(control_coverage, lower=length(control_calls), 
 treatment_covered <- GRanges(slice(treatment_coverage, lower=length(treatment_calls), rangesOnly=TRUE))
 
 # Close gaps in the resulting regions -- min.gapwidth can be adjusted 
-control_consensus <- reduce(control_covered, min.gapwidth=301)
-treatment_consensus <- reduce(treatment_covered, min.gapwidth=301)
+control_consensus <- reduce(control_covered, min.gapwidth=101)
+treatment_consensus <- reduce(treatment_covered, min.gapwidth=101)
 all_consensus <- union(control_consensus, treatment_consensus)
 
 # Export as BED files
@@ -196,55 +196,134 @@ rtracklayer::export.bed(treatment_consensus, here("data", "04_callpeak", "treatm
 rtracklayer::export.bed(all_consensus, here("data", "04_callpeak", "consensus.bed"))
 ```
 
-## 5. Create TSS and region plots with `deeptools`
+## Create raw signal tracks
 
-[deeptools](https://deeptools.readthedocs.io/en/latest/) can be used to compute
-normalized coverage files in bigwig format for visualization in IGV. 
-Normalization in `deeptools` can be really context dependent and what 
-normalization strategy to use can often be [unclear](https://www.biostars.org/p/413626/#414440). 
-To get an idea of how the data is behaving, I tend to use CPM normalization 
-first and then perform other normalizations if needed (for example, 
-if performing DA analysis and computing TMM scaling factors).
+Genrich outputs a bedgraph-ish file using the `-k` flag that can be used to 
+quickly create a a bigwig file of the raw signal which can be viewed in IGV. I 
+find it useful to look at the raw signal tracks after peak calling so I can 
+assess the absolute magnitude of the pileup that went into calling a peak. 
+Then, if the peaks look too permissive or too stringent, adjust the peak calls.
 
-There's an interesting [discussion](https://www.biostars.org/p/422383/) 
-regarding what parameters to use for ATAC-seq in `deeptools` if you want to 
-accurately view cut sites. We tend to care about larger signals/peaks of 
-enrichment vs footprinting, however, so I tend to just use the entire fragment lengths.   
-
-Then you can run `deeptools` using the TSS regions of coding genes and called
-consensus peaks.
+Creating bigwigs from the bedgraph-ish files can be accomplished using `awk` 
+and [bedGraphToBigWig](https://www.encodeproject.org/software/bedgraphtobigwig/)
+from UCSC. 
 
 ```{bash}
 #| eval: false
 
 #!/usr/bin/env bash
 #
-# Compute coverage bigwigs for visualization
+# Convert the pileups computed by Genrich from bedGraph-ish files to bigwigs
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt   
+PEAKS=/path/to/03_callpeak
+OUT=/path/to/04_bg2bw
+CHROM_SIZES=/path/to/chrom.sizes
+JOBS=6
+
+mkdir -p $OUT
+
+echo "Extracting bedGraphs from experimental signal..."
+parallel --jobs $JOBS \
+  "awk 'NR > 2 { print \$1, \$2, \$3, \$4 }' $PEAKS/{}.pileup.txt | \
+  LC_ALL=C sort -k1,1 -k2,2n > $OUT/{}.sorted.bedGraph" :::: $SAMPLES
+
+echo "Creating bigwigs from pileups..."
+parallel --jobs $JOBS "bedGraphToBigWig $OUT/{}.sorted.bedGraph $CHROM_SIZES $OUT/{}.bw" :::: $SAMPLES
+
+echo "Cleaning up intermediate bedGraphs..."
+find $OUT -type f -name "*.bedGraph" -delete
+```
+
+### Chrom sizes files
+
+You can supply a URL to `bedGraphToBigWig` to get the chrom.sizes if you're 
+genome is supported. Otherwise, you can create a chrom.sizes file using another 
+UCSC utility, `faSize`, and your genome fasta.
+
+```{bash}
+#| eval: false
+faSize -detailed -tab genome.fasta > genome.chrom.sizes
+```
+
+## ATACSeqQC
+
+**TODO: complete this section**
+
+The [ATACseqQC](https://bioconductor.org/packages/release/bioc/vignettes/ATACseqQC/inst/doc/ATACseqQC.html)
+R package can be used to calculate various QC stats on the filtered BAM files. 
+These should be assessed closely and compared to the 
+[ENCODE data standards](https://www.encodeproject.org/atac-seq/).
+
+## Differential abundance using `csaw` and `edgeR`
+
+**TODO: elaborate on this section**
+
+[csaw](https://bioconductor.org/books/release/csawBook/) can be used to perform
+differential abundance over sliding windows *or* by counting reads in the 
+consensus peaks defined above. This [paper](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y) 
+contains some code for performing and assessing ATAC-seq DA analysis using both 
+methods. 
+
+I usually generate read counts over the consensus peaks using `featureCounts` 
+from the [Rsubread](https://bioconductor.org/packages/devel/bioc/vignettes/Rsubread/inst/doc/SubreadUsersGuide.pdf) package. An SAF formatted file can be generated easily from the 
+"consensus.bed" file. To get the read counts to align with the Genrich called 
+peaks, set the `-read2Pos 5` flag to count alignments over the 5' end of reads.
+
+## Create TSS and region plots with `deeptools`
+
+[deeptools](https://deeptools.readthedocs.io/en/latest/) can be used to compute
+normalized coverage files in bigwig format for visualization in IGV. 
+Normalization in `deeptools` can be really context dependent and what 
+normalization strategy to use can often be unclear. 
+
+If you've performed differential abundance analysis and have global scaling
+normalization factors, they can be used at this step to generate [TMM normalized](https://www.biostars.org/p/413626/#414440) 
+bigwigs. In the absence of scaling factors, I've seen people use RPGC 
+normalization or CPM for ATAC-seq. 
+
+Then you can run `deeptools` using the TSS regions of coding genes and called
+consensus peaks. 
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Compute normalized coverage bigwigs for visualization
 #
 # 'deeptools' mamba env must be activated before running
 # -----------------------------------------------------------------------------
 SAMPLES=/path/to/sample-names.txt
 BLACKLIST=/path/to/excluderanges.bed
 CODING=/path/to/coding.bed
-BAM=/path/to/03_filter
+BAM=/path/to/02_align
 PEAKS=/path/to/consensus.bed
 OUT=/path/to/05_deeptools
+GENOME_SIZE=2654621783  # mm39 specific value, see https://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html
 JOBS=6
 THREADS=4
 
 mkdir -p $OUT
 
+echo "Position sorting BAMs..."
+parallel --jobs $JOBS "samtools sort -@$THREADS -m4G -o $OUT/{}.sorted.bam $BAM/{}.bam" :::: $SAMPLES
+parallel --jobs $JOBS "samtools index $OUT/{}.sorted.bam" :::: $SAMPLES
 
 echo "Computing coverage over all BAM files..." 
 parallel --jobs $JOBS \
-    "bamCoverage --bam $BAM/{}.final.bam \
+    "bamCoverage --bam $BAM/{}.sorted.bam \
                  --outFileName $OUT/{}.bw \
                  --outFileFormat 'bigwig' \
+                 --normalizeUsing 'RPGC' \
+                 --effectiveGenomeSize $GENOME_SIZE \
                  --binSize 1 \
                  --extendReads \
                  --blackListFileName $BLACKLIST \
                  --numberOfProcessors $THREADS \
-                 --normalizeUsing 'CPM' \
                  --ignoreDuplicates" :::: $SAMPLES
 
 echo "Computing matrix over TSS regions..."
@@ -279,9 +358,9 @@ plotHeatmap -m $OUT/tss.mat.gz \
   --boxAroundHeatmaps 'no' \
   --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
   --regionsLabel "Protein Coding Genes" \
-  --yAxisLabel "CPM" \
+  --yAxisLabel "RPGC" \
   --perGroup \
-  --heatmapHeight 24 \
+  --heatmapHeight 12 \
   --heatmapWidth 8 \
   --plotFileFormat "pdf"
 
@@ -294,9 +373,9 @@ plotHeatmap -m $OUT/peak.mat.gz \
   --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
   --regionsLabel "Consensus Peak Calls" \
   --refPointLabel "Center of Peak" \
-  --yAxisLabel "CPM" \
+  --yAxisLabel "RPGC" \
   --perGroup \
-  --heatmapHeight 24 \
+  --heatmapHeight 12 \
   --heatmapWidth 8 \
   --plotFileFormat "pdf"
 ```
@@ -324,26 +403,7 @@ coding$score <- 1L
 rtracklayer::export.bed(coding, here("doc", "gencode.vM37.coding.bed"))
 ```
 
-## 6. ATACSeqQC
-
-**TODO: complete this section**
-
-The [ATACseqQC](https://bioconductor.org/packages/release/bioc/vignettes/ATACseqQC/inst/doc/ATACseqQC.html)
-R package can be used to calculate various QC stats on the filtered BAM files. 
-These should be assessed closely and compared to the 
-[ENCODE data standards](https://www.encodeproject.org/atac-seq/).
-
-## 7. Differential abundance using `csaw` and `edgeR`
-
-**TODO: elaborate on this section**
-
-[csaw](https://bioconductor.org/books/release/csawBook/) can be used to perform
-differential abundance over sliding windows *or* by counting reads in the 
-consensus peaks defined above. This [paper](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y) 
-contains some code for performing and assessing ATAC-seq DA analysis using both 
-methods.
-
-## 8. Motif analysis with `MEME`
+## Motif analysis with `MEME`
 
 The [MEME suite](https://meme-suite.org/meme/) can be used to perform motif 
 analysis on peaks that have been determined to have differential abundance. 
