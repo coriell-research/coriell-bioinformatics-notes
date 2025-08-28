@@ -282,28 +282,50 @@ normalization strategy to use can often be unclear.
 
 If you've performed differential abundance analysis and have global scaling
 normalization factors, they can be used at this step to generate [TMM normalized](https://www.biostars.org/p/413626/#414440) 
-bigwigs. In the absence of scaling factors, I've seen people use RPGC 
-normalization or CPM for ATAC-seq. 
+bigwigs. Below, scale each bigwig file using TMM scaling factors computed by 
+`edgeR::normLibSizes()`
 
-Then you can run `deeptools` using the TSS regions of coding genes and called
-consensus peaks. 
+First, compute the reciprocal of the TMM scaling factors in R:
+
+```{r}
+#| eval: false
+
+# This assumes you have used featureCounts and imported into edgeR DGEList object 'y'
+y <- normLibSizes(y)
+
+# Compute the scale factors for each library
+sf <- y$samples$norm.factors * y$samples$lib.size / 1e6   
+
+# Take the inverse of the scale factors for use in deeptools
+inv_sf <- 1 / sf
+
+# Write out to a csv file -- assuming the colnames match the file basenames
+fwrite(
+  data.frame(sample_name = colnames(y), 
+             scale_factor=inv_sf), 
+  "scale-factors.csv", 
+  col.names=FALSE
+  )
+```
+
+Then, to compute TMM scaled bigwigs using `deeptools`
 
 ```{bash}
 #| eval: false
 
 #!/usr/bin/env bash
 #
-# Compute normalized coverage bigwigs for visualization
+# Compute TMM normalized coverage bigwigs for visualization
 #
 # 'deeptools' mamba env must be activated before running
 # -----------------------------------------------------------------------------
 SAMPLES=/path/to/sample-names.txt
+SCALE_FACTORS=/path/to/scale-factors.csv
 BLACKLIST=/path/to/excluderanges.bed
 CODING=/path/to/coding.bed
-BAM=/path/to/02_align
 PEAKS=/path/to/consensus.bed
+BAM=/path/to/02_align
 OUT=/path/to/05_deeptools
-GENOME_SIZE=2654621783  # mm39 specific value, see https://deeptools.readthedocs.io/en/latest/content/feature/effectiveGenomeSize.html
 JOBS=6
 THREADS=4
 
@@ -314,17 +336,14 @@ parallel --jobs $JOBS "samtools sort -@$THREADS -m4G -o $OUT/{}.sorted.bam $BAM/
 parallel --jobs $JOBS "samtools index $OUT/{}.sorted.bam" :::: $SAMPLES
 
 echo "Computing coverage over all BAM files..." 
-parallel --jobs $JOBS \
-    "bamCoverage --bam $BAM/{}.sorted.bam \
-                 --outFileName $OUT/{}.bw \
+parallel --csv --jobs $JOBS \
+    "bamCoverage --bam $BAM/{1}.sorted.bam \
+                 --outFileName $OUT/{1}.bw \
+                 --scaleFactor {2} \
                  --outFileFormat 'bigwig' \
-                 --normalizeUsing 'RPGC' \
-                 --effectiveGenomeSize $GENOME_SIZE \
-                 --binSize 1 \
-                 --extendReads \
                  --blackListFileName $BLACKLIST \
                  --numberOfProcessors $THREADS \
-                 --ignoreDuplicates" :::: $SAMPLES
+                 --ignoreDuplicates" :::: $SCALE_FACTORS
 
 echo "Computing matrix over TSS regions..."
 computeMatrix reference-point \
@@ -353,21 +372,18 @@ computeMatrix reference-point \
 echo "Plotting heatmap of TSS enrichment..."
 plotHeatmap -m $OUT/tss.mat.gz \
   -o $OUT/tss-heatmap.pdf \
-  --dpi 300 \
   --colorMap "viridis" \
   --boxAroundHeatmaps 'no' \
   --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
   --regionsLabel "Protein Coding Genes" \
   --yAxisLabel "RPGC" \
   --perGroup \
-  --heatmapHeight 12 \
-  --heatmapWidth 8 \
-  --plotFileFormat "pdf"
+  --plotFileFormat "pdf" \
+  --dpi 300 \
 
 echo "Plotting heatmap of MACS peak enrichment..."
 plotHeatmap -m $OUT/peak.mat.gz \
   -o $OUT/peak-heatmap.pdf \
-  --dpi 300 \
   --colorMap "viridis" \
   --boxAroundHeatmaps 'no' \
   --samplesLabel "Ctl 1" "Ctl 2" "Ctl 3" "Trt 1" "Trt 2" "Trt 3" \
@@ -375,9 +391,8 @@ plotHeatmap -m $OUT/peak.mat.gz \
   --refPointLabel "Center of Peak" \
   --yAxisLabel "RPGC" \
   --perGroup \
-  --heatmapHeight 12 \
-  --heatmapWidth 8 \
-  --plotFileFormat "pdf"
+  --plotFileFormat "pdf" \
+  --dpi 300 \
 ```
 
 ### Getting TSS coding region ranges
