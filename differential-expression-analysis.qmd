@@ -742,7 +742,7 @@ library(msigdbr)
 
 
 # Get the HALLMARK gene set data
-msigdb_hs <- msigdbr(species = "Homo sapiens", category = "H")
+msigdb_hs <- msigdbr(species = "Homo sapiens", collection = "H")
 
 # Split into list of gene names per HALLMARK pathway
 msigdb_hs <- split(as.character(msigdb_hs$gene_symbol), msigdb_hs$gs_name)
@@ -813,100 +813,162 @@ barcodeplot(
   )
 ```
 
+We can also visualize the `camera()` results using an enrichment map from the 
+`TMSig` package. To make the results conform to the expected input of the 
+`TMSig::enrichmap()` function, we need to add a few new columns to the results 
+data.frame.
+
+```{r}
+library(TMSig)
+
+
+# Add columns needed by TMSig::enrichmap() 
+camera_result$Pathway <- rownames(camera_result)
+camera_result$Contrast <- "Treatment vs. Control"
+camera_result$stat <- ifelse(camera_result$Direction == "Down", -1, 1)
+
+# Finally, show the enrichment map for the top 15 results
+enrichmap(
+  x = camera_result,
+  scale_by = "max",
+  n_top = 15,
+  plot_sig_only = FALSE,
+  set_column = "Pathway",
+  statistic_column = "stat",
+  contrast_column = "Contrast",
+  padj_column = "FDR",
+  padj_legend_title = "BH Adjusted\nP-Value",
+  padj_cutoff = 0.05
+)
+```
+
 ## Gene ontology (GO) over-representation test
 
-Over-representation analysis can be performed with the `clusterProfiler` 
-package. Here, instead of using the entire gene list as input we select 
-separate sets of up and down-regulated genes and test to see if these sets are
-enriched in our differentially expressed gene list.
+Over-representation testing can be performed using the `goseq` package which 
+incorporates length bias inherent in RNA-seq when performing over-representation
+testing. Using `goseq` requires gene length information. `goseq` has several 
+gene length datasets built-in, however, when gene length data is not available 
+you may need to compute it yourself (as in the case of GENCODE v48 annotations, 
+for example). 
 
-```{r message=FALSE}
-library(clusterProfiler)
-library(org.Hs.eg.db)
+Below I will show how you can compute gene length information and use that in 
+`goseq` analysis. There are two ways to think about computing gene lengths, 
+either taking the median transcript length across transcripts of a given gene or
+by taking the total length of all reduced exons. Either should suffice and I'm 
+not sure if one is better than the other. For reference, `goseq` uses the median 
+transcript length. 
 
+### Computing gene length information
 
-# Split the genes into up and down
-up_genes <- subset(
-  de_result, 
-  FDR < 0.05 & logFC > 0, 
-  "gene_name", 
-  drop = TRUE
-  )
-
-down_genes <- subset(
-  de_result, 
-  FDR < 0.05 & logFC < 0, 
-  "gene_name", 
-  drop = TRUE
-  )
-
-# Extract the list of all genes expressed in the experiment
-# to use as a background set
-universe <- unique(y$genes$gene_name)
-```
-
-Create results objects for each set of genes
+**The annotation used in the airway package is from Ensembl v75** we can import
+the gtf as a txdb object in order to compute gene length information
 
 ```{r}
-ego_up <- enrichGO(
-  gene = up_genes,
-  universe = universe,
-  OrgDb = org.Hs.eg.db,
-  keyType = "SYMBOL",
-  ont = "ALL",
-  pAdjustMethod = "BH",
-  pvalueCutoff = 0.01,
-  qvalueCutoff = 0.05,
-  readable = TRUE
-  )
+suppressPackageStartupMessages(library(txdbmaker))
 
-ego_down <- enrichGO(
-  gene = down_genes,
-  universe = universe,
-  OrgDb = org.Hs.eg.db,
-  keyType = "SYMBOL",
-  ont = "ALL",
-  pAdjustMethod = "BH",
-  pvalueCutoff = 0.01,
-  qvalueCutoff = 0.05,
-  readable = TRUE
-  )
+
+# Download and create a txdb object from the ensembl GTF
+url <- "https://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz"
+txdb <- makeTxDbFromGFF(url, format = "gtf")
 ```
 
-These results can be converted to data.frames and combined with:
+Compute the reduced exon lengths
 
 ```{r}
-ego_up_df <- data.frame(ego_up)
-ego_down_df <- data.frame(ego_down)
+exons_by_gene <- exonsBy(txdb, by = "gene")
+reduced_exon_lengths <- sum(width(reduce(exons_by_gene)))
+names(reduced_exon_lengths) <- names(exons_by_gene)
+```
 
-ego_df <- data.table::rbindlist(
-  list(up = ego_up_df, down = ego_down_df), 
-  idcol = "Direction"
+And compute the median transcript lengths
+
+```{r}
+tx_by_gene <- transcriptsBy(txdb, by = "gene")
+median_tx_lengths <- median(width(tx_by_gene))
+names(median_tx_lengths) <- names(tx_by_gene)
+```
+
+With this information we are ready to perform over-representation testing with 
+`goseq`. 
+
+### Perform over-representation testing with `goseq`
+
+```{r}
+library(goseq)
+
+
+# First create an indicator vector for the significant genes
+up_genes <- de_result$logFC > 0 & de_result$FDR < 0.05
+down_genes <- de_result$logFC < 0 & de_result$FDR < 0.05
+
+# Name each set with the ENSEMBL IDs
+names(up_genes) <- names(down_genes) <- de_result$gene_id
+```
+
+Next, Compute the probability weighted functions for each set of up and 
+down-regulated genes. **NOTE** `goseq` has built-in genomes and annotations
+that can be used in place of the pre-computed lengths above, I just wanted to 
+show how you might compute these lengths if needed (especially since newer 
+annotation version are not present). The pwf plots should generally increase
+with increasing length.
+
+```{r}
+up_pwf <- suppressWarnings(
+  nullp(
+    up_genes,
+    genome = "hg19",
+    id = "ensGene",
+    bias.data = reduced_exon_lengths[names(up_genes)],
+    plot.fit = TRUE
+    )
+  )
+
+down_pwf <- suppressWarnings(
+    nullp(
+      down_genes,
+      genome = "hg19",
+      id = "ensGene",
+      bias.data = reduced_exon_lengths[names(down_genes)],
+      plot.fit = TRUE
+    )
   )
 ```
 
-Or the results can be plotted as dotplots with:
-
-```{r fig.width=8, fig.height=6}
-d1 <- dotplot(ego_up) + labs(title = "Up-regulated genes")
-d2 <- dotplot(ego_down) + labs(title = "Down-regulated genes")
-
-d1 | d2
-```
-
-You can also create a nice enrichment map showing similarity between the 
-significant GO terms like so:
+Finally, perform over-representation testing
 
 ```{r}
-em_up <- enrichplot::pairwise_termsim(ego_up)
-em_down <- enrichplot::pairwise_termsim(ego_down)
+# Perform GO analysis
+up_go <- goseq(up_pwf, genome = "hg19", id = "ensGene")
+down_go <- goseq(down_pwf, genome = "hg19", id = "ensGene")
 
-p1 <- enrichplot::emapplot(em_up, showCategory = 10, min_edge = 0.5) +
-  labs(title = "Up-regulated genes")
-p2 <- enrichplot::emapplot(em_down, showCategory = 10, min_edge = 0.5) +
-  labs(title = "Down-regulated genes")
+# Add multiple test correction
+up_go$FDR <- p.adjust(up_go$over_represented_pvalue, method = "BH")
+down_go$FDR <- p.adjust(down_go$over_represented_pvalue, method = "BH")
+```
 
-p1 | p2
+We can show these results using a dotplot. Below is a simple function used to 
+create gene ontology dotplots from the top 15 significant go terms. 
+
+```{r}
+plot_dotplot <- function(df, n = 15) {
+  df <- df[order(df$FDR), ]
+  df <- head(df, n = n)
+  df$prop_in_set <- df$numDEInCat / df$numInCat
+
+  ggplot(df, aes(x = -log10(FDR), y = reorder(term, -FDR))) +
+    geom_point(aes(size = prop_in_set, color = -log10(FDR))) +
+    scale_color_viridis_c() +
+    labs(
+      x = "-log10(FDR)",
+      y = NULL,
+      color = "-log10(FDR)",
+      size = "Prop. Genes in Set"
+    ) +
+    theme_classic()
+}
+
+plot_dotplot(up_go) + labs(title = "Up-regulated Genes")
+plot_dotplot(down_go) + labs(title = "Down-regulated Genes")
 ```
 
 ## Session Info
