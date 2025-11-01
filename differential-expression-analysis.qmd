@@ -200,7 +200,7 @@ transcript annotations). Then, we use `summarizeToGene()` to summarize the tx
 counts to the gene level. Finally, we transform the `SummarizedExperiment` 
 object to a `DGEList` for use in downstream analysis with `edgeR`
 
-```{r eval=FALSE}
+```{r, eval=FALSE, warning=FALSE}
 library(tximeta)
 library(edgeR)
 
@@ -238,7 +238,7 @@ y <- SE2DGEList(gse)
 If you used STAR to generate counts with HTSeq-count then `edgeR` can directly 
 import the results for downstream analysis like so:
 
-```{r eval=FALSE}
+```{r, eval=FALSE, warning=FALSE}
 library(edgeR)
 
 
@@ -279,7 +279,7 @@ GTF file.
 The resulting object can also be easily coerced to a `DGEList` for downstream 
 analysis.
 
-```{r eval=FALSE}
+```{r, eval=FALSE, warning=FALSE}
 library(Rsubread)
 
 
@@ -313,7 +313,7 @@ see [Section 2](https://bioconductor.org/packages/release/workflows/vignettes/rn
 Below, we load the data from the airway package and use `SE2DGEList` to convert 
 the object to a `DGElist` for use with `edgeR`.
 
-```{r message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(airway)
 library(edgeR)
 
@@ -361,7 +361,7 @@ The first diagnostic plot we can look at is a plot of the relative log expressio
 values. [RLE plots](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0191629) 
 are good diagnostic tools for evaluating unwanted variation in libraries. 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(coriell)
 
@@ -441,7 +441,7 @@ For more complicated experiments I have also found UMAP (see `coriell::UMAP()`)
 to be useful for dimensionality reduction (although using UMAP is not without 
 its [problems for biologists](https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/)).  
 
-```{r message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(PCAtools)
 
 
@@ -487,7 +487,7 @@ ratio of between group variability to within group variability using a
 permutation test similar to an ANOVA. If this value is large, it suggests 
 global adjustment methods might not be appropriate.
 
-```{r message=FALSE, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(quantro)
 
 
@@ -545,7 +545,7 @@ design <- model.matrix(~group, data = y$samples)
 
 We can make an equivalent model and test *without* an intercept like so:
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 # A means model
 design_no_intercept <- model.matrix(~0 + group, data = y$samples)
 
@@ -598,7 +598,7 @@ calculate offsets to be used in downstream DE analysis with `edgeR`. Please note
 **this is not a benchmarked or 'official' workflow** just a method that I have
 implemented based on reading forums and github issues.
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 library(qsmooth)
 
 
@@ -609,15 +609,15 @@ qs <- qsmooth(y$counts, group_factor = y$samples$group)
 qsd <- qsmoothData(qs)
 
 # Calculate offsets to be used by edgeR in place of norm.factors
-# Offsets are on the natural log scale. Add a small offset to avoid
-# taking logs of zero 
-offset <- log(y$counts + 0.1) - log(qsd + 0.1)
+# Offsets are on the natural log scale. 
+# Add a small prior_count to avoid taking logs of zero 
+prior_count <- 0.1
+offset <- log(y$counts + prior_count) - log(qsd + prior_count)
 
-# Scale the offsets for internal usage by the DGEList object
-# Now the object is ready for downstream analysis
-y <- scaleOffset(y, offset = offset)
+# Add the offset matrix to the edgeR object
+y$offset <- offset
 
-# To create logCPM values with the new norm factors use
+# To create logCPM values with the offsets
 lcpm <- cpm(y, offset = y$offset, log = TRUE)
 ```
 
@@ -629,7 +629,7 @@ will perform dispersion estimation in legacy mode so that we can use competitive
 gene set testing later. If we want to use the new workflow we can use the 
 following:
 
-```{r eval=FALSE}
+```{r, eval=FALSE}
 # edgeR 4.0 workflow
 fit <- glmQLFit(y, design, legacy = FALSE, robust = TRUE)
 ```
@@ -692,7 +692,7 @@ show the average expression of the gene on the x-axis vs the log2 fold-change
 of the gene on the y-axis. The `coriell` package includes functions for 
 producing both. 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(patchwork)
 
 
@@ -737,7 +737,7 @@ I have switched all of my pipelines to using competitive gene set testing
 Below we use the `msigdbr` R package to retrieve HALLMARK gene sets and then use
 `edgeR::camera()` for gene set testing.
 
-```{r message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(msigdbr)
 
 
@@ -764,6 +764,10 @@ set of genes. `camera()` performs a competitive gene set test, where it compares
 the DE within the gene set to the DE outside of the gene set.
 
 ```{r}
+# NOTE: if you used the new edgeR 4.0 workflow you can add common dispersion
+# needed by camera with:
+y$common.dispersion <- fit$dispersion
+
 # Use camera to perform competitive gene set testing
 camera_result <- camera(y, idx, design, contrast = 2)
 
@@ -818,7 +822,7 @@ We can also visualize the `camera()` results using an enrichment map from the
 `TMSig::enrichmap()` function, we need to add a few new columns to the results 
 data.frame.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(TMSig)
 
 
@@ -863,7 +867,7 @@ transcript length.
 **The annotation used in the airway package is from Ensembl v75** we can import
 the gtf as a txdb object in order to compute gene length information
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 suppressPackageStartupMessages(library(txdbmaker))
 
 
@@ -874,7 +878,7 @@ txdb <- makeTxDbFromGFF(url, format = "gtf")
 
 Compute the reduced exon lengths
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 exons_by_gene <- exonsBy(txdb, by = "gene")
 reduced_exon_lengths <- sum(width(reduce(exons_by_gene)))
 names(reduced_exon_lengths) <- names(exons_by_gene)
@@ -882,7 +886,7 @@ names(reduced_exon_lengths) <- names(exons_by_gene)
 
 And compute the median transcript lengths
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 tx_by_gene <- transcriptsBy(txdb, by = "gene")
 median_tx_lengths <- median(width(tx_by_gene))
 names(median_tx_lengths) <- names(tx_by_gene)
@@ -893,7 +897,7 @@ With this information we are ready to perform over-representation testing with
 
 ### Perform over-representation testing with `goseq`
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(goseq)
 
 
@@ -912,7 +916,7 @@ show how you might compute these lengths if needed (especially since newer
 annotation version are not present). The pwf plots should generally increase
 with increasing length.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 up_pwf <- suppressWarnings(
   nullp(
     up_genes,
@@ -936,7 +940,7 @@ down_pwf <- suppressWarnings(
 
 Finally, perform over-representation testing
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # Perform GO analysis
 up_go <- goseq(up_pwf, genome = "hg19", id = "ensGene")
 down_go <- goseq(down_pwf, genome = "hg19", id = "ensGene")

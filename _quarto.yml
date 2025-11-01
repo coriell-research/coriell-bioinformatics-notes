@@ -23,9 +23,10 @@ bibliography: references.bib
 
 format:
   html:
+    respect-user-color-scheme: true
     theme:
-      - cosmo
-      - brand
+      light: litera
+      dark: cyborg
   pdf:
     documentclass: scrreprt
 
