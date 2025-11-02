@@ -348,6 +348,8 @@ y <- y[keep,,keep.lib.sizes = FALSE]
 At this stage it is often wise to perform library QC on the library size 
 normalized counts. This will give us an idea about potential global expression
 differences and potential outliers *before* introducing normalization factors. 
+I also like to check the same plots *after* applying normalization factors. 
+
 We can use `edgeR` to generate log2 counts-per-million values for the retained 
 genes.
 
@@ -366,12 +368,15 @@ library(ggplot2)
 library(coriell)
 
 
-plot_boxplot(logcounts, metadata = y$samples, fillBy = "group", 
-             rle = TRUE, outliers = FALSE) +
-  labs(title = "Relative Log Expression",
-       x = NULL,
-       y = "RLE",
-       color = "Treatment Group")
+plot_boxplot2(
+  logcounts,
+  y$samples,
+  fillBy = "group",
+  rle = TRUE,
+  show_outliers = FALSE,
+  plot_title = "Relative Log Expression",
+  y_label = "RLE"
+)
 ```
 
 We can see from the above RLE plot that the samples are centered around zero and
@@ -386,11 +391,13 @@ magnitude of counts. Shifts of these curves should align with group differences
 and generally samples from the same group should have overlapping density curves
 
 ```{r}
-plot_density(logcounts, metadata = y$samples, colBy = "group") +
-  labs(title = "Library Densities",
-       x = "logCPM",
-       y = "Density",
-       color = "Treatment Group")
+plot_density2(
+  logcounts,
+  y$samples,
+  colBy = "group",
+  plot_title = "Library Density",
+  x_label = "logCPM"
+)
 ```
 
 ### Sample vs Sample Distances
@@ -439,7 +446,9 @@ samples prior to downstream analysis. For simple analyses we expect to see the
 I like to use the [PCAtools](https://bioconductor.org/packages/release/bioc/vignettes/PCAtools/inst/doc/PCAtools.html) package for quickly computing and plotting principal components.
 For more complicated experiments I have also found UMAP (see `coriell::UMAP()`)
 to be useful for dimensionality reduction (although using UMAP is not without 
-its [problems for biologists](https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/)).  
+its [problems for biologists](https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/)).
+
+NOTE: `edgeR::plotMDS(y)` is also a good alternative to PCA. 
 
 ```{r, warning=FALSE, message=FALSE}
 library(PCAtools)
@@ -562,11 +571,15 @@ for the experiment at hand. In this case, that is the model with an intercept.
 ### Estimating normalization factors
 
 We use `edgeR` to calculate trimmed mean of the M-value (TMM) normalization
-factors for each library.
+factors for each library. Then we compute the logCPMs usning the TMM scaling
+factors. At this point running `plot_density2(lcpms)`, etc. is recommended.
 
 ```{r}
 # Estimate TMM normalization factors
 y <- normLibSizes(y)
+
+# Compute the log2 CPMs after normalization
+lcpms <- cpm(y, log = TRUE)
 ```
 
 We can check the normalization by creating MA plots for each library. The bulk
@@ -576,7 +589,7 @@ logFC as a function of average abundance.
 ```{r}
 par(mfrow = c(2, 4))
 for (i in 1:ncol(y)) {
-  plotMD(cpm(y, log = TRUE), column = i)
+  plotMD(lcpms, column = i)
   abline(h = 0, lty = 2, col = "red2")
 }
 ```
@@ -615,10 +628,10 @@ prior_count <- 0.1
 offset <- log(y$counts + prior_count) - log(qsd + prior_count)
 
 # Add the offset matrix to the edgeR object
-y$offset <- offset
+y <- scaleOffset(y, offset)
 
 # To create logCPM values with the offsets
-lcpm <- cpm(y, offset = y$offset, log = TRUE)
+lcpms <- cpm(y, offset = y$offset, log = TRUE)
 ```
 
 ### Fit the model
@@ -630,7 +643,7 @@ gene set testing later. If we want to use the new workflow we can use the
 following:
 
 ```{r, eval=FALSE}
-# edgeR 4.0 workflow
+# edgeR 4.0 workflow (recommended)
 fit <- glmQLFit(y, design, legacy = FALSE, robust = TRUE)
 ```
 

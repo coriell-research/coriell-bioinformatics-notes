@@ -25,8 +25,8 @@ format:
   html:
     respect-user-color-scheme: true
     theme:
-      light: litera
-      dark: cyborg
+      light: flatly
+      dark: darkly
   pdf:
     documentclass: scrreprt
 
