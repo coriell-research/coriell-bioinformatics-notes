@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Coriell Bioinformatics Notes - A Collection of Useful Resources</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./atacseq-analysis.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">A Collection of Useful Resources</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Coriell Bioinformatics Notes</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Bioinformatics Notes</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-best-practices.html" class="sidebar-item-text sidebar-link">‘Best’ practices for data projects</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linux.html" class="sidebar-item-text sidebar-link">Command line basics</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">R programming basics</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-viz.html" class="sidebar-item-text sidebar-link">Effective data visualizations</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./presenting-science.html" class="sidebar-item-text sidebar-link">Scientific presentations</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summarized-experiments.html" class="sidebar-item-text sidebar-link">Practical introduction to SummarizedExperiments</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link">Differential Expression Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./differential-methylation-analysis.html" class="sidebar-item-text sidebar-link">Differential Methylation Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./atacseq-analysis.html" class="sidebar-item-text sidebar-link">ATAC-seq Analysis</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./useful-resources.html" class="sidebar-item-text sidebar-link active">A Collection of Useful Resources</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#r-general" id="toc-r-general" class="nav-link active" data-scroll-target="#r-general">R General:</a></li>
+  <li><a href="#bioinformatics" id="toc-bioinformatics" class="nav-link" data-scroll-target="#bioinformatics">Bioinformatics:</a></li>
+  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics">Statistics:</a></li>
+  <li><a href="#programming-general" id="toc-programming-general" class="nav-link" data-scroll-target="#programming-general">Programming general:</a></li>
+  <li><a href="#mathematics" id="toc-mathematics" class="nav-link" data-scroll-target="#mathematics">Mathematics:</a></li>
+  <li><a href="#mlai" id="toc-mlai" class="nav-link" data-scroll-target="#mlai">ML/AI:</a></li>
+  <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc:</a></li>
+  <li><a href="#bio-art-free-svgs-to-create-diagrams" id="toc-bio-art-free-svgs-to-create-diagrams" class="nav-link" data-scroll-target="#bio-art-free-svgs-to-create-diagrams">Bio Art : free SVGs to create diagrams:</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">A Collection of Useful Resources</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="r-general" class="level2">
+<h2 class="anchored" data-anchor-id="r-general">R General:</h2>
+<ul>
+<li><a href="https://r4ds.had.co.nz/">R For Data Science</a></li>
+<li><a href="https://github.com/matloff/fasteR">fasteR</a></li>
+<li><a href="https://www.burns-stat.com/pages/Tutor/R_inferno.pdf">The R Inferno</a></li>
+<li><a href="https://adv-r.hadley.nz/">Advanced R 2nd Edition</a></li>
+<li><a href="http://adv-r.had.co.nz/">Advanced R 1st Edition</a></li>
+<li><a href="https://mastering-shiny.org/">Mastering Shiny</a></li>
+<li><a href="https://engineering-shiny.org/">Production Grade Shiny Apps</a></li>
+<li><a href="https://r-pkgs.org/">R Packages Book</a></li>
+</ul>
+</section>
+<section id="bioinformatics" class="level2">
+<h2 class="anchored" data-anchor-id="bioinformatics">Bioinformatics:</h2>
+<ul>
+<li><a href="https://bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html">DESeq2 workflow</a></li>
+<li><a href="https://bioconductor.org/packages/release/workflows/vignettes/RnaSeqGeneEdgeRQL/inst/doc/edgeRQL.html">edgeR workflow</a></li>
+<li><a href="https://bioconductor.org/books/release/csawBook/">csaw book for CHIP/ATAC seq</a></li>
+<li><a href="https://bioconductor.org/books/release/OSCA/">Orchestrating Single cell Analysis with Bioconductor</a></li>
+<li><a href="https://www.sc-best-practices.org/preamble.html">Single Cell Best Practices book</a></li>
+<li><a href="https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html">Guide to creating design matrices</a></li>
+<li><a href="https://microbiome.github.io/OMA/docs/devel/">Orchestrating Microbiome Analysis in R</a></li>
+<li><a href="https://qiime2.org/">QIIME2 for microbiome analysis</a></li>
+<li><a href="https://blog.bioconductor.org/posts/2022-10-22-awesome-lists/">Bioconductor Awesome Lists</a></li>
+<li><a href="https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y">ATAC-seq pipeline</a></li>
+<li><a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html">Intro to RNAseq</a></li>
+<li><a href="https://hutchdatascience.org/Choosing_Genomics_Tools/introduction.html">Fred Hutch Bioinfo Primer book</a></li>
+<li><a href="https://bookdown.org/goknurginer/Analysing-CRISPR-screens-with-edgeR/">Analyzing CRISPR screens with edgeR</a></li>
+</ul>
+</section>
+<section id="statistics" class="level2">
+<h2 class="anchored" data-anchor-id="statistics">Statistics:</h2>
+<ul>
+<li><a href="https://web.stanford.edu/class/bios221/book/">Modern Statistics for Modern Biology</a>: I use this all the time</li>
+<li><a href="https://xcelab.net/rm/statistical-rethinking/">Statistical Rethinking</a>: Highly recommend</li>
+<li><a href="https://avehtari.github.io/ROS-Examples/">Regression and Other Stories</a>: Read this book</li>
+<li><a href="https://www.fharrell.com/post/assume/">What does a statistical method assume</a>: Read this blog</li>
+<li><a href="https://statmodeling.stat.columbia.edu/">Andrew Gelman’s Blog</a></li>
+<li><a href="https://hbiostat.org/doc/rms/book/">Regression Modeling Strategies Course Notes</a></li>
+<li><a href="https://hbiostat.org/bbr/">Biostatistics for Biomedical Research</a></li>
+<li><a href="https://openintro-ims2.netlify.app/">introduction to modern statistics</a></li>
+<li><a href="https://statswithr.github.io/book/the-basics-of-bayesian-statistics.html">The basics of bayesian statistics</a></li>
+<li><a href="https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/src/chapter10.html">Hidden Markov Models in R</a></li>
+<li><a href="https://onlinelibrary.wiley.com/doi/10.1002/bimj.201700067">Review of recommendations for variable selection</a></li>
+<li><a href="https://stefvanbuuren.name/fimd/">Imputation methods</a></li>
+<li><a href="https://www.nxn.se/valent/2017/6/12/how-to-read-pca-plots">How to read PCA plots</a></li>
+</ul>
+</section>
+<section id="programming-general" class="level2">
+<h2 class="anchored" data-anchor-id="programming-general">Programming general:</h2>
+<ul>
+<li><a href="https://tldp.org/LDP/abs/html/index.html">Advanced Bash scripting</a> (old http link)</li>
+<li><a href="https://betterdev.blog/minimal-safe-bash-script-template/">minimal safe bash script template</a></li>
+<li><a href="https://effective-shell.com/">Effective Shell</a></li>
+<li><a href="https://swcarpentry.github.io/make-novice/">Software Carpentry on Automation and Make</a></li>
+<li><a href="https://inria.hal.science/hal-02383654">Modern C</a></li>
+<li><a href="https://github.com/pkivolowitz/asm_book">Assembly Language</a></li>
+<li><a href="https://www.youtube.com/playlist?list=PL9D558D49CA734A02">Programming Paradigms</a>: watch this and you’ll understand how programming generally works</li>
+<li><a href="https://github.com/VernonGrant/gnu-c-language-manual/blob/main/markdown/index.md">GNU C Language manual</a></li>
+</ul>
+</section>
+<section id="mathematics" class="level2">
+<h2 class="anchored" data-anchor-id="mathematics">Mathematics:</h2>
+<ul>
+<li><a href="https://www.math.utah.edu/~alfeld/math.html">Understanding Mathematics</a></li>
+<li><a href="https://pimbook.org/">Programmer’s introduction to mathematics</a></li>
+<li><a href="https://par.cse.nsysu.edu.tw/link/math-pronunciation.pdf">Math pronunciation guide</a></li>
+</ul>
+</section>
+<section id="mlai" class="level2">
+<h2 class="anchored" data-anchor-id="mlai">ML/AI:</h2>
+<ul>
+<li><a href="https://microsoft.github.io/generative-ai-for-beginners/#/">Generative AI for beginners</a></li>
+<li><a href="https://udlbook.github.io/udlbook/">Understanding Deep Learning</a></li>
+<li><a href="https://developers.google.com/machine-learning">Google ML Course</a></li>
+</ul>
+</section>
+<section id="misc" class="level2">
+<h2 class="anchored" data-anchor-id="misc">Misc:</h2>
+<ul>
+<li><a href="https://github.com/papers-we-love/papers-we-love">Papers We Love</a></li>
+<li><a href="https://forbetterscience.com/">For Better Science</a></li>
+<li><a href="https://bionumbers.hms.harvard.edu/search.aspx">Bionumbers</a></li>
+<li><a href="https://chmod-calculator.com/">chmod calculator</a> you’d be surprised how often you use this</li>
+<li><a href="https://oeis.org/">Online encyclopedia of integer sequences</a></li>
+</ul>
+</section>
+<section id="bio-art-free-svgs-to-create-diagrams" class="level2">
+<h2 class="anchored" data-anchor-id="bio-art-free-svgs-to-create-diagrams">Bio Art : free SVGs to create diagrams:</h2>
+<ul>
+<li><a href="https://inkscape.org/">inkscape</a> For creating the diagrams</li>
+<li><a href="https://bioart.niaid.nih.gov/">NIH BioArt</a></li>
+<li><a href="https://bioicons.com/">bioicons</a></li>
+<li><a href="https://openscienceart.com/">Open Science Art</a></li>
+<li><a href="https://scidraw.io/">Scidraw</a></li>
+<li><a href="https://reactome.org/icon-lib">Reactome Icon Library</a></li>
+<li><a href="https://smart.servier.com/">Smart Servier Medical Art</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./atacseq-analysis.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">ATAC-seq Analysis</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
