@@ -17,6 +17,7 @@ book:
     - differential-expression-analysis.qmd
     - differential-methylation-analysis.qmd
     - atacseq-analysis.qmd
+    - useful-resources.qmd
     - references.qmd
 
 bibliography: references.bib

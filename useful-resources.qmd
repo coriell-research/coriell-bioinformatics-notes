@@ -1,0 +1,85 @@
+# A Collection of Useful Resources {.unnumbered}
+
+## R General:
+
+* [R For Data Science](https://r4ds.had.co.nz/)
+* [fasteR](https://github.com/matloff/fasteR)
+* [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
+* [Advanced R 2nd Edition](https://adv-r.hadley.nz/)
+* [Advanced R 1st Edition](http://adv-r.had.co.nz/)
+* [Mastering Shiny](https://mastering-shiny.org/)
+* [Production Grade Shiny Apps](https://engineering-shiny.org/)
+* [R Packages Book](https://r-pkgs.org/)
+
+## Bioinformatics:
+
+* [DESeq2 workflow](https://bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html)
+* [edgeR workflow](https://bioconductor.org/packages/release/workflows/vignettes/RnaSeqGeneEdgeRQL/inst/doc/edgeRQL.html)
+* [csaw book for CHIP/ATAC seq](https://bioconductor.org/books/release/csawBook/)
+* [Orchestrating Single cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/)
+* [Single Cell Best Practices book](https://www.sc-best-practices.org/preamble.html)
+* [Guide to creating design matrices](https://bioconductor.org/packages/release/workflows/vignettes/RNAseq123/inst/doc/designmatrices.html)
+* [Orchestrating Microbiome Analysis in R](https://microbiome.github.io/OMA/docs/devel/)
+* [QIIME2 for microbiome analysis](https://qiime2.org/)
+* [Bioconductor Awesome Lists](https://blog.bioconductor.org/posts/2022-10-22-awesome-lists/)
+* [ATAC-seq pipeline](https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-020-00342-y)
+* [Intro to RNAseq](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html)
+* [Fred Hutch Bioinfo Primer book](https://hutchdatascience.org/Choosing_Genomics_Tools/introduction.html)
+* [Analyzing CRISPR screens with edgeR](https://bookdown.org/goknurginer/Analysing-CRISPR-screens-with-edgeR/)
+
+## Statistics:
+
+* [Modern Statistics for Modern Biology](https://web.stanford.edu/class/bios221/book/): I use this all the time
+* [Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/): Highly recommend
+* [Regression and Other Stories](https://avehtari.github.io/ROS-Examples/): Read this book
+* [What does a statistical method assume](https://www.fharrell.com/post/assume/): Read this blog
+* [Andrew Gelman’s Blog](https://statmodeling.stat.columbia.edu/)
+* [Regression Modeling Strategies Course Notes](https://hbiostat.org/doc/rms/book/)
+* [Biostatistics for Biomedical Research](https://hbiostat.org/bbr/)
+* [introduction to modern statistics](https://openintro-ims2.netlify.app/)
+* [The basics of bayesian statistics](https://statswithr.github.io/book/the-basics-of-bayesian-statistics.html)
+* [Hidden Markov Models in R](https://a-little-book-of-r-for-bioinformatics.readthedocs.io/en/latest/src/chapter10.html)
+* [Review of recommendations for variable selection](https://onlinelibrary.wiley.com/doi/10.1002/bimj.201700067)
+* [Imputation methods](https://stefvanbuuren.name/fimd/)
+* [How to read PCA plots](https://www.nxn.se/valent/2017/6/12/how-to-read-pca-plots)
+
+## Programming general:
+
+* [Advanced Bash scripting](https://tldp.org/LDP/abs/html/index.html) (old http link)
+* [minimal safe bash script template](https://betterdev.blog/minimal-safe-bash-script-template/)
+* [Effective Shell](https://effective-shell.com/)
+* [Software Carpentry on Automation and Make](https://swcarpentry.github.io/make-novice/)
+* [Modern C](https://inria.hal.science/hal-02383654)
+* [Assembly Language](https://github.com/pkivolowitz/asm_book)
+* [Programming Paradigms](https://www.youtube.com/playlist?list=PL9D558D49CA734A02): watch this and you’ll understand how programming generally works
+* [GNU C Language manual](https://github.com/VernonGrant/gnu-c-language-manual/blob/main/markdown/index.md)
+
+## Mathematics:
+
+* [Understanding Mathematics](https://www.math.utah.edu/~alfeld/math.html)
+* [Programmer’s introduction to mathematics](https://pimbook.org/)
+* [Math pronunciation guide](https://par.cse.nsysu.edu.tw/link/math-pronunciation.pdf)
+
+## ML/AI:
+
+* [Generative AI for beginners](https://microsoft.github.io/generative-ai-for-beginners/#/)
+* [Understanding Deep Learning](https://udlbook.github.io/udlbook/)
+* [Google ML Course](https://developers.google.com/machine-learning)
+
+## Misc:
+
+* [Papers We Love](https://github.com/papers-we-love/papers-we-love)
+* [For Better Science](https://forbetterscience.com/)
+* [Bionumbers](https://bionumbers.hms.harvard.edu/search.aspx)
+* [chmod calculator](https://chmod-calculator.com/) you’d be surprised how often you use this
+* [Online encyclopedia of integer sequences](https://oeis.org/)
+
+## Bio Art : free SVGs to create diagrams:
+
+* [inkscape](https://inkscape.org/) For creating the diagrams
+* [NIH BioArt](https://bioart.niaid.nih.gov/)
+* [bioicons](https://bioicons.com/)
+* [Open Science Art](https://openscienceart.com/)
+* [Scidraw](https://scidraw.io/)
+* [Reactome Icon Library](https://reactome.org/icon-lib)
+* [Smart Servier Medical Art](https://smart.servier.com/)
