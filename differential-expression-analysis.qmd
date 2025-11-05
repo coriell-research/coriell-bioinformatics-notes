@@ -214,14 +214,19 @@ quant_files <- list.files(
 
 # Extract samples names from filepaths
 names(quant_files) <- gsub("02_quants", "", quant_files, fixed = TRUE)
-names(quant_files) <- gsub("_quants/quant.sf", "", names(quant_files), fixed = TRUE)
+names(quant_files) <- gsub(
+  "_quants/quant.sf",
+  "",
+  names(quant_files),
+  fixed = TRUE
+)
 
 # Create metadata for import
 coldata <- data.frame(
-  names = names(quant_files), 
+  names = names(quant_files),
   files = quant_files,
   group = factor(rep(c("Control", "Treatment"), each = 3))
-  )
+)
 
 # Import transcript counts with tximeta
 se <- tximeta(coldata)
@@ -244,21 +249,21 @@ library(edgeR)
 
 # Specify the filepaths to gene counts from STAR
 count_files <- list.files(
-  path = "03_STAR_outs", 
-  pattern = "*.ReadsPerGene.out.tab", 
+  path = "03_STAR_outs",
+  pattern = "*.ReadsPerGene.out.tab",
   full.names = TRUE
-  )
+)
 
 # Name the file with their sample names
 names(count_files) <- gsub(".ReadsPerGene.out.tab", "", basename(count_files))
 
-# Import HTSeq counts into a DGEList 
+# Import HTSeq counts into a DGEList
 y <- readDGE(
-  files = count_files, 
-  columns = c(1, 2),  # Gene name and 'unstranded' count columns
+  files = count_files,
+  columns = c(1, 2), # Gene name and 'unstranded' count columns
   group = factor(rep(c("Control", "Treatment"), each = 3)),
   labels = names(count_files)
-  )
+)
 ```
 
 ### Counting reads with `featureCounts()`
@@ -285,15 +290,15 @@ library(Rsubread)
 
 # Specify the path to the BAM files produced by STAR
 bam_files <- list.files(
-  path = "path/to/bam_files", 
-  pattern = "*.bam$", 
+  path = "path/to/bam_files",
+  pattern = "*.bam$",
   full.names = TRUE
-  )
+)
 
 # Optionally name the bam files
 names(bam_files) <- gsub(".bam", "", basename(bam_files))
 
-# Count reads over genes for a paired-end library 
+# Count reads over genes for a paired-end library
 fc <- featureCounts(
   files = bam_files,
   annot.inbuilt = "hg38",
@@ -326,6 +331,10 @@ airway$group <- factor(airway$dex, levels = c("untrt", "trt"))
 
 # Convert to a DGEList to be consistent with above steps
 y <- SE2DGEList(airway)
+
+# Reorder so that replicates from the same group are next to each other
+# this will make this easier to visualize downstream
+y <- y[, order(y$samples$group)]
 ```
 
 ## Library QC
@@ -341,8 +350,11 @@ analysis. This can be achieved using `edgeR::filterByExpr()`.
 # Determine which genes have enough counts to keep around
 keep <- filterByExpr(y)
 
+# How many genes are kept?
+table(keep)
+
 # Remove the unexpressed genes
-y <- y[keep,,keep.lib.sizes = FALSE]
+y <- y[keep, , keep.lib.sizes = FALSE]
 ```
 
 At this stage it is often wise to perform library QC on the library size 
@@ -364,14 +376,13 @@ values. [RLE plots](https://journals.plos.org/plosone/article?id=10.1371/journal
 are good diagnostic tools for evaluating unwanted variation in libraries. 
 
 ```{r, warning=FALSE, message=FALSE}
-library(ggplot2)
 library(coriell)
 
 
 plot_boxplot2(
   logcounts,
   y$samples,
-  fillBy = "group",
+  fill_by = "group",
   rle = TRUE,
   show_outliers = FALSE,
   plot_title = "Relative Log Expression",
@@ -394,7 +405,7 @@ and generally samples from the same group should have overlapping density curves
 plot_density2(
   logcounts,
   y$samples,
-  colBy = "group",
+  col_by = "group",
   plot_title = "Library Density",
   x_label = "logCPM"
 )
@@ -417,12 +428,7 @@ variable genes change between treatment groups. These plots show the expression
 of each gene as a line on the y-axis traced between samples on the x-axis. 
 
 ```{r}
-plot_parallel(logcounts, y$samples, colBy = "group", 
-              removeVar = 0.9, alpha = 0.05) +
-  labs(title = "10% Most Variable Genes",
-       x = "Sample",
-       y = "logCPM",
-       color = "Treatment Group")
+plot_parallel2(logcounts, main = "10% Most Variable Genes")
 ```
 
 ### Correlations between samples
@@ -457,25 +463,25 @@ library(PCAtools)
 # Perform PCA on the 20% most variable genes
 # Center and scale the variable after selecting most variable
 pca_result <- pca(
-  logcounts, 
-  metadata = y$samples, 
-  center = TRUE, 
-  scale = TRUE, 
+  logcounts,
+  metadata = y$samples,
+  center = TRUE,
+  scale = TRUE,
   removeVar = 0.8
-  )
+)
 
 # Show the PCA biplot
 biplot(
-  pca_result, 
-  colby = "group", 
-  hline = 0, 
-  vline = 0, 
-  hlineType = 2, 
-  vlineType = 2, 
+  pca_result,
+  colby = "group",
+  hline = 0,
+  vline = 0,
+  hlineType = 2,
+  vlineType = 2,
   legendPosition = "bottom",
   title = "PCA",
   caption = "20% Most Variable Features"
-  )
+)
 ```
 
 ### Assessing global scaling normalization assumptions
@@ -556,7 +562,7 @@ We can make an equivalent model and test *without* an intercept like so:
 
 ```{r, eval=FALSE}
 # A means model
-design_no_intercept <- model.matrix(~0 + group, data = y$samples)
+design_no_intercept <- model.matrix(~ 0 + group, data = y$samples)
 
 # Construct contrasts to test the difference in means between the groups
 cm <- makeContrasts(
@@ -594,6 +600,34 @@ for (i in 1:ncol(y)) {
 }
 ```
 
+At this point it's also a good idea to recheck the above plots using the normalized data
+
+```{r, eval=FALSE}
+# RLE boxplots after normalization
+plot_boxplot2(
+  lcpms,
+  y$samples,
+  fill_by = "group",
+  rle = TRUE,
+  show_outliers = FALSE,
+  plot_title = "Normalized Relative Log-Expression",
+  y_label = "RLE"
+)
+
+# Normalized library densities
+plot_density2(
+  lcpms,
+  y$samples,
+  col_by = "group",
+  plot_title = "Normalized Library Density",
+  x_label = "logCPM"
+)
+
+# MDS (similar to PCA)
+plotMDS(lcpms, col = y$samples$group, pch = 16, cex = 2)
+legend("top", legend = levels(y$samples$group), col = palette()[1:2], pch = 16)
+```
+
 #### What to do if global scaling normalization is violated?
 
 Above I described testing for violations of global scaling normalization. So 
@@ -615,15 +649,15 @@ implemented based on reading forums and github issues.
 library(qsmooth)
 
 
-# Compute the smooth quantile factors 
+# Compute the smooth quantile factors
 qs <- qsmooth(y$counts, group_factor = y$samples$group)
 
 # Extract the qsmooth transformed data
 qsd <- qsmoothData(qs)
 
 # Calculate offsets to be used by edgeR in place of norm.factors
-# Offsets are on the natural log scale. 
-# Add a small prior_count to avoid taking logs of zero 
+# Offsets are on the natural log scale.
+# Add a small prior_count to avoid taking logs of zero
 prior_count <- 0.1
 offset <- log(y$counts + prior_count) - log(qsd + prior_count)
 
@@ -710,13 +744,13 @@ library(patchwork)
 
 
 # Create a volcano plot of the results
-v <- plot_volcano(de_result, fdr = 0.05) 
+v <- plot_volcano(de_result, fdr = 0.05)
 
 # Create and MA plot of the results
-m <- plot_md(de_result, fdr = 0.05) 
+m <- plot_md(de_result, fdr = 0.05)
 
 # Patch both plots together
-(v | m) + 
+(v | m) +
   plot_annotation(title = "Treatment vs. Control") &
   theme_coriell()
 ```
@@ -734,10 +768,10 @@ is_de <- de_result$FDR < 0.05
 
 # Produce a heatmap from the DE genes
 quickmap(
-  x = lcpm[is_de, ], 
+  x = lcpm[is_de, ],
   metadata = y$samples[, "group", drop = FALSE],
   main = "Differentially Expressed Genes"
-  )
+)
 ```
 
 ## Competitive gene set testing with `camera()`
@@ -800,7 +834,7 @@ Smyth is to derive a z-statistic from the F-scores like so:
 t_stat <- sign(de_result$logFC) * sqrt(de_result$`F`)
 z <- zscoreT(t_stat, df = qlf$df.total)
 
-# Name the stat vector with the gene names 
+# Name the stat vector with the gene names
 names(z) <- de_result$gene_name
 
 # Use the z-scores as the ranking stat for cameraPR
@@ -815,19 +849,19 @@ plots for any of the gene sets of interest using any ranking stat of our choice.
 ```{r}
 # Show barcodeplot using the z-scores
 barcodeplot(
-  z, 
-  index = idx[["HALLMARK_ANDROGEN_RESPONSE"]], 
+  z,
+  index = idx[["HALLMARK_ANDROGEN_RESPONSE"]],
   main = "HALLMARK_ANDROGEN_RESPONSE",
   xlab = "z-score"
-  )
+)
 
 # Or you can use the logFC
 barcodeplot(
-  de_result$logFC, 
-  index = idx[["HALLMARK_ANDROGEN_RESPONSE"]], 
+  de_result$logFC,
+  index = idx[["HALLMARK_ANDROGEN_RESPONSE"]],
   main = "HALLMARK_ANDROGEN_RESPONSE",
   xlab = "logFC"
-  )
+)
 ```
 
 We can also visualize the `camera()` results using an enrichment map from the 
@@ -839,7 +873,7 @@ data.frame.
 library(TMSig)
 
 
-# Add columns needed by TMSig::enrichmap() 
+# Add columns needed by TMSig::enrichmap()
 camera_result$Pathway <- rownames(camera_result)
 camera_result$Contrast <- "Treatment vs. Control"
 camera_result$stat <- ifelse(camera_result$Direction == "Down", -1, 1)
@@ -937,18 +971,18 @@ up_pwf <- suppressWarnings(
     id = "ensGene",
     bias.data = reduced_exon_lengths[names(up_genes)],
     plot.fit = TRUE
-    )
   )
+)
 
 down_pwf <- suppressWarnings(
-    nullp(
-      down_genes,
-      genome = "hg19",
-      id = "ensGene",
-      bias.data = reduced_exon_lengths[names(down_genes)],
-      plot.fit = TRUE
-    )
+  nullp(
+    down_genes,
+    genome = "hg19",
+    id = "ensGene",
+    bias.data = reduced_exon_lengths[names(down_genes)],
+    plot.fit = TRUE
   )
+)
 ```
 
 Finally, perform over-representation testing
