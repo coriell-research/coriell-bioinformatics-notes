@@ -428,7 +428,11 @@ variable genes change between treatment groups. These plots show the expression
 of each gene as a line on the y-axis traced between samples on the x-axis. 
 
 ```{r}
-plot_parallel2(logcounts, main = "10% Most Variable Genes")
+plot_parallel2(
+  logcounts,
+  plot_title = "10% Most Variable Genes",
+  y_label = "Scaled Expression"
+)
 ```
 
 ### Correlations between samples
@@ -623,8 +627,14 @@ plot_density2(
   x_label = "logCPM"
 )
 
-# MDS (similar to PCA)
-plotMDS(lcpms, col = y$samples$group, pch = 16, cex = 2)
+# MDS (similar to PCA above)
+plotMDS(
+  lcpms,
+  col = y$samples$group,
+  pch = 16,
+  cex = 2,
+  gene.selection = "common"
+)
 legend("top", legend = levels(y$samples$group), col = palette()[1:2], pch = 16)
 ```
 
