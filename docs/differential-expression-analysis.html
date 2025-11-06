@@ -626,7 +626,11 @@ FALSE  TRUE
 <h3 class="anchored" data-anchor-id="parallel-coordinates-plot">Parallel coordinates plot</h3>
 <p>Parallel coordinates plots are useful for giving you an idea of how the most variable genes change between treatment groups. These plots show the expression of each gene as a line on the y-axis traced between samples on the x-axis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_parallel2</span>(logcounts, <span class="at">main =</span> <span class="st">"10% Most Variable Genes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_parallel2</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  logcounts,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_title =</span> <span class="st">"10% Most Variable Genes"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_label =</span> <span class="st">"Scaled Expression"</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Removing 90% lowest variance features...</code></pre>
 </div>
@@ -784,9 +788,15 @@ Residuals    6 31225.5  5204.2               </code></pre>
 <span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_label =</span> <span class="st">"logCPM"</span></span>
 <span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co"># MDS (similar to PCA)</span></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(lcpms, <span class="at">col =</span> y<span class="sc">$</span>samples<span class="sc">$</span>group, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(y<span class="sc">$</span>samples<span class="sc">$</span>group), <span class="at">col =</span> <span class="fu">palette</span>()[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="co"># MDS (similar to PCA above)</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a><span class="fu">plotMDS</span>(</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  lcpms,</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> y<span class="sc">$</span>samples<span class="sc">$</span>group,</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">cex =</span> <span class="dv">2</span>,</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene.selection =</span> <span class="st">"common"</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"top"</span>, <span class="at">legend =</span> <span class="fu">levels</span>(y<span class="sc">$</span>samples<span class="sc">$</span>group), <span class="at">col =</span> <span class="fu">palette</span>()[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="what-to-do-if-global-scaling-normalization-is-violated" class="level4">
 <h4 class="anchored" data-anchor-id="what-to-do-if-global-scaling-normalization-is-violated">What to do if global scaling normalization is violated?</h4>
@@ -1199,8 +1209,8 @@ loaded via a namespace (and not attached):
  [97] knitr_1.50                tzdb_0.5.0               
  [99] reshape2_1.4.4            rjson_0.2.23             
 [101] nlme_3.1-168              curl_7.0.0               
-[103] bumphunter_1.50.0         GlobalOptions_0.1.2      
-[105] cachem_1.1.0              rhdf5_2.52.1             
+[103] bumphunter_1.50.0         cachem_1.1.0             
+[105] rhdf5_2.52.1              GlobalOptions_0.1.2      
 [107] stringr_1.5.2             KernSmooth_2.23-26       
 [109] parallel_4.5.1            restfulr_0.0.16          
 [111] GEOquery_2.76.0           pillar_1.11.1            
