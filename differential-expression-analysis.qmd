@@ -941,16 +941,7 @@ reduced_exon_lengths <- sum(width(reduce(exons_by_gene)))
 names(reduced_exon_lengths) <- names(exons_by_gene)
 ```
 
-And compute the median transcript lengths
-
-```{r, warning=FALSE, message=FALSE}
-tx_by_gene <- transcriptsBy(txdb, by = "gene")
-median_tx_lengths <- median(width(tx_by_gene))
-names(median_tx_lengths) <- names(tx_by_gene)
-```
-
-With this information we are ready to perform over-representation testing with 
-`goseq`. 
+With this information we are ready to perform over-representation testing with `goseq`. 
 
 ### Perform over-representation testing with `goseq`
 
