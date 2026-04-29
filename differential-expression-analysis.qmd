@@ -16,7 +16,7 @@ several steps:
 
 1. Quality control of the fastq files with a tool like 
 [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) or 
-[fastp](https://github.com/OpenGene/fastp)
+[fastp](https://github.com/OpenGene/fastp) and more recently, [RustQC](https://seqeralabs.github.io/RustQC/)
 2. Alignment of fastq files to a reference genome using a splice-aware aligner 
 like [STAR](https://github.com/alexdobin/STAR) *or* transcript quantification 
 using a pseudoaligner like [Salmon](https://combine-lab.github.io/salmon/).
@@ -34,6 +34,13 @@ global scaling normalization.
 6. Creation of results plots such as volcano or MA plots.
 7. Gene ontology analysis of interesting genes.
 8. Gene set enrichment analysis.
+
+### Workflow managers
+
+Most of the above processing steps can (and should) be orchestrated using a workflow manager like 
+[Snakemake](https://snakemake.readthedocs.io/en/stable/) or [Nextflow](https://www.nextflow.io/). 
+Below, I demonstrate example processing steps using simple Bash scripts for simplicity and 
+illustrative purposes.
 
 ## Quality Control
 
@@ -303,6 +310,7 @@ fc <- featureCounts(
   files = bam_files,
   annot.inbuilt = "hg38",
   isPairedEnd = TRUE,
+  countReadPairs = TRUE,
   nThreads = 12
 )
 
@@ -453,39 +461,25 @@ can reveal overall patterns of expression as well as potential problematic
 samples prior to downstream analysis. For simple analyses we expect to see the
 'main' effect primarily along the first component.
 
-I like to use the [PCAtools](https://bioconductor.org/packages/release/bioc/vignettes/PCAtools/inst/doc/PCAtools.html) package for quickly computing and plotting principal components.
+I like to use `edgeR::plotMDS(y)` for quickly computing and plotting principal components.
 For more complicated experiments I have also found UMAP (see `coriell::UMAP()`)
 to be useful for dimensionality reduction (although using UMAP is not without 
 its [problems for biologists](https://simplystatistics.org/posts/2024-12-23-biologists-stop-including-umap-plots-in-your-papers/)).
 
-NOTE: `edgeR::plotMDS(y)` is also a good alternative to PCA. 
-
 ```{r, warning=FALSE, message=FALSE}
-library(PCAtools)
+# Set up the color palette to match the above plots
+grp_pal <- hcl.colors(n = nlevels(y$samples$group), palette = "Dark 3")
+names(grp_pal) <- levels(y$samples$group)
 
-
-# Perform PCA on the 20% most variable genes
-# Center and scale the variable after selecting most variable
-pca_result <- pca(
+# Create the PCA plot by using 'gene.selection = "common"''
+plotMDS(
   logcounts,
-  metadata = y$samples,
-  center = TRUE,
-  scale = TRUE,
-  removeVar = 0.8
+  pch = 16,
+  col = grp_pal[y$samples$group],
+  cex = 1.8,
+  gene.selection = "common"
 )
-
-# Show the PCA biplot
-biplot(
-  pca_result,
-  colby = "group",
-  hline = 0,
-  vline = 0,
-  hlineType = 2,
-  vlineType = 2,
-  legendPosition = "bottom",
-  title = "PCA",
-  caption = "20% Most Variable Features"
-)
+legend("top", legend = levels(y$samples$group), col = grp_pal, pch = 16)
 ```
 
 ### Assessing global scaling normalization assumptions
@@ -627,15 +621,15 @@ plot_density2(
   x_label = "logCPM"
 )
 
-# MDS (similar to PCA above)
+# PCA
 plotMDS(
   lcpms,
-  col = y$samples$group,
   pch = 16,
-  cex = 2,
+  col = grp_pal[y$samples$group],
+  cex = 1.8,
   gene.selection = "common"
 )
-legend("top", legend = levels(y$samples$group), col = palette()[1:2], pch = 16)
+legend("top", legend = levels(y$samples$group), col = grp_pal, pch = 16)
 ```
 
 #### What to do if global scaling normalization is violated?
@@ -680,33 +674,13 @@ lcpms <- cpm(y, offset = y$offset, log = TRUE)
 
 ### Fit the model
 
-New in edgeR 4.0 is the ability to estimate dispersions while performing the
-model fitting step. I typically tend to 'robustify' the fit to outliers. Below I 
-will perform dispersion estimation in legacy mode so that we can use competitive
-gene set testing later. If we want to use the new workflow we can use the 
-following:
-
-```{r, eval=FALSE}
-# edgeR 4.0 workflow (recommended)
-fit <- glmQLFit(y, design, legacy = FALSE, robust = TRUE)
-```
-
-We will continue with the legacy workflow.
+New in [edgeR 4.0](https://academic.oup.com/nar/article/53/2/gkaf018/7973897?login=false) is the 
+ability to estimate dispersions while performing the model fitting step. I typically tend to 
+'robustify' the fit to outliers. NOTE: if you are familiar with the old edgeR workflow this step
+directly skips `estimateDisp()`
 
 ```{r}
-y <- estimateDisp(y, design, robust = TRUE)
-fit <- glmQLFit(y, design, robust = TRUE, legacy = TRUE)
-```
-
-It's always a good idea at this step to check some of the diagnostic plots from
-`edgeR`
-
-```{r}
-# Show the biological coefficient of variation
-plotBCV(y)
-
-# Show the dispersion estimates
-plotQLDisp(fit)
+fit <- glmQLFit(y, design, robust = TRUE)
 ```
 
 ### Test for differential expression
@@ -720,7 +694,7 @@ qlf <- glmQLFTest(fit, coef = 2)
 
 Often it is more biologically relevant to give more weight to higher fold 
 changes. This can be achieved using `glmTreat()`. **NOTE** do not use 
-`glmQLFTest()` and then filter by fold-change - you destroy the FDR correction!
+`glmQLFTest()` and then filter by fold-change - [you destroy the FDR correction!](https://academic.oup.com/bioinformatics/article/25/6/765/251641)
 
 When testing against a fold-change we can use relatively modest values since the
 fold-change must exceed this threshold before being considered for significance.
@@ -787,12 +761,12 @@ quickmap(
 ## Competitive gene set testing with `camera()`
 
 I've recently become aware of some of the [problems](https://support.bioconductor.org/p/9158100/#9158105) with gene set 
-enrichment analysis using the `fgsea` package. Following Gordon Smyth's advice,
-I have switched all of my pipelines to using competitive gene set testing 
-(when appropriate) in `limma` to avoid problems with correlated genes.
+enrichment analysis using the `fgsea` package. Following Gordon Smyth's advice, I have switched all 
+of my pipelines to using competitive gene set testing (when appropriate) in `limma` to avoid 
+problems with correlated genes.
 
-Below we use the `msigdbr` R package to retrieve HALLMARK gene sets and then use
-`edgeR::camera()` for gene set testing.
+Below we use the `msigdbr` R package to retrieve HALLMARK gene sets and then use camera()` for gene 
+set testing.
 
 ```{r, warning=FALSE, message=FALSE}
 library(msigdbr)
@@ -822,7 +796,7 @@ the DE within the gene set to the DE outside of the gene set.
 
 ```{r}
 # NOTE: if you used the new edgeR 4.0 workflow you can add common dispersion
-# needed by camera with:
+# needed by downstream plotting/gene set testing with:
 y$common.dispersion <- fit$dispersion
 
 # Use camera to perform competitive gene set testing
@@ -905,122 +879,129 @@ enrichmap(
 
 ## Gene ontology (GO) over-representation test
 
-Over-representation testing can be performed using the `goseq` package which 
-incorporates length bias inherent in RNA-seq when performing over-representation
-testing. Using `goseq` requires gene length information. `goseq` has several 
-gene length datasets built-in, however, when gene length data is not available 
-you may need to compute it yourself (as in the case of GENCODE v48 annotations, 
-for example). 
+Over-representation testing can be performed with edgeR's `goana()` and `kegga()` functions. These
+functions also enable adjusting for [gene length bias](https://link.springer.com/article/10.1186/1745-6150-4-14) by incorporating gene lengths as a covariate during testing. The only slightly annoying aspect to 
+using these functions is that they use Entrez IDs as input and I typically use GENCODE / Ensembl 
+Ids.
 
-Below I will show how you can compute gene length information and use that in 
-`goseq` analysis. There are two ways to think about computing gene lengths, 
-either taking the median transcript length across transcripts of a given gene or
-by taking the total length of all reduced exons. Either should suffice and I'm 
-not sure if one is better than the other. For reference, `goseq` uses the median 
-transcript length. 
+### Computing gene lengths
 
-### Computing gene length information
+If you do not have gene length information available, one way of deriving it is by computing the 
+sum of the reduced exon lengths for each gene. This can be accomplished using a TxDb object or 
+creating one directly from a GTF.
 
-**The annotation used in the airway package is from Ensembl v75** we can import
-the gtf as a txdb object in order to compute gene length information
+The annotation used in the airway package is from Ensembl v75 we can import the gtf as a txdb object 
+in order to compute gene length information
 
 ```{r, warning=FALSE, message=FALSE}
-suppressPackageStartupMessages(library(txdbmaker))
+library(txdbmaker)
 
 
 # Download and create a txdb object from the ensembl GTF
 url <- "https://ftp.ensembl.org/pub/release-75/gtf/homo_sapiens/Homo_sapiens.GRCh37.75.gtf.gz"
 txdb <- makeTxDbFromGFF(url, format = "gtf")
-```
 
-Compute the reduced exon lengths
-
-```{r, warning=FALSE, message=FALSE}
+# Extract exon features by gene id, create reduced features, sum the widths by gene
 exons_by_gene <- exonsBy(txdb, by = "gene")
 reduced_exon_lengths <- sum(width(reduce(exons_by_gene)))
 names(reduced_exon_lengths) <- names(exons_by_gene)
+
+# Add the length information back to the de_results
+de_result$Length <- reduced_exon_lengths[de_result$gene_id]
 ```
 
-With this information we are ready to perform over-representation testing with `goseq`. 
+### Converting from ENSEMBL Ids to Entrez Ids
 
-### Perform over-representation testing with `goseq`
-
-```{r, warning=FALSE, message=FALSE}
-library(goseq)
-
-
-# First create an indicator vector for the significant genes
-up_genes <- de_result$logFC > 0 & de_result$FDR < 0.05
-down_genes <- de_result$logFC < 0 & de_result$FDR < 0.05
-
-# Name each set with the ENSEMBL IDs
-names(up_genes) <- names(down_genes) <- de_result$gene_id
-```
-
-Next, Compute the probability weighted functions for each set of up and 
-down-regulated genes. **NOTE** `goseq` has built-in genomes and annotations
-that can be used in place of the pre-computed lengths above, I just wanted to 
-show how you might compute these lengths if needed (especially since newer 
-annotation version are not present). The pwf plots should generally increase
-with increasing length.
+If you have Ensembl Ids you'll need to find the coresponding Entrez Id before proceeding with 
+`goana()`. We can use the `mapIds()` function from the `AnnotationDbi` package and the Ensembl 
+Org Db object to get this mapping. NOTE: the mapping is generally not one-to-one.
 
 ```{r, warning=FALSE, message=FALSE}
-up_pwf <- suppressWarnings(
-  nullp(
-    up_genes,
-    genome = "hg19",
-    id = "ensGene",
-    bias.data = reduced_exon_lengths[names(up_genes)],
-    plot.fit = TRUE
-  )
-)
+library(org.Hs.eg.db)
+library(AnnotationDbi)
 
-down_pwf <- suppressWarnings(
-  nullp(
-    down_genes,
-    genome = "hg19",
-    id = "ensGene",
-    bias.data = reduced_exon_lengths[names(down_genes)],
-    plot.fit = TRUE
-  )
+
+# Convert gene IDs to Entrez IDs
+de_result$entrez_id <- mapIds(
+  org.Hs.eg.db,
+  keys = de_result$gene_id,
+  keytype = "ENSEMBL",
+  column = "ENTREZID"
 )
 ```
 
-Finally, perform over-representation testing
-
-```{r, warning=FALSE, message=FALSE}
-# Perform GO analysis
-up_go <- goseq(up_pwf, genome = "hg19", id = "ensGene")
-down_go <- goseq(down_pwf, genome = "hg19", id = "ensGene")
-
-# Add multiple test correction
-up_go$FDR <- p.adjust(up_go$over_represented_pvalue, method = "BH")
-down_go$FDR <- p.adjust(down_go$over_represented_pvalue, method = "BH")
-```
-
-We can show these results using a dotplot. Below is a simple function used to 
-create gene ontology dotplots from the top 15 significant go terms. 
+Now we have all of the ingredients to perform GO (or KEGG) over-representation analysis. First, 
+we will need to create subsets for up and down-regulated genes. Then we can test for 
+over-representation adjusting for gene length biases.
 
 ```{r}
-plot_dotplot <- function(df, n = 15) {
-  df <- df[order(df$FDR), ]
-  df <- head(df, n = n)
-  df$prop_in_set <- df$numDEInCat / df$numInCat
+# Extract all assayed genes (that have entrez IDs) to be used as background
+universe <- de_result$entrez_id
+universe <- universe[!is.na(universe)]
 
-  ggplot(df, aes(x = -log10(FDR), y = reorder(term, -FDR))) +
-    geom_point(aes(size = prop_in_set, color = -log10(FDR))) +
+# Extract the lengths for genes in the universe
+lengths <- de_result$Length[match(universe, de_result$entrez_id)]
+
+# Get Entrez Ids of up and down genes
+up_genes <- de_result[de_result$logFC > 0 & de_result$FDR < 0.05, "entrez_id"]
+down_genes <- de_result[de_result$logFC < 0 & de_result$FDR < 0.05, "entrez_id"]
+
+up_genes <- up_genes[!is.na(up_genes)]
+down_genes <- down_genes[!is.na(down_genes)]
+```
+
+Perform GO over-representation testing
+
+```{r}
+up_go <- goana(
+  up_genes,
+  universe = universe,
+  species = "Hs",
+  null.prob = NULL,
+  covariate = lengths,
+  plot = TRUE
+)
+
+down_go <- goana(
+  down_genes,
+  universe = universe,
+  species = "Hs",
+  null.prob = NULL,
+  covariate = lengths,
+  plot = TRUE
+)
+```
+
+We can also plot these results after creating a simple function. Below I am plotting the top GO 
+results from biological processes (BP)
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+
+
+plot_dotplot <- function(df, n = 15, term = "Term") {
+  df <- df[order(df$P.DE), ]
+  df <- head(df, n = n)
+  df$prop_in_set <- df$N / df$DE
+
+  ggplot(df, aes(x = -log10(P.DE), y = reorder(df[[term]], -P.DE))) +
+    geom_point(aes(size = prop_in_set, color = -log10(P.DE))) +
     scale_color_viridis_c() +
     labs(
-      x = "-log10(FDR)",
+      x = "-log10(P-value)",
       y = NULL,
-      color = "-log10(FDR)",
+      color = "-log10(P-value)",
       size = "Prop. Genes in Set"
     ) +
     theme_classic()
 }
 
-plot_dotplot(up_go) + labs(title = "Up-regulated Genes")
-plot_dotplot(down_go) + labs(title = "Down-regulated Genes")
+d1 <- plot_dotplot(subset(up_go, Ont == "BP")) +
+  labs(title = "Up-regulated Genes")
+d2 <- plot_dotplot(subset(down_go, Ont == "BP")) +
+  labs(title = "Down-regulated Genes")
+
+(d1 | d2) + plot_annotation(title = "Top GO Terms")
 ```
 
 ## Session Info
