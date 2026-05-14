@@ -2,85 +2,50 @@
 
 ## Introduction to programming in R
 
-There are tons of great resources for learning R. [R for Data Science](https://r4ds.had.co.nz/)
-is probably the most popular resource for new useRs to get up to speed with slicing 
-and dicing data in R. The *R for Data Science* book, however, is taught from the 
-perspective of the [Tidyverse](https://www.tidyverse.org/). The *Tidyverse* is 
-an opinionated set of packages and functions that help users perform data 
-manipulations primarily on data.frames. While these packages and functions can be
-great for experienced users by providing ergonomic and consistent interfaces for
-data.frame manipulation, it is my personal belief that new users should first 
-learn the base language, especially if their goal is to perform bioinformatics 
-analysis. 
+There are tons of great resources for learning R. [R for Data Science](https://r4ds.had.co.nz/) is probably the most popular resource for new users to get up to speed with slicing and dicing data in R. The *R for Data Science* book, however, is taught from the perspective of the [Tidyverse](https://www.tidyverse.org/). The *Tidyverse* is an opinionated set of packages and functions that help users perform data manipulations primarily on `data.frame`s. While these packages and functions can be great for experienced users by providing ergonomic and consistent interfaces for `data.frame` manipulation, it is my personal belief that new users should first learn the base language, especially if their goal is to perform bioinformatics analysis. 
 
-Bioinformatics tools rely heavily on subsetting and matrix manipulations. 
-In my experience, users who start learning R using only function from the 
-*Tidyverse* have a difficult time understanding matrix manipulations and 
-subsetting operations common in bioinformatics workflows. This becomes 
-especially important when using [SummarizedExperiments](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) - the backbone of many bioinformatics data structures in 
-R. 
+Bioinformatics tools rely heavily on subsetting and matrix manipulations. In my experience, users who start learning R using only functions from the *Tidyverse* have a difficult time understanding matrix manipulations and subsetting operations common in bioinformatics workflows. This becomes especially important when using [SummarizedExperiments](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html) - the backbone of many bioinformatics data structures in R. 
 
-For this reason, we're going to focus on learning R from the ground up using 
-functions that exist primarily in the base language. A great resource for 
-learning base R quickly is Norm Matloff's *fasteR* which can be found 
-[here](https://github.com/matloff/fasteR). 
+For this reason, we're going to focus on learning R from the ground up using functions that exist primarily in the base language. A great resource for learning base R quickly is Norm Matloff's *fasteR*, which can be found [here](https://github.com/matloff/fasteR). 
 
-## Subsetting in R
+## Vectors
 
-You may have only ever encountered R from the perspective of the 
-[tidyverse](https://www.tidyverse.org/). `tidyverse` functions provide useful 
-abstractions for munging [tidy data](https://vita.had.co.nz/papers/tidy-data.html)
-however, most genomics data is often best represented and operated on as 
-matrices. Keeping your data in matrix format can provide many benefits as far 
-as speed and code clarity, which in turn helps to ensure correctness. You can 
-think of matrices as just fancy 2D versions of vectors. So what are vectors?
+You may have only ever encountered R from the perspective of the [tidyverse](https://www.tidyverse.org/). `tidyverse` functions provide useful abstractions for munging [tidy data](https://vita.had.co.nz/papers/tidy-data.html); however, most genomics data is often best represented and operated on as matrices. Keeping your data in matrix format can provide many benefits as far as speed and code clarity, which in turn helps to ensure correctness. You can think of matrices as just fancy 2D versions of vectors. So what are vectors?
 
-Vectors are the main building blocks of most R analyses. Whenever you use the
-`c()` function ('concatenate'), like: `x <- c('a', 'b', 'c')` you're creating a
-vector. Vectors hold R objects and are the building block of more complex 
-structures in R.
+Vectors are the main building blocks of most R analyses and are the R objects that you'll interact with the most. Whenever you use the `c()` function ('concatenate'), like `x <- c('a', 'b', 'c')`, you're creating a vector. Vectors hold R objects and are the building blocks of more complex structures in R.
 
-NOTE: the following is heavily inspired by Norm Matloff's excellent 
-[fasteR](https://github.com/matloff/fasteR) tutorial. Take a look there to get a 
-brief and concise overview base R. You should also check out the first few 
-chapters of Hadley Wickham's amazing book [Advanced R](https://adv-r.hadley.nz/).
-The [first edition](http://adv-r.had.co.nz/) contains some more information on
-base R.
+> **Note:** The following is heavily inspired by Norm Matloff's excellent [fasteR](https://github.com/matloff/fasteR) tutorial. Take a look there to get a brief and concise overview of base R. You should also check out the first few chapters of Hadley Wickham's amazing book [Advanced R](https://adv-r.hadley.nz/). The [first edition](http://adv-r.had.co.nz/) contains some more information on base R.
 
 ### Subsetting vectors
 
-Below, we'll use the built-in R constant called `LETTERS`. The `LETTERS` 
-vector is simply a 'list' of all uppercase letters in the Roman alphabet.
+Below, we'll use the built-in R constant called `LETTERS`. The `LETTERS` vector is simply a list of all uppercase letters in the Roman alphabet.
 
 ```{r}
+# "A" "B" "C", ...
 LETTERS
 ```
 
-We can subset the vector by position. For example, to get the 3rd letter we use
-the `[` operator and the position we want to extract.
+We can subset the vector by position. For example, to get the 3rd letter we use the `[` operator and the position we want to extract. It is important to stop here and appreciate that R uses 1-based indexing. Meaning that positions in vectors start at the value of 1. This is different from other programming languages like Python that use [0-based indexing](https://en.wikipedia.org/wiki/Zero-based_numbering).
 
 ```{r}
+# "A" "B" "C"
+#  1   2   3
 LETTERS[3]
 ```
 
-We can also use a range of positions. The notation `3:7` is a shortcut that
-generates the numbers, 3, 4, 5, 6, 7. 
+We can also use a range of positions. The notation `3:7` is a shortcut that generates the numbers 3, 4, 5, 6, 7.
 
 ```{r}
 LETTERS[3:7]
 ```
 
-We don't have to select sequential elements either. We can extract elements by
-using another vector of positions.
+We don't have to select sequential elements either. We can extract elements by using another vector of positions.
 
 ```{r}
 LETTERS[c(7, 5, 14, 14, 1, 18, 15)]
 ```
 
-Vectors become really powerful when we start combining them with logical 
-operations. R supports all of the usual logical and comparison operators 
-you can expect from a programming language, `<`, `>`, `==`, `!=`, `<=`, `>=`, 
-`%in%`, `&` and `|`.
+Vectors become really powerful when we start combining them with logical operations. R supports all of the usual logical and comparison operators you can expect from a programming language: `<`, `>`, `==`, `!=`, `<=`, `>=`, `%in%`, `&`, and `|`.
 
 ```{r}
 my_favorite_letters <- c("A", "B", "C")
@@ -93,98 +58,73 @@ LETTERS %in% my_favorite_letters
 LETTERS[LETTERS %in% my_favorite_letters]
 ```
 
-This same kind of subsetting works on vectors that contain numeric data as well. 
-For example, we can filter the measurements of annual flow of water through the 
-Nile river like so:
+You may have also noticed that we used another special operator above: `<-`. The `<-` operator is an assignment operator. It takes the object on the right-hand side and assigns it to the variable on the left-hand side. Assigning objects to variables is a basic concept across all programming languages. R actually has a [few ways](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/assignOps) to assign objects to variables, but using `<-` is by far the most common and preferred for a number of [reasons](https://stackoverflow.com/a/1742550).
 
-*Nile is another built-in dataset*
+This same kind of subsetting works on vectors that contain numeric data as well. For example, we can filter the measurements of annual flow of water through the Nile river like so:
+
+*(Note: `Nile` is another built-in dataset)*
 
 ```{r}
 # Any values strictly greater than 1200
 Nile[Nile > 1200]
 
-# Any even number - `%%` is the modulus operator
+# Any even number - `%%` is the modulus operator (returns the remainder)
 Nile[Nile %% 2 == 0]
 ```
 
-At this point it's important to take a step back and appreciate what R is doing. 
-Each of the comparison operators that we used above is *vectorized*. This means
-that the comparison is applied to all elements of the vector at one time. If 
-you're used to a programming language like Python this might seem foreign at 
-first. In Python, you would have to write a list comprehension to filter 
-observations from a list that meet a certain condition. For example, 
-`[x for x in Nile if x > 1200]`. However in R, most functions and operators are 
-*vectorized* allowing us to do things like `Nile > 1200` and have the comparison 
-applied to all of the elements of the vector automatically.
+At this point, it's important to take a step back and appreciate what R is doing. Each of the comparison operators that we used above is *vectorized*. This means that the comparison is applied to all elements of the vector at one time. If you're used to a programming language like Python, this might seem foreign at first. In Python, you would have to write a list comprehension to filter observations from a list that meet a certain condition (e.g., `[x for x in Nile if x > 1200]`). However, in R, most functions and operators are vectorized, allowing us to do things like `Nile > 1200` and have the comparison applied to all of the elements of the vector automatically.
 
 ### Subsetting data.frames
 
-But these are just one dimensional vectors. In R, we usually deal with 
-data.frames (tibbles for you tidyverse folks) and matrices. Lucky for us, the 
-subsetting operations we learned for vectors work the same way for data.frames
-and matrices.
+But these are just one-dimensional vectors. In R, we usually deal with `data.frame`s (tibbles for you tidyverse folks) and matrices. Lucky for us, the subsetting operations we learned for vectors work the same way for `data.frame`s and matrices.
 
-Let's take a look at the built-in `ToothGrowth` dataset. The data consists of 
-the length of odontoblasts in 60 guinea pigs receiving one of three levels of 
-vitamin C by one of two delivery methods.
+Let's take a look at the built-in `ToothGrowth` dataset. The data consists of the length of odontoblasts in 60 guinea pigs receiving one of three levels of vitamin C by one of two delivery methods.
 
 ```{r}
 head(ToothGrowth)
 ```
 
-The dollar sign `$` is used to extract an individual column from the data.frame, 
-which is just a vector.
+The dollar sign `$` is used to extract an individual column from the `data.frame`, which is just a vector.
 
 ```{r}
 head(ToothGrowth$len)
 ```
 
-We can also use the `[[` to get the same thing. Double-brackets come in handy 
-when your columns are not valid R names since `$` only works when columns are 
-valid names.
+We can also use `[[` to get the same thing. Double-brackets come in handy when your columns are not valid R names, since `$` only works when columns are valid names without spaces or special characters.
 
 ```{r}
 head(ToothGrowth[["len"]])
 ```
 
-When subsetting a data.frame in base R, the general scheme is:
+When subsetting a `data.frame` in base R, the general scheme is:
 
 ```
 df[the rows you want, the columns you want]
 ```
 
-So in order to get the 5th row of the first column we could do:
+So in order to get the value at the 5th row of the first column we could do:
 
 ```{r}
 ToothGrowth[5, 1]
 ```
 
-Again, we can combine this kind of thinking to extract rows and columns matching
-logical conditions. For example, if we want to get all of the animals 
-administered orange juice ('OJ')
+Again, we can combine this kind of thinking to extract rows and columns matching logical conditions. For example, if we want to get all of the animals administered orange juice ('OJ'):
 
 ```{r}
 ToothGrowth[ToothGrowth$supp == "OJ", ]
 ```
 
-We can also combine logical statements. For example, to get all of the rows for 
-animals administered orange juice and with odontoblast length ('len') less than 
-10.
+We can also combine logical statements. For example, to get all of the rows for animals administered orange juice *and* with an odontoblast length ('len') less than 10:
 
 ```{r}
 ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$len < 10, ]
 
-# We can also use the bracket notation to select rows and columns at the same time
+# We can also use the bracket notation to select specific rows and columns at the same time
 # Although this gets a little difficult to read
 ToothGrowth[ToothGrowth$supp == "OJ" & ToothGrowth$len < 10, c("len", "supp")]
 ```
 
-It gets annoying typing `ToothGrowth` every time we want to subset the data.frame. 
-Base R has a very useful function called `subset()` that can help us type less.
-`subset()` essentially 'looks inside' the data.frame for the given columns and 
-evaluates the expression without having to explicitly tell R where to find the 
-columns. Think of it like `dplyr::filter()`, if you are familiar with that 
-function. 
+It gets annoying typing `ToothGrowth` every time we want to subset the `data.frame`. Base R has a very useful function called `subset()` that can help us type less. `subset()` essentially 'looks inside' the `data.frame` for the given columns and evaluates the expression without having to explicitly tell R where to find them. Think of it like `dplyr::filter()`, if you are familiar with that function.
 
 ```{r}
 subset(ToothGrowth, supp == "OJ" & len < 10)
@@ -192,14 +132,9 @@ subset(ToothGrowth, supp == "OJ" & len < 10)
 
 ### Subsetting Lists
 
-Another data structure to be aware of, which is used frequently, is the `List`. 
-We've actually already encountered Lists above. data.frames are really just 
-Lists where each vector contains the same data type and all List elements are the
-same length.
+Another data structure to be aware of, which is used frequently, is the List. We've actually already encountered lists above: `data.frame`s are really just lists where each vector contains the same data type and all list elements are the exact same length.
 
-We can create a List in R using the `list()` function. Notice how each list 
-element has a name and can contain a different type of data and number of data 
-elements
+We can create a list in R using the `list()` function. Notice how each list element has a name and can contain a different type of data and number of data elements.
 
 ```{r}
 l <- list(
@@ -210,10 +145,7 @@ l <- list(
 )
 ```
 
-Lists can be tricky at first. To extract the data from a particular list 
-element you can use the `[[` or the `$` (as in the case of data.frames above). 
-Like vectors, you can use either the index or the name of the element you wish 
-to extract. 
+Lists can be tricky at first. To extract the underlying data from a particular list element, you can use `[[` or `$` (as in the case of `data.frame`s above). Like vectors, you can use either the index or the name of the element you wish to extract.
 
 ```{r}
 l[[1]]
@@ -223,14 +155,13 @@ l[["element1"]]
 l$element1
 ```
 
-What is returned if you only use the single bracket `[`? 
+What is returned if you only use the single bracket `[`?
 
 ```{r}
 l[1]
 ```
 
-You get another List, but now with a single element. This behavior might seem 
-unintuitive at first, but it can be very useful for creating new lists.
+You get another List, but now with a single element. This behavior might seem unintuitive at first, but it can be very useful for creating new, smaller lists.
 
 ```{r}
 numeric_l <- l[c(1, 4)]
@@ -238,15 +169,13 @@ numeric_l <- l[c(1, 4)]
 
 ### Subsetting matrices
 
-Matrices behave much like data.frames but unlike data.frames matrices can only
-contain one type of data. This might sound like a limitation at first but 
-you'll soon come to realize that matrices are very powerful (and fast) to work 
-with in R.
+Matrices behave much like `data.frame`s, but unlike `data.frame`s, matrices can only contain *one* type of data (e.g., all numeric or all character). This might sound like a limitation at first, but you'll soon come to realize that matrices are very powerful (and fast) to work with in R.
 
 ```{r}
 set.seed(123)
 
 # Create some random data that looks like methylation values
+# runif() generates random numbers between 0 and 1
 (m <- matrix(
   data = runif(6 * 10),
   ncol = 6,
@@ -257,53 +186,45 @@ set.seed(123)
 ))
 ```
 
-If we want to extract the value for CpG.3 for Sample3
+If we want to extract the value for CpG.3 for Sample3:
 
 ```{r}
 m[3, 3]
 ```
 
-Or all values of CpG.3 for every sample
+Or all values of CpG.3 for every sample:
 
 ```{r}
 m[3, ]
 
-# Or refer to the row by it's name
+# Or refer to the row by its name
 m["CpG.3", ]
 ```
 
-Or all CpGs for Sample3
+Or all CpGs for Sample3:
 
 ```{r}
 m[, 3]
 
-# Or refer to the column by it's name
+# Or refer to the column by its name
 m[, "Sample3"]
 ```
 
-We can also apply a mask to the entire matrix at once. For example, the 
-following will mark any value that is greater than 0.5 with `TRUE`
+We can also apply a logical mask to the entire matrix at once. For example, the following will mark any value that is greater than 0.5 with `TRUE`.
 
 ```{r}
 m > 0.5
 ```
 
-We can use this kind of masking to filter rows of the matrix using some very 
-helpful base R functions that operate on matrices. For example, to get only 
-those CpGs where 3 or more samples have a value > 0.5 we can use the `rowSums()`
-like so:
+We can use this kind of masking to filter rows of the matrix using some very helpful base R functions. For example, to get only those CpGs where 3 or more samples have a value > 0.5, we can use `rowSums()` like so:
 
 ```{r}
 m[rowSums(m > 0.5) > 3, ]
 ```
 
-This pattern is very common when dealing with sequencing data. Base R functions
-like `rowSums()` and `colMeans()` are specialized to operate over matrices 
-and are the most efficient way to summarize matrix data. The R package 
-[matrixStats](https://github.com/HenrikBengtsson/matrixStats) also contains 
-highly optimized functions for operating on matrices.
+This pattern is very common when dealing with sequencing data. Base R functions like `rowSums()` and `colMeans()` are specialized to operate over matrices and are the most efficient way to summarize matrix data. The R package [matrixStats](https://github.com/HenrikBengtsson/matrixStats) also contains highly optimized functions for operating on matrices.
 
-Compare the above to the `tidy` solution given the same matrix.
+Compare the elegance of the base R matrix subsetting above to the `tidy` solution given the same matrix:
 
 ```{r}
 tidyr::as_tibble(m, rownames = "CpG") |>
@@ -311,64 +232,63 @@ tidyr::as_tibble(m, rownames = "CpG") |>
   dplyr::group_by(CpG) |>
   dplyr::mutate(n = sum(beta > 0.5)) |>
   dplyr::filter(n > 3) |>
-  tidyr::pivot_wider(id_cols = CpG, names_from = "SampleName", values_from = "beta") |>
+  tidyr::pivot_wider(
+    id_cols = CpG,
+    names_from = "SampleName",
+    values_from = "beta"
+  ) |>
   tibble::column_to_rownames(var = "CpG") |>
   data.matrix()
 ```
 
-*There's probably some kind of tidy solution using `across()` that I'm missing 
-but this is how most of the tidy code in the wild that I have seen looks*
+*(Note: There's probably some kind of tidy solution using `across()` that I'm missing, but this is how most of the tidy code in the wild that I have seen looks).*
 
 ## Data Wrangling
 
-Now that we've got a handle on some different R data types, and how to slice and 
-dice them, we can start learning basic data cleaning and exploratory data analysis. 
-We'll focus on using data.frames since they're the primary workhorse of data 
-analysis in R. But remember, data.frames are just lists of vectors with some 
-special rules, so many concepts you learn will apply to data.frames but also 
-apply to vectors and lists.
+Now that we've got a handle on some different R data types and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We'll focus on using `data.frame`s since they're the primary workhorse of data analysis in R. But remember, `data.frame`s are just lists of vectors with some special rules, so many concepts you learn will apply to `data.frame`s but also apply to vectors and lists.
 
 ### Data import
 
-We'll use the built in `penguins_raw` dataset to learn some basic data cleaning.
-This dataset is built into R version 4.5 so you can just load it by running 
-`penguins_raw` if you have that R version installed. However, to illustrate 
-data import, we'll read in the data from an external source.
+We'll use the built-in `penguins_raw` dataset to learn some basic data cleaning. This dataset is built into R version 4.5, so you can just load it by running `penguins_raw` if you have that R version installed. However, to illustrate data import, we'll read in the data from an external source.
 
-The `read.csv()` function can read in comma-separated value files that are 
-located either on your local machine or from remote sources if provided a URL.
+The `read.csv()` function can read in comma-separated value files that are located either on your local machine or from remote sources if provided a URL.
 
 ```{r}
-url <- "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins_raw.csv"
+url <-
+  "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins_raw.csv"
+
 penguins <- read.csv(url)
 ```
 
-The `read.csv()` function has many options for reading in data. If you want to 
-learn about all of the options any particular R function has, you can prefix the 
-function name with a `?` like, `?read.csv()` to bring up the help documentation.
+The `read.csv()` function has many options for reading in data. If you want to learn about all of the options any particular R function has, you can prefix the function name with a `?` like, `?read.csv()` to bring up the help documentation.
+
+### Data export
+
+If you have a `data.frame` then you can also export it as a file for later. The most common format to export data to is a csv file like that used above. To export a csv file we can use the `write.csv()` function and supply the `data.frame` we wish to write out along with the filename we wish to write the data to. 
+
+```{r}
+write.csv(penguins, "~/Downloads/my-penguins.csv")
+```
+
+You can also save R objects into files that only R can read using the `saveRDS()` function. These objects can then be read back into an R session using the `readRDS()` function.  
 
 ### Viewing data
 
-The code above read the data into data.frame that we called `penguins`. We can
-take a look at the first few rows of the `penguins` data.frame using the `head()`
-function.
+The code above read the data into a `data.frame` that we called `penguins`. We can take a look at the first few rows using the `head()` function.
 
 ```{r}
 head(penguins)
 ```
 
-If we want to get a general overview of the data, we can use the `str()` function.
+If we want to get a general overview of the data types, we can use the `str()` (structure) function.
 
 ```{r}
 str(penguins)
 ```
 
-There are a few external packages that are also very useful for getting summaries 
-of data.frames. `Hmsic::describe()` and `skimr::skim()` are two standouts.
+There are a few external packages that are also very useful for getting summaries of `data.frame`s. `Hmisc::describe()` and `skimr::skim()` are two standouts.
 
-One of the most basic ways to get an idea of the data is to summarize each 
-variable. There are a few functions we can use to get summaries of the data. The 
-`table()` function will count the number of occurrences of each type in a vector.
+One of the most basic ways to get an idea of the data is to summarize each variable. There are a few functions we can use to get summaries of the data. The `table()` function will count the number of occurrences of each type in a vector.
 
 For example, how many observations of each species of penguin are in the dataset?
 
@@ -376,9 +296,7 @@ For example, how many observations of each species of penguin are in the dataset
 table(penguins$Species)
 ```
 
-R also provides the typical summary functions that you would expect from a 
-statistical programming language such as `mean()`, `median()`, `min()`, and 
-`max()`, and `length()`. 
+R also provides the typical summary functions that you would expect from a statistical programming language such as `mean()`, `median()`, `min()`, `max()`, and `length()`.
 
 For example, what is the mean flipper length?
 
@@ -386,77 +304,52 @@ For example, what is the mean flipper length?
 mean(penguins$Flipper.Length..mm.)
 ```
 
-On no! This returned NA but there is clearly data in this column. What happened?
-Missing data is commonly observed across all data domains. NAs simply represent
-unknown values in this context and it's impossible to know how to take the mean of
-a value that's known with a value that's unknown. It is for this reason that many 
-R functions have an argument called `na.rm=`. Setting `na.rm=TRUE` in these 
-functions tells R to ignore the NA values.
+Oh no! This returned `NA`, but there is clearly data in this column. What happened? Missing data is commonly observed across all data domains. `NA`s simply represent unknown values in this context, and it's impossible to know how to take the mean of a value that's known with a value that's unknown. It is for this reason that many R functions have an argument called `na.rm`. Setting `na.rm = TRUE` in these functions tells R to ignore the `NA` values.
 
 ```{r}
 mean(penguins$Flipper.Length..mm., na.rm = TRUE)
 ```
 
-Now we can see that the mean flipper length is ~200 mm across all observations
-in the dataset. Another useful function is `summary()`. Running `summary()` on 
-a numeric vector returns a lot of useful information.
+Now we can see that the mean flipper length is ~200 mm across all observations in the dataset. Another extremely useful function is `summary()`. Running `summary()` on a numeric vector returns a lot of useful information at once.
 
 ```{r}
 summary(penguins$Flipper.Length..mm., na.rm = TRUE)
 ```
 
-Finally, if you are using and IDE like Rstudio or Positron you can run the 
-`View()` function on your data.frame. This will bring up an interactive data 
-viewer. 
+Finally, if you are using an IDE like RStudio or Positron, you can run the `View()` function on your `data.frame`. This will bring up an interactive data viewer in a new tab.
 
 ### Splitting data
 
-You may have noticed above that we computed the mean flipper length across all
-species of penguins. But do all species have the same mean? A common pattern
-in R is called "split-apply-combine". This pattern means, split the data into
-groups you're interested in, apply a function to each of those groups, and 
-combine the results. One such function that performs this operation is called
-`tapply()`. `tapply()` will split the data by a given variable into groups and 
-apply a function to each group.
+You may have noticed above that we computed the mean flipper length across all species of penguins combined. But do all species have the same mean? A common pattern in R is called "split-apply-combine". This pattern means: split the data into groups you're interested in, apply a function to each of those groups, and combine the results. One such function that performs this operation is called `tapply()`.
 
-For example, to find the mean flipper length for each species we could use
+For example, to find the mean flipper length for *each* species, we could use:
 
 ```{r}
 tapply(penguins$Flipper.Length..mm., penguins$Species, mean, na.rm = TRUE)
 ```
 
-The basic format of the `tapply()` function is
+The basic format of the `tapply()` function is:
 
 ```{r}
 #| eval: false
-tapply("data to split", "what to split by", "what to compute")
+tapply(X = "data to split", INDEX = "what to split by", FUN = "what to compute")
 ```
 
-Splitting can also by applied directly to data.frames using the `split()` 
-function. Let's say we wanted to split the penguins data.frame into one 
-data.frame for each species. We can use the `split()` function for this purpose.
+Splitting can also be applied directly to `data.frame`s using the `split()` function. Let's say we wanted to split the penguins `data.frame` into separate `data.frame`s for each species.
 
 ```{r}
 by_species <- split(penguins, f = penguins$Species)
 ```
 
-This function returns a list of data.frames, one for each species in the 
-original data.frame. Use `names(by_species)` to see what each list element 
-is named. To extract the first data.frame from this list, which contains Adelie 
-penguin data only, we can subset the list of data.frames.
+This function returns a list of `data.frame`s, one for each species in the original data. Use `names(by_species)` to see what each list element is named. To extract the first `data.frame` from this list, which contains Adelie penguin data only, we can subset the list.
 
 ```{r}
 adelie <- by_species[[1]]
 ```
 
-Performing operations on lists is such a common task in R that a function 
-exists specifically to apply functions to list elements. This function is 
-called `lapply()`. `lapply()` takes a list and a function and applies that
-function to each list element. The `lapply()` function returns the results as
-a list. We'll learn more about this later in the functional programming section.
+Performing operations on lists is such a common task in R that a function exists specifically to apply functions to list elements. This function is called `lapply()`. `lapply()` takes a list and a function, applies that function to each list element, and returns the results as a new list. We'll learn more about this later in the functional programming section.
 
-For example, to see how many rows are in each of the data.frames in the 
-"by_species" list:
+For example, to see how many rows are in each of the `data.frame`s in the `by_species` list:
 
 ```{r}
 lapply(by_species, nrow)
@@ -464,214 +357,172 @@ lapply(by_species, nrow)
 
 ### Plotting data
 
-Data cleaning and data visualization go hand-in-hand. To effectively clean data,
-you should be examining the changes you're making in real time. Base R actually
-has very powerful graphics capabilities for quickly visualizing data. Packages
-like [ggplot2](https://ggplot2.tidyverse.org/) and 
-[lattice](https://lattice.r-forge.r-project.org/) provide powerful alternatives
-to base R plots. We'll cover `ggplot2` later. For now, base R plotting can 
-provide all we need for exploratory analyses. 
+Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you're making in real-time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like [ggplot2](https://ggplot2.tidyverse.org/) and [lattice](https://lattice.r-forge.r-project.org/) provide powerful alternatives to base R plots, and we'll cover `ggplot2` later. For now, base R plotting can provide all we need for exploratory analyses.
 
-One of the most useful plots for numeric data is a histogram. Histograms bin the 
-data and plot how many occurrences of a particular bin are present. This plot 
-allows you to get an idea of the numeric summary of a variable. To plot a 
-histogram of a numeric variable we can use the `hist()` function. 
+One of the most useful plots for numeric data is a histogram. Histograms bin the data and plot how many occurrences of a particular bin are present, giving you an idea of the distribution.
 
 ```{r}
 hist(penguins$Flipper.Length..mm.)
 ```
 
-The histogram has a few arguments we can use to adjust the plot. Use `?hist()` 
-to see the full list. Below, we can adjust the axes to be more informative and 
-modify the number of bins we're computing.
+The histogram has a few arguments we can use to adjust the plot. Use `?hist()` to see the full list. Below, we can adjust the axes to be more informative and modify the number of bins we're computing.
 
 ```{r}
-hist(penguins$Flipper.Length..mm., 
-     breaks = 30,
-     main = "Flipper Length of All Palmer Penguins", 
-     xlab = "Flipper Length (mm)",
-     ylab = "Count"
-     )
+hist(
+  penguins$Flipper.Length..mm.,
+  breaks = 30,
+  main = "Flipper Length of All Palmer Penguins",
+  xlab = "Flipper Length (mm)",
+  ylab = "Count"
+)
 ```
 
-The distribution appears to be bimodal. Is this because there are different 
-species present in this plot? We can check by applying the `hist()` function
-to each of the groups using the list of data.frames from above. 
+The distribution appears to be bimodal. Is this because there are different species present in this plot? We can check by applying the `hist()` function to each of the groups using the list of `data.frame`s from earlier.
 
 ```{r}
-# Adelie penguins 
-hist(by_species[[1]]$Flipper.Length..mm., 
-     breaks = 20, 
-     main = "Adelie", 
-     xlab = "Flipper Length (mm)")
+# Adelie penguins
+hist(
+  by_species[[1]]$Flipper.Length..mm.,
+  breaks = 20,
+  main = "Adelie",
+  xlab = "Flipper Length (mm)"
+)
 
 # Chinstrap penguins
-hist(by_species[[2]]$Flipper.Length..mm., 
-     breaks = 20, 
-     main = "Chinstrap", 
-     xlab = "Flipper Length (mm)")
+hist(
+  by_species[[2]]$Flipper.Length..mm.,
+  breaks = 20,
+  main = "Chinstrap",
+  xlab = "Flipper Length (mm)"
+)
 
 # Gentoo penguins
-hist(by_species[[3]]$Flipper.Length..mm., 
-     breaks = 20, 
-     main = "Gentoo", 
-     xlab = "Flipper Length (mm)")
+hist(
+  by_species[[3]]$Flipper.Length..mm.,
+  breaks = 20,
+  main = "Gentoo",
+  xlab = "Flipper Length (mm)"
+)
 ```
 
-Histograms are useful for plotting the distribution of a single numeric 
-variable. Often, we wish to see how two variables are related. The `plot()` 
-function provides a way to create a scatter plot of two variables against each 
-other on the same plot. For example, to plot the culmen length vs the culmen 
-depth:
-
-```{r}
-plot(x = penguins$Culmen.Length..mm., 
-     y = penguins$Culmen.Depth..mm.,
-     xlab = "Culmen Length (mm)",
-     ylab = "Culmen Depth (mm)",
-     main = "Relationship between culmen length and depth"
-     )
-```
-
-Again, these data points seem to be split by the different species of penguins
-present in the dataset. We can color these points using an additional variable
-in the call to the `plot()` function.
-
-```{r}
-plot(x = penguins$Culmen.Length..mm., 
-     y = penguins$Culmen.Depth..mm.,
-     col = factor(penguins$Species),
-     xlab = "Culmen Length (mm)",
-     ylab = "Culmen Depth (mm)",
-     main = "Relationship between culmen length and depth"
-     )
-```
-
-You may have noticed that we did something special to that vector of species. We
-wrapped it in the `factor()` function. In R, factors are used when we have 
-categorical values. R uses factors to represent the different levels of each 
-category. It may not seem important now, but factors are very useful for 
-statistical analysis. We'll build on this topic shortly.   
-
-The `plot()` function is very versatile. You can use it to create line plots as 
-well, to show trends of variables over time. Here is a contrived example of using
-`plot()` to create a simple line chart. 
+Histograms are useful for plotting the distribution of a single numeric variable. Often, we wish to see how two variables are related. The `plot()` function provides a way to create a scatter plot of two variables against each other.
 
 ```{r}
 plot(
-  x = adelie$Sample.Number, 
-  y = adelie$Body.Mass..g., 
-  type = "l", 
+  x = penguins$Culmen.Length..mm.,
+  y = penguins$Culmen.Depth..mm.,
+  xlab = "Culmen Length (mm)",
+  ylab = "Culmen Depth (mm)",
+  main = "Relationship between culmen length and depth"
+)
+```
+
+Again, these data points seem to be split by the different species of penguins present in the dataset. We can color these points using an additional variable in the call to the `plot()` function.
+
+```{r}
+plot(
+  x = penguins$Culmen.Length..mm.,
+  y = penguins$Culmen.Depth..mm.,
+  col = factor(penguins$Species),
+  xlab = "Culmen Length (mm)",
+  ylab = "Culmen Depth (mm)",
+  main = "Relationship between culmen length and depth"
+)
+```
+
+You may have noticed that we did something special to that vector of species. We wrapped it in the `factor()` function. In R, factors are used when we have categorical values. R uses factors to represent the different levels of each category. It may not seem important now, but factors are very useful for statistical analysis and plotting. We'll build on this topic shortly.
+
+The `plot()` function is very versatile. You can use it to create line plots as well to show trends of variables over time. Here is a contrived example of using `plot()` to create a simple line chart.
+
+```{r}
+plot(
+  x = adelie$Sample.Number,
+  y = adelie$Body.Mass..g.,
+  type = "l",
   main = "Body mass vs sample number in Adelie penguins",
   xlab = "Sample Number",
   ylab = "Body Mass (g)"
-  )
+)
 ```
 
-Scatter plots are useful for displaying two numeric values against each other. 
-However you'll often want to compare numeric values across categorical values. 
-One such plot for doing this is called a boxplot. Boxplots show the median and
-interquartile (IQR) range for a set of data. The 'whiskers' of the boxplot display
-the 1.5 x IQR of the data. We can plot a boxplot of the flipper length for each 
-species using the `boxplot()` function.
+Scatter plots display two numeric values against each other, but you'll often want to compare numeric values across categorical values. A boxplot is perfect for this. Boxplots show the median and interquartile range (IQR) for a set of data.
 
 ```{r}
 boxplot(
-  Flipper.Length..mm. ~ Species, 
-  data = penguins, 
+  Flipper.Length..mm. ~ Species,
+  data = penguins,
   main = "Flipper length by species"
-  )
+)
 ```
 
-The `boxplot()` function is a little funny because it uses formula notation. 
-Many functions in R accept formula notation as input. In this case, the formula
-notation means "plot the flipper length as a function of the species type". You 
-may have also noticed that we gave this function the penguins data.frame as the
-value for the `data=` argument. This allowed the boxplot function to use the 
-column names without us having to explicitly say that they came from the 
-penguins data.frame.
+The `boxplot()` function is a little funny because it uses formula notation. Many functions in R accept formula notation as input. In this case, `Flipper.Length..mm. ~ Species` means "plot the flipper length as a function of the species type". You may have also noticed that we gave this function the `penguins` `data.frame` via the `data =` argument. This allows the function to look up the column names without us having to explicitly type `penguins$` every time.
 
-If there's not too much data, boxplots can actually hide a lot of information. 
-In this case, another option is to use a stripchart. A stripchart shows every 
-data point on the plot instead of a depiction of the distribution as in the 
-boxplot.
+If there's not too much data, boxplots can actually hide a lot of information. In this case, another option is to use a stripchart, which shows every data point on the plot.
 
 ```{r}
 stripchart(
-  Flipper.Length..mm. ~ Species, 
-  data = penguins, 
+  Flipper.Length..mm. ~ Species,
+  data = penguins,
   method = "jitter",
   pch = 1,
   main = "Flipper length by species",
   vertical = TRUE
-  )
+)
 ```
 
-Bar charts are another common way that people show summaries of data. To display 
-a barplot of data, we can use the `barplot()` function. To create a barplot of
-the mean flipper length for each species we first need to summarize the 
-flipper length for each group and then supply these summaries to the `barplot()`
-function.
+Bar charts are another common way to show summaries of data. To create a barplot of the mean flipper length for each species, we first need to summarize the flipper length for each group and then supply these summaries to `barplot()`.
 
 ```{r}
-species_means <- tapply(penguins$Flipper.Length..mm., penguins$Species, mean, na.rm = TRUE)
+species_means <- tapply(
+  penguins$Flipper.Length..mm.,
+  penguins$Species,
+  mean,
+  na.rm = TRUE
+)
+
 barplot(species_means, main = "Mean flipper length by species")
 ```
 
-There are many ways to modify these default plot types and make the charts look
-great. Take the time to look into some of base R graphing capabilities. A really
-good tutorial for learning about base R plotting can be found [here](http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/).
-Also take a look at `?pairs()`, `?dotchart()`, and `?coplot()` for some other
-useful base R graphics functions for creating quick plots.
+There are many ways to modify these default plot types and make the charts look great. Take the time to look into some of base R's graphing capabilities. A really good tutorial for learning about base R plotting can be found [here](http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/). Also, check out `?pairs()`, `?dotchart()`, and `?coplot()` for some other useful base R graphics functions.
 
 ### Filtering data
 
-We've already learned how to subset a data.frame but let's just take a step back
-and quickly revisit subsetting data.frames. To subset a data.frame means to 
-select rows of a data.frame based on some condition that you're interested in. 
-This subsetting can be accomplished using the `[` operator and setting 
-conditions by specifying `df[the rows we want, the cols we want]` syntax.
+We've already learned how to subset a `data.frame`, but let's quickly revisit it. To subset a `data.frame` means to select rows based on some condition. This is accomplished using the `[` operator and the `df[rows we want, cols we want]` syntax.
 
-For example, in the above plots it looked like the Gentoo penguins typically
-had the largest flippers. It looked like a value > 205 roughly separated the 
-Gentoo penguins from the others. How could we select the rows where the flipper 
-length is greater than or equal to 205 and count the species types?
+For example, in the above plots, it looked like the Gentoo penguins typically had the largest flippers. It looked like a value > 205 roughly separated the Gentoo penguins from the others. How could we select the rows where the flipper length is greater than or equal to 205 and count the species types?
 
 ```{r}
 big_flippers <- penguins[penguins$Flipper.Length..mm. >= 205, ]
 table(big_flippers$Species)
 ```
 
-We can combine conditions as well to select on multiple conditions. For example,
-let's select the female penguins with flippers >= 205 mm.
+We can combine conditions to select on multiple parameters. For example, let's select the female penguins with flippers >= 205 mm.
 
 ```{r}
-head(penguins[penguins$Sex == "FEMALE" & penguins$Flipper.Length..mm. >= 205, ])
+big_females <- penguins[
+  penguins$Sex == "FEMALE" & penguins$Flipper.Length..mm. >= 205,
+]
+
+head(big_females)
 ```
 
-Another important aspect of base R data.frames is that they can utilize 
-`rownames()`. Using `rownames()` is uncommon in workflows from the 
-`tidyverse` or even `data.table`. However, `rownames()` can be very useful when
-dealing with bioinformatics data. One R package that utilizes `rownames()` 
-extensively is the [SummarizedExperiment](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html). `SummarizedExperiment`s use
-rownames and colnames to ensure that data stays coordinated during an analysis. 
+Another important aspect of base R `data.frame`s is that they utilize `rownames()`. Using `rownames()` is uncommon in workflows from the `tidyverse` or `data.table`. However, `rownames()` can be very useful when dealing with bioinformatics data. One R package that utilizes `rownames()` extensively is [SummarizedExperiment](https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html), which uses row and column names to ensure that data stays coordinated during an analysis.
 
-You can view and set the `rownames()` on a data.frame using the `rownames()` 
-function. 
+You can view and set the rownames on a `data.frame` using the `rownames()` function.
 
 ```{r}
 # View the current rownames
 head(rownames(penguins))
 
-# Set the rownames based on a new value - we'll go over what paste() does shortly
+# Set the rownames based on a new value
+# paste() concatenates strings together
 rownames(penguins) <- paste("row_number", 1:nrow(penguins), sep = ".")
 
 # View the new rownames
 head(rownames(penguins))
 ```
 
-Above, we filtered by a column in the data.frame. We can also filter by 
-selecting rownames.
+Above, we filtered by a column in the `data.frame`. We can also filter by selecting specific rownames.
 
 ```{r}
 penguins[c("row_number.1", "row_number.5"), ]
@@ -679,66 +530,55 @@ penguins[c("row_number.1", "row_number.5"), ]
 
 ### Reordering data
 
-We can also change the order of the rows in a data.frame. This is similar to 
-subsetting but instead rearranges the data based on some condition. To reorder 
-the data.frame we can use the `order()` function. 
+We can also change the order of the rows in a `data.frame`. This is similar to subsetting but instead rearranges the data based on some condition. To reorder, we use the `order()` function.
 
-For example, we can order the data by decreasing flipper length
+For example, we can order the data by decreasing flipper length:
 
 ```{r}
 head(penguins[order(penguins$Flipper.Length..mm., decreasing = TRUE), ])
 ```
 
-R also provides the `sort()` function. See if you can understand the difference 
-between `order()` and `sort()`.
+R also provides the `sort()` function. See if you can understand the difference between `order()` and `sort()` by looking up their help pages!
 
-Similar to filtering above, we can also reorder by the `rownames()`. 
+Similar to filtering above, we can also reorder by the `rownames()`.
 
 ```{r}
 head(penguins[order(rownames(penguins)), ])
 ```
 
-Can you figure out why the data.frame was sorted this way?
+*(Can you figure out why the `data.frame` was sorted this way? Hint: Rownames are characters, so "row_number.10" comes before "row_number.2" alphabetically!)*
 
 ### Selecting columns of data
 
-Similarly to how we were able to select rows of data from the data.frame, we 
-can also select columns of the data.frame. First, to see what columns are in 
-our data.frame we can use the `colnames()` function. 
+Similarly to how we select rows, we can also select columns. First, to see what columns are in our `data.frame`, we use the `colnames()` function.
 
 ```{r}
 colnames(penguins)
 ```
 
-To select columns, we can either specify the columns we want by name
+To select columns, we can either specify them by name:
 
 ```{r}
 head(penguins[, c("studyName", "Species")])
 ```
 
-Or by the column index
+Or by their numeric index:
 
 ```{r}
 head(penguins[, c(1, 3)])
 ```
 
-If we want to rename a column, we can use the `colnames()` function to reassign
-the column name with a new name. First, we can get the index of the column we 
-want to change. Then we can reassign that column with the new name.
+If we want to rename a column, we can use the `colnames()` function to reassign a specific position with a new name.
 
 ```{r}
-# This returns the index of the colnames() that matches "Species"
+# This returns the numeric index of the colname that matches "Species"
 which_col_to_change <- which(colnames(penguins) == "Species")
 
 # Rename "Species" to "species"
 colnames(penguins)[which_col_to_change] <- "species"
 ```
 
-One tricky aspect of base R subsetting on data.frames has to do with selecting 
-a single column of data. If you select a single column of data from a data.frame
-what you get back is a vector. To ensure that you return a data.frame when 
-selecting a single column, add the `drop=FALSE` argument when selecting a single
-column.
+One tricky aspect of base R subsetting has to do with selecting a *single* column. If you select a single column using bracket notation, R simplifies it and returns a vector. To ensure that you return a `data.frame`, add the `drop = FALSE` argument.
 
 ```{r}
 # Returns a vector
@@ -750,33 +590,25 @@ class(penguins[, "species", drop = FALSE])
 
 ### Modifying columns of data
 
-Adding or removing columns of data to a data.frame is as simple as specifying 
-the name of the column you want to add along with the data that you want to add.
+Adding or removing columns is as simple as specifying the name of the new column using the `$` operator and assigning data to it.
 
-For example, if I wanted to convert the flipper length from mm to m I could 
-multiply each value of flipper length by 0.001. 
+For example, if I wanted to convert the flipper length from mm to m, I could multiply each value by 0.001.
 
 ```{r}
 penguins$flipper_length_m <- penguins$Flipper.Length..mm. * 0.001
 ```
 
-The above data transformation works because of R's *vectorization* rule described 
-above. What if I wanted to define a new variable based on a logical condition? 
-For example, what if I wanted to create a new column based on whether or not 
-a penguin was and Adelie or any other kind? A useful function for performing this
-action is `ifelse()`. `ifelse()` evaluates a logical condition and returns a 
-value based on whether the condition evaluates to TRUE or FALSE.
+This data transformation works seamlessly because of R's *vectorization* rule described earlier. What if I wanted to define a new variable based on a logical condition? A useful function for performing this action is `ifelse()`. `ifelse()` evaluates a logical condition and returns one value if TRUE, and another if FALSE.
 
 ```{r}
 penguins$is_adelie <- ifelse(
-  penguins$species == "Adelie Penguin (Pygoscelis adeliae)", 
-  "Adelie", 
+  penguins$species == "Adelie Penguin (Pygoscelis adeliae)",
+  "Adelie",
   "Other"
-  )
+)
 ```
 
-If I want to remove a column from the data.frame I can set the value of the 
-column to `NULL`
+If I want to remove a column from the `data.frame`, I can simply set its value to `NULL`.
 
 ```{r}
 penguins$Flipper.Length..mm. <- NULL
@@ -784,63 +616,42 @@ penguins$Flipper.Length..mm. <- NULL
 
 ## String operations
 
-String operations are an important part of data cleaning. Base R supports many 
-functions for transforming strings. Again, these string functions are 
-typically *vectorized* meaning that they can easily be used to modify columns of 
-data.frames. 
+String operations are an important part of data cleaning. Base R supports many functions for transforming strings. Again, these functions are typically vectorized, meaning they can easily be used to modify entire columns at once.
 
-The "species" column of the penguins data.frame is annoying to work with. We can 
-simplify this column by creating simpler names for each species by excluding the 
-scientific name and the word 'penguin' (we know they're all penguins...)
+The "species" column of the penguins `data.frame` is annoying to work with. We can simplify this column by extracting just the core species name and dropping the scientific name.
 
-One base R function we can use to find and replace text is called `gsub()`. 
-`gsub()` takes what is called a [regular expression](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to find text inside of a string and then replaces the text it finds
-with the text you supply. Regular expressions can become incredibly complex. 
-With this complexity come a lot of power. It would be impossible to teach 
-regular expression in this tutorial. Taking some time to understand the basics
-of regular expressions can go a long way during data cleaning.
+One base R function we can use to find and replace text is `gsub()`. `gsub()` takes a [regular expression](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) to find text inside of a string and replaces it with the text you supply. Regular expressions can become incredibly complex, but taking some time to understand the basics will go a long way during data cleaning.
 
 ```{r}
-# Replace a space followed by the word 'penguins' and any other character
+# Replace a space followed by the word 'penguin' and any other character with nothing ("")
 penguins$species_clean <- gsub(
-  pattern = " penguin.*", 
-  replacement = "", 
-  x = penguins$species, 
+  pattern = " penguin.*",
+  replacement = "",
+  x = penguins$species,
   ignore.case = TRUE
-  )
+)
 
-# Show the counts for these new categories
+# Show the counts for these new, cleaner categories
 table(penguins$species_clean)
 ```
 
-Another base R function that is useful for extracting text is the `substr()` 
-function. `substr()` extracts sub-strings from the supplied text based on the
-index of the text. For example, to create an even simpler representation of 
-species we could extract only the first letter from the "species" column.
+Another base R function that is useful for extracting text is `substr()`. `substr()` extracts sub-strings from the supplied text based on numeric start and stop positions.
 
 ```{r}
 penguins$species_simple <- substr(penguins$species, start = 1, stop = 1)
 table(penguins$species_simple)
 ```
 
-A slightly more complicated string operation is extracting text from a string. 
-This involves two functions; one to find a match in the text and another to 
-extract it. Let's say we wanted to extract the word 'penguin' from each of the
-original species strings. We can do this with a combination of `regmatches()`
-and `regexpr()`.
+A slightly more complicated string operation involves finding and extracting a specific pattern. This involves two functions: `regexpr()` to find the match, and `regmatches()` to extract it. Let's extract the word 'penguin' from each of the original species strings.
 
 ```{r}
 penguins$only_penguin <- regmatches(
-  x = penguins$species, 
-  m = regexpr(pattern = "penguin", 
-              text = penguins$species, 
-              ignore.case = TRUE)
-  )
+  x = penguins$species,
+  m = regexpr(pattern = "penguin", text = penguins$species, ignore.case = TRUE)
+)
 ```
 
-R also supports basic operations on strings like making all characters upper or
-lowercase. For example, to ensure `only_penguin` contains 'penguin'
-(and not 'Penguin') we can convert the string to lowercase
+R also supports basic operations for changing case. For example, to ensure `only_penguin` contains 'penguin' entirely in lowercase:
 
 ```{r}
 # lower case
@@ -850,35 +661,27 @@ head(tolower(penguins$only_penguin))
 head(toupper(penguins$only_penguin))
 ```
 
-Another slightly complicated string operation is string splitting. String 
-splitting in base R can be accomplished using the `strsplit()` function. This 
-function is a little tricky because it returns a list. Here, we split the 
-"species" column on every space character. Using the results from the 
-`strsplit()` function most efficiently involves some advanced R skills. 
+String splitting in base R can be accomplished using `strsplit()`. This function is a little tricky because it returns a *list* of split strings.
 
 ```{r}
 split_species <- strsplit(
-  x = penguins$species, 
+  x = penguins$species,
   split = " "
-  )
+)
 
 # strsplit returns a list of character vectors split on every space
 head(split_species)
 
-# To extract the species from this list, we can use a fancy trick
-# don't worry about what's happening here right now
+# To extract just the first word from each split list element, we can use sapply
+# The `[[` tells sapply to apply the double-bracket extraction, and `1` means get the first element.
 penguins$extracted_species <- sapply(split_species, `[[`, 1)
 ```
 
 ## Control flow
 
-R contains all of the typical control flow you expect from a programming 
-language. 
+R contains all of the typical control flow mechanisms you expect from a programming language.
 
-For-loops are somewhat under-utilized by many R users but can often be the 
-most clear for new (and experienced) users. one common for-loop idion in R is 
-to use a for-loop with the `seq_along()` function. `seq_along()` generates an 
-index of the given vector that you can use to loop over. 
+For-loops are somewhat under-utilized by many R users but can often be the clearest approach for new (and experienced) users. One common for-loop idiom in R is to use it in conjunction with the `seq_along()` function. `seq_along()` generates an index of the given vector that you can safely loop over.
 
 ```{r}
 #| eval: false
@@ -887,10 +690,9 @@ for (i in seq_along(x)) {
 }
 ```
 
-Other looping operations in base R include `while` and `repeat`. 
+Other looping operations in base R include `while` and `repeat`.
 
-Conditional statements can be tested using if statements. These follow a familiar 
-syntax
+Conditional statements can be tested using `if` statements. These follow a familiar syntax:
 
 ```{r}
 x <- 10
@@ -901,10 +703,9 @@ if (x == 10) {
 }
 ```
 
-If statements in R are *not* vectorized. Use `ifelse()` to perform a vectorized
-if statement as demonstrated above. 
+Standard `if` statements in R are *not* vectorized. Use `ifelse()` to perform a vectorized conditional statement on a column, as demonstrated earlier.
 
-If statements are often combined with for-loops. 
+`if` statements are often combined with for-loops.
 
 ```{r}
 # Make some space to save the result
@@ -922,13 +723,11 @@ for (i in 1:10) {
 result
 ```
 
-R also contains a `switch()` statement which can be very useful when programming
-new functions. 
+R also contains a `switch()` statement which can be very useful when programming new functions with multiple potential inputs.
 
 ## Functions
 
-Eventually you'll want to create your own functions to do stuff. Functions
-can be defined in R using the following syntax
+Eventually, you'll want to create your own functions to do stuff. Functions can be defined in R using the following syntax:
 
 ```{r}
 #| eval: false
@@ -937,10 +736,7 @@ f <- function(args) {
 }
 ```
 
-To make this a little more concrete, let's define a function that classifies
-a penguin based on it's flipper size. Our function will take in a flipper size
-and a threshold value for determining whether or not the penguin is "large" or "small" based on this flipper size. The function will return the resulting size 
-designation.
+To make this a little more concrete, let's define a function that classifies a penguin based on its flipper size. Our function will take in a flipper size and a threshold value for determining whether the penguin is "large" or "small". The function will return the resulting size designation.
 
 ```{r}
 determine_size <- function(flipper_size, threshold = 0.2) {
@@ -949,7 +745,7 @@ determine_size <- function(flipper_size, threshold = 0.2) {
   } else {
     size_category <- "small"
   }
-  
+
   return(size_category)
 }
 
@@ -959,44 +755,35 @@ determine_size(flipper_size = 0.5)
 
 ## Functional programming
 
-For-loops in R are very simple to understand but most R programmers use 
-functions in the `apply()` family. These functions supply abstractions over 
-common for-loops that make applying functions over lists much easier in R. 
+For-loops in R are simple to understand, but most R programmers heavily utilize functions in the `apply()` family. These functions supply abstractions over common for-loops that make applying functions over lists and matrices much easier in R.
 
-The most commonly used functional programming paradigm in R is the use of the 
-`lapply()` function. The `lapply()` function takes a list as input, applies a 
-function to each element of that list, and returns the results as a list. For 
-example, above we split the penguins data.frame into a list of smaller 
-data.frames for each species. Instead of repeating the code to create a 
-histogram from each data.frame, let's define a function that plots a histogram 
-using a data.frame and then apply that function to every data.frame in our 
-"by_species" list of data.frames
- 
+The most commonly used functional programming paradigm in R is the `lapply()` function. `lapply()` takes a list as input, applies a function to each element of that list, and returns the results as a list. For example, earlier we split the penguins `data.frame` into a list of smaller `data.frame`s for each species. Instead of writing a loop to create a histogram for each one, let's define a function and `lapply()` it.
+
 ```{r}
 # Define a function for plotting a histogram of flipper lengths
 plot_histogram <- function(df) {
-  hist(df[, "Flipper.Length..mm."], breaks=20)
+  hist(df[, "Flipper.Length..mm."], breaks = 20)
 }
 
 # Apply this function to every data.frame
-# invisible() is used to hide the output from the hist() function
+# invisible() is used to suppress the text output from the hist() function
 invisible(
   lapply(X = by_species, FUN = plot_histogram)
-  )
+)
 ```
 
-R includes some other specialized functions for functional programming. Be sure
-to explore `apply()` for computing over rows/columns of matrices, `sapply()`and 
-`vapply()` for applying functions over lists and returning vectors, `mapply()` 
-for supplying multiple arguments to a list. 
+R includes several other specialized functions for functional programming. Be sure to explore `apply()` for computing over rows/columns of matrices, `sapply()` and `vapply()` for applying functions over lists and returning simplified vectors, and `mapply()` for applying a function to multiple list arguments at once.
+
+## R packages
+
+Even though the base language provides much of the functionality we need for simple analyses the real strength of R comes from its rich package repository called the [Comprehensive R Archive Network](https://cran.r-project.org/) or CRAN. CRAN packages can be installed using `install.packages("package_name")`. in addition to CRAN the bioinformatics community is centered around the [BioConductor](https://bioconductor.org/) project. BioConductor curates R packages focused on biological data analysis and uses standardized objects for R analysis that enable really great cross-package functionality. BioConductor packages can typically be installed using the `BiocManager` package with `BiocManager::install("bioc_package")` 
 
 ## Resources
 
-This only scratches the surface of programming in R. Check out these resources
-for more information.
+This only scratches the surface of programming in R. Check out these resources for more information:
 
-- [fasteR](https://github.com/matloff/fasteR)
-- [R for Data Science](https://r4ds.had.co.nz/)
-- [Advanced R 2nd Edition](https://adv-r.hadley.nz/)
-- [Advanced R 1st Edition](http://adv-r.had.co.nz/)
-- [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
+* [fasteR](https://github.com/matloff/fasteR)
+* [R for Data Science](https://r4ds.had.co.nz/)
+* [Advanced R 2nd Edition](https://adv-r.hadley.nz/)
+* [Advanced R 1st Edition](http://adv-r.had.co.nz/)
+* [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)

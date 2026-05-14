@@ -231,7 +231,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
    
   <ul>
   <li><a href="#introduction-to-programming-in-r" id="toc-introduction-to-programming-in-r" class="nav-link active" data-scroll-target="#introduction-to-programming-in-r">Introduction to programming in R</a></li>
-  <li><a href="#subsetting-in-r" id="toc-subsetting-in-r" class="nav-link" data-scroll-target="#subsetting-in-r">Subsetting in R</a>
+  <li><a href="#vectors" id="toc-vectors" class="nav-link" data-scroll-target="#vectors">Vectors</a>
   <ul class="collapse">
   <li><a href="#subsetting-vectors" id="toc-subsetting-vectors" class="nav-link" data-scroll-target="#subsetting-vectors">Subsetting vectors</a></li>
   <li><a href="#subsetting-data.frames" id="toc-subsetting-data.frames" class="nav-link" data-scroll-target="#subsetting-data.frames">Subsetting data.frames</a></li>
@@ -241,6 +241,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a>
   <ul class="collapse">
   <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">Data import</a></li>
+  <li><a href="#data-export" id="toc-data-export" class="nav-link" data-scroll-target="#data-export">Data export</a></li>
   <li><a href="#viewing-data" id="toc-viewing-data" class="nav-link" data-scroll-target="#viewing-data">Viewing data</a></li>
   <li><a href="#splitting-data" id="toc-splitting-data" class="nav-link" data-scroll-target="#splitting-data">Splitting data</a></li>
   <li><a href="#plotting-data" id="toc-plotting-data" class="nav-link" data-scroll-target="#plotting-data">Plotting data</a></li>
@@ -253,6 +254,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#control-flow" id="toc-control-flow" class="nav-link" data-scroll-target="#control-flow">Control flow</a></li>
   <li><a href="#functions" id="toc-functions" class="nav-link" data-scroll-target="#functions">Functions</a></li>
   <li><a href="#functional-programming" id="toc-functional-programming" class="nav-link" data-scroll-target="#functional-programming">Functional programming</a></li>
+  <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
   <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a></li>
   </ul>
 </nav>
@@ -279,33 +281,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="introduction-to-programming-in-r" class="level2">
 <h2 class="anchored" data-anchor-id="introduction-to-programming-in-r">Introduction to programming in R</h2>
-<p>There are tons of great resources for learning R. <a href="https://r4ds.had.co.nz/">R for Data Science</a> is probably the most popular resource for new useRs to get up to speed with slicing and dicing data in R. The <em>R for Data Science</em> book, however, is taught from the perspective of the <a href="https://www.tidyverse.org/">Tidyverse</a>. The <em>Tidyverse</em> is an opinionated set of packages and functions that help users perform data manipulations primarily on data.frames. While these packages and functions can be great for experienced users by providing ergonomic and consistent interfaces for data.frame manipulation, it is my personal belief that new users should first learn the base language, especially if their goal is to perform bioinformatics analysis.</p>
-<p>Bioinformatics tools rely heavily on subsetting and matrix manipulations. In my experience, users who start learning R using only function from the <em>Tidyverse</em> have a difficult time understanding matrix manipulations and subsetting operations common in bioinformatics workflows. This becomes especially important when using <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">SummarizedExperiments</a> - the backbone of many bioinformatics data structures in R.</p>
-<p>For this reason, we’re going to focus on learning R from the ground up using functions that exist primarily in the base language. A great resource for learning base R quickly is Norm Matloff’s <em>fasteR</em> which can be found <a href="https://github.com/matloff/fasteR">here</a>.</p>
+<p>There are tons of great resources for learning R. <a href="https://r4ds.had.co.nz/">R for Data Science</a> is probably the most popular resource for new users to get up to speed with slicing and dicing data in R. The <em>R for Data Science</em> book, however, is taught from the perspective of the <a href="https://www.tidyverse.org/">Tidyverse</a>. The <em>Tidyverse</em> is an opinionated set of packages and functions that help users perform data manipulations primarily on <code>data.frame</code>s. While these packages and functions can be great for experienced users by providing ergonomic and consistent interfaces for <code>data.frame</code> manipulation, it is my personal belief that new users should first learn the base language, especially if their goal is to perform bioinformatics analysis.</p>
+<p>Bioinformatics tools rely heavily on subsetting and matrix manipulations. In my experience, users who start learning R using only functions from the <em>Tidyverse</em> have a difficult time understanding matrix manipulations and subsetting operations common in bioinformatics workflows. This becomes especially important when using <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">SummarizedExperiments</a> - the backbone of many bioinformatics data structures in R.</p>
+<p>For this reason, we’re going to focus on learning R from the ground up using functions that exist primarily in the base language. A great resource for learning base R quickly is Norm Matloff’s <em>fasteR</em>, which can be found <a href="https://github.com/matloff/fasteR">here</a>.</p>
 </section>
-<section id="subsetting-in-r" class="level2">
-<h2 class="anchored" data-anchor-id="subsetting-in-r">Subsetting in R</h2>
-<p>You may have only ever encountered R from the perspective of the <a href="https://www.tidyverse.org/">tidyverse</a>. <code>tidyverse</code> functions provide useful abstractions for munging <a href="https://vita.had.co.nz/papers/tidy-data.html">tidy data</a> however, most genomics data is often best represented and operated on as matrices. Keeping your data in matrix format can provide many benefits as far as speed and code clarity, which in turn helps to ensure correctness. You can think of matrices as just fancy 2D versions of vectors. So what are vectors?</p>
-<p>Vectors are the main building blocks of most R analyses. Whenever you use the <code>c()</code> function (‘concatenate’), like: <code>x &lt;- c('a', 'b', 'c')</code> you’re creating a vector. Vectors hold R objects and are the building block of more complex structures in R.</p>
-<p>NOTE: the following is heavily inspired by Norm Matloff’s excellent <a href="https://github.com/matloff/fasteR">fasteR</a> tutorial. Take a look there to get a brief and concise overview base R. You should also check out the first few chapters of Hadley Wickham’s amazing book <a href="https://adv-r.hadley.nz/">Advanced R</a>. The <a href="http://adv-r.had.co.nz/">first edition</a> contains some more information on base R.</p>
+<section id="vectors" class="level2">
+<h2 class="anchored" data-anchor-id="vectors">Vectors</h2>
+<p>You may have only ever encountered R from the perspective of the <a href="https://www.tidyverse.org/">tidyverse</a>. <code>tidyverse</code> functions provide useful abstractions for munging <a href="https://vita.had.co.nz/papers/tidy-data.html">tidy data</a>; however, most genomics data is often best represented and operated on as matrices. Keeping your data in matrix format can provide many benefits as far as speed and code clarity, which in turn helps to ensure correctness. You can think of matrices as just fancy 2D versions of vectors. So what are vectors?</p>
+<p>Vectors are the main building blocks of most R analyses and are the R objects that you’ll interact with the most. Whenever you use the <code>c()</code> function (‘concatenate’), like <code>x &lt;- c('a', 'b', 'c')</code>, you’re creating a vector. Vectors hold R objects and are the building blocks of more complex structures in R.</p>
+<blockquote class="blockquote">
+<p><strong>Note:</strong> The following is heavily inspired by Norm Matloff’s excellent <a href="https://github.com/matloff/fasteR">fasteR</a> tutorial. Take a look there to get a brief and concise overview of base R. You should also check out the first few chapters of Hadley Wickham’s amazing book <a href="https://adv-r.hadley.nz/">Advanced R</a>. The <a href="http://adv-r.had.co.nz/">first edition</a> contains some more information on base R.</p>
+</blockquote>
 <section id="subsetting-vectors" class="level3">
 <h3 class="anchored" data-anchor-id="subsetting-vectors">Subsetting vectors</h3>
-<p>Below, we’ll use the built-in R constant called <code>LETTERS</code>. The <code>LETTERS</code> vector is simply a ‘list’ of all uppercase letters in the Roman alphabet.</p>
+<p>Below, we’ll use the built-in R constant called <code>LETTERS</code>. The <code>LETTERS</code> vector is simply a list of all uppercase letters in the Roman alphabet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>LETTERS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "A" "B" "C", ...</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>LETTERS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S"
 [20] "T" "U" "V" "W" "X" "Y" "Z"</code></pre>
 </div>
 </div>
-<p>We can subset the vector by position. For example, to get the 3rd letter we use the <code>[</code> operator and the position we want to extract.</p>
+<p>We can subset the vector by position. For example, to get the 3rd letter we use the <code>[</code> operator and the position we want to extract. It is important to stop here and appreciate that R uses 1-based indexing. Meaning that positions in vectors start at the value of 1. This is different from other programming languages like Python that use <a href="https://en.wikipedia.org/wiki/Zero-based_numbering">0-based indexing</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>LETTERS[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "A" "B" "C"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  1   2   3</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>LETTERS[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "C"</code></pre>
 </div>
 </div>
-<p>We can also use a range of positions. The notation <code>3:7</code> is a shortcut that generates the numbers, 3, 4, 5, 6, 7.</p>
+<p>We can also use a range of positions. The notation <code>3:7</code> is a shortcut that generates the numbers 3, 4, 5, 6, 7.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>LETTERS[<span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -319,7 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1] "G" "E" "N" "N" "A" "R" "O"</code></pre>
 </div>
 </div>
-<p>Vectors become really powerful when we start combining them with logical operations. R supports all of the usual logical and comparison operators you can expect from a programming language, <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>%in%</code>, <code>&amp;</code> and <code>|</code>.</p>
+<p>Vectors become really powerful when we start combining them with logical operations. R supports all of the usual logical and comparison operators you can expect from a programming language: <code>&lt;</code>, <code>&gt;</code>, <code>==</code>, <code>!=</code>, <code>&lt;=</code>, <code>&gt;=</code>, <code>%in%</code>, <code>&amp;</code>, and <code>|</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>my_favorite_letters <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -337,15 +344,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1] "A" "B" "C"</code></pre>
 </div>
 </div>
+<p>You may have also noticed that we used another special operator above: <code>&lt;-</code>. The <code>&lt;-</code> operator is an assignment operator. It takes the object on the right-hand side and assigns it to the variable on the left-hand side. Assigning objects to variables is a basic concept across all programming languages. R actually has a <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/assignOps">few ways</a> to assign objects to variables, but using <code>&lt;-</code> is by far the most common and preferred for a number of <a href="https://stackoverflow.com/a/1742550">reasons</a>.</p>
 <p>This same kind of subsetting works on vectors that contain numeric data as well. For example, we can filter the measurements of annual flow of water through the Nile river like so:</p>
-<p><em>Nile is another built-in dataset</em></p>
+<p><em>(Note: <code>Nile</code> is another built-in dataset)</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Any values strictly greater than 1200</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Nile[Nile <span class="sc">&gt;</span> <span class="dv">1200</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1210 1230 1370 1210 1250 1260 1220</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Any even number - `%%` is the modulus operator</span></span>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Any even number - `%%` is the modulus operator (returns the remainder)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Nile[Nile <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1120 1160 1210 1160 1160 1230 1370 1140 1110  994 1020  960 1180  958 1140
@@ -355,11 +363,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 [61]  744  838 1050  918  986 1020  906 1170  912  746  718  714  740</code></pre>
 </div>
 </div>
-<p>At this point it’s important to take a step back and appreciate what R is doing. Each of the comparison operators that we used above is <em>vectorized</em>. This means that the comparison is applied to all elements of the vector at one time. If you’re used to a programming language like Python this might seem foreign at first. In Python, you would have to write a list comprehension to filter observations from a list that meet a certain condition. For example, <code>[x for x in Nile if x &gt; 1200]</code>. However in R, most functions and operators are <em>vectorized</em> allowing us to do things like <code>Nile &gt; 1200</code> and have the comparison applied to all of the elements of the vector automatically.</p>
+<p>At this point, it’s important to take a step back and appreciate what R is doing. Each of the comparison operators that we used above is <em>vectorized</em>. This means that the comparison is applied to all elements of the vector at one time. If you’re used to a programming language like Python, this might seem foreign at first. In Python, you would have to write a list comprehension to filter observations from a list that meet a certain condition (e.g., <code>[x for x in Nile if x &gt; 1200]</code>). However, in R, most functions and operators are vectorized, allowing us to do things like <code>Nile &gt; 1200</code> and have the comparison applied to all of the elements of the vector automatically.</p>
 </section>
 <section id="subsetting-data.frames" class="level3">
 <h3 class="anchored" data-anchor-id="subsetting-data.frames">Subsetting data.frames</h3>
-<p>But these are just one dimensional vectors. In R, we usually deal with data.frames (tibbles for you tidyverse folks) and matrices. Lucky for us, the subsetting operations we learned for vectors work the same way for data.frames and matrices.</p>
+<p>But these are just one-dimensional vectors. In R, we usually deal with <code>data.frame</code>s (tibbles for you tidyverse folks) and matrices. Lucky for us, the subsetting operations we learned for vectors work the same way for <code>data.frame</code>s and matrices.</p>
 <p>Let’s take a look at the built-in <code>ToothGrowth</code> dataset. The data consists of the length of odontoblasts in 60 guinea pigs receiving one of three levels of vitamin C by one of two delivery methods.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ToothGrowth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -373,30 +381,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 6 10.0   VC  0.5</code></pre>
 </div>
 </div>
-<p>The dollar sign <code>$</code> is used to extract an individual column from the data.frame, which is just a vector.</p>
+<p>The dollar sign <code>$</code> is used to extract an individual column from the <code>data.frame</code>, which is just a vector.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ToothGrowth<span class="sc">$</span>len)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  4.2 11.5  7.3  5.8  6.4 10.0</code></pre>
 </div>
 </div>
-<p>We can also use the <code>[[</code> to get the same thing. Double-brackets come in handy when your columns are not valid R names since <code>$</code> only works when columns are valid names.</p>
+<p>We can also use <code>[[</code> to get the same thing. Double-brackets come in handy when your columns are not valid R names, since <code>$</code> only works when columns are valid names without spaces or special characters.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ToothGrowth[[<span class="st">"len"</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  4.2 11.5  7.3  5.8  6.4 10.0</code></pre>
 </div>
 </div>
-<p>When subsetting a data.frame in base R, the general scheme is:</p>
+<p>When subsetting a <code>data.frame</code> in base R, the general scheme is:</p>
 <pre><code>df[the rows you want, the columns you want]</code></pre>
-<p>So in order to get the 5th row of the first column we could do:</p>
+<p>So in order to get the value at the 5th row of the first column we could do:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>ToothGrowth[<span class="dv">5</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.4</code></pre>
 </div>
 </div>
-<p>Again, we can combine this kind of thinking to extract rows and columns matching logical conditions. For example, if we want to get all of the animals administered orange juice (‘OJ’)</p>
+<p>Again, we can combine this kind of thinking to extract rows and columns matching logical conditions. For example, if we want to get all of the animals administered orange juice (‘OJ’):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>ToothGrowth[ToothGrowth<span class="sc">$</span>supp <span class="sc">==</span> <span class="st">"OJ"</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -433,7 +441,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 60 23.0   OJ  2.0</code></pre>
 </div>
 </div>
-<p>We can also combine logical statements. For example, to get all of the rows for animals administered orange juice and with odontoblast length (‘len’) less than 10.</p>
+<p>We can also combine logical statements. For example, to get all of the rows for animals administered orange juice <em>and</em> with an odontoblast length (‘len’) less than 10:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ToothGrowth[ToothGrowth<span class="sc">$</span>supp <span class="sc">==</span> <span class="st">"OJ"</span> <span class="sc">&amp;</span> ToothGrowth<span class="sc">$</span>len <span class="sc">&lt;</span> <span class="dv">10</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -443,7 +451,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 38 9.4   OJ  0.5
 40 9.7   OJ  0.5</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can also use the bracket notation to select rows and columns at the same time</span></span>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can also use the bracket notation to select specific rows and columns at the same time</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Although this gets a little difficult to read</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>ToothGrowth[ToothGrowth<span class="sc">$</span>supp <span class="sc">==</span> <span class="st">"OJ"</span> <span class="sc">&amp;</span> ToothGrowth<span class="sc">$</span>len <span class="sc">&lt;</span> <span class="dv">10</span>, <span class="fu">c</span>(<span class="st">"len"</span>, <span class="st">"supp"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -454,7 +462,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 40 9.7   OJ</code></pre>
 </div>
 </div>
-<p>It gets annoying typing <code>ToothGrowth</code> every time we want to subset the data.frame. Base R has a very useful function called <code>subset()</code> that can help us type less. <code>subset()</code> essentially ‘looks inside’ the data.frame for the given columns and evaluates the expression without having to explicitly tell R where to find the columns. Think of it like <code>dplyr::filter()</code>, if you are familiar with that function.</p>
+<p>It gets annoying typing <code>ToothGrowth</code> every time we want to subset the <code>data.frame</code>. Base R has a very useful function called <code>subset()</code> that can help us type less. <code>subset()</code> essentially ‘looks inside’ the <code>data.frame</code> for the given columns and evaluates the expression without having to explicitly tell R where to find them. Think of it like <code>dplyr::filter()</code>, if you are familiar with that function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(ToothGrowth, supp <span class="sc">==</span> <span class="st">"OJ"</span> <span class="sc">&amp;</span> len <span class="sc">&lt;</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -468,8 +476,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="subsetting-lists" class="level3">
 <h3 class="anchored" data-anchor-id="subsetting-lists">Subsetting Lists</h3>
-<p>Another data structure to be aware of, which is used frequently, is the <code>List</code>. We’ve actually already encountered Lists above. data.frames are really just Lists where each vector contains the same data type and all List elements are the same length.</p>
-<p>We can create a List in R using the <code>list()</code> function. Notice how each list element has a name and can contain a different type of data and number of data elements</p>
+<p>Another data structure to be aware of, which is used frequently, is the List. We’ve actually already encountered lists above: <code>data.frame</code>s are really just lists where each vector contains the same data type and all list elements are the exact same length.</p>
+<p>We can create a list in R using the <code>list()</code> function. Notice how each list element has a name and can contain a different type of data and number of data elements.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">element1 =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">12</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">7</span>),</span>
@@ -478,7 +486,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">element4 =</span> <span class="fu">c</span>(<span class="fl">0.001</span>, <span class="fl">0.05</span>, <span class="fl">0.86</span>, <span class="fl">1.098</span>, <span class="fl">345.0</span>)</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Lists can be tricky at first. To extract the data from a particular list element you can use the <code>[[</code> or the <code>$</code> (as in the case of data.frames above). Like vectors, you can use either the index or the name of the element you wish to extract.</p>
+<p>Lists can be tricky at first. To extract the underlying data from a particular list element, you can use <code>[[</code> or <code>$</code> (as in the case of <code>data.frame</code>s above). Like vectors, you can use either the index or the name of the element you wish to extract.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>l[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -501,26 +509,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
  [1]  1 10 12  3  6 12 13  2  5  6  3  7</code></pre>
 </div>
 </div>
-<p>You get another List, but now with a single element. This behavior might seem unintuitive at first, but it can be very useful for creating new lists.</p>
+<p>You get another List, but now with a single element. This behavior might seem unintuitive at first, but it can be very useful for creating new, smaller lists.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>numeric_l <span class="ot">&lt;-</span> l[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="subsetting-matrices" class="level3">
 <h3 class="anchored" data-anchor-id="subsetting-matrices">Subsetting matrices</h3>
-<p>Matrices behave much like data.frames but unlike data.frames matrices can only contain one type of data. This might sound like a limitation at first but you’ll soon come to realize that matrices are very powerful (and fast) to work with in R.</p>
+<p>Matrices behave much like <code>data.frame</code>s, but unlike <code>data.frame</code>s, matrices can only contain <em>one</em> type of data (e.g., all numeric or all character). This might sound like a limitation at first, but you’ll soon come to realize that matrices are very powerful (and fast) to work with in R.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create some random data that looks like methylation values</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>(m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">runif</span>(<span class="dv">6</span> <span class="sc">*</span> <span class="dv">10</span>),</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">6</span>,</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"CpG."</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Sample"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># runif() generates random numbers between 0 and 1</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>(m <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> <span class="fu">runif</span>(<span class="dv">6</span> <span class="sc">*</span> <span class="dv">10</span>),</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">6</span>,</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"CpG."</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"Sample"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Sample1    Sample2   Sample3    Sample4   Sample5    Sample6
 CpG.1  0.2875775 0.95683335 0.8895393 0.96302423 0.1428000 0.04583117
@@ -535,28 +544,28 @@ CpG.9  0.5514350 0.32792072 0.2891597 0.31818101 0.2659726 0.89504536
 CpG.10 0.4566147 0.95450365 0.1471136 0.23162579 0.8578277 0.37446278</code></pre>
 </div>
 </div>
-<p>If we want to extract the value for CpG.3 for Sample3</p>
+<p>If we want to extract the value for CpG.3 for Sample3:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">3</span>, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.6405068</code></pre>
 </div>
 </div>
-<p>Or all values of CpG.3 for every sample</p>
+<p>Or all values of CpG.3 for every sample:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">3</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sample1   Sample2   Sample3   Sample4   Sample5   Sample6 
 0.4089769 0.6775706 0.6405068 0.6907053 0.4137243 0.7989248 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or refer to the row by it's name</span></span>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or refer to the row by its name</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>m[<span class="st">"CpG.3"</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Sample1   Sample2   Sample3   Sample4   Sample5   Sample6 
 0.4089769 0.6775706 0.6405068 0.6907053 0.4137243 0.7989248 </code></pre>
 </div>
 </div>
-<p>Or all CpGs for Sample3</p>
+<p>Or all CpGs for Sample3:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>m[, <span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -565,7 +574,7 @@ CpG.10 0.4566147 0.95450365 0.1471136 0.23162579 0.8578277 0.37446278</code></pr
     CpG.9    CpG.10 
 0.2891597 0.1471136 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or refer to the column by it's name</span></span>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or refer to the column by its name</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>m[, <span class="st">"Sample3"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    CpG.1     CpG.2     CpG.3     CpG.4     CpG.5     CpG.6     CpG.7     CpG.8 
@@ -574,7 +583,7 @@ CpG.10 0.4566147 0.95450365 0.1471136 0.23162579 0.8578277 0.37446278</code></pr
 0.2891597 0.1471136 </code></pre>
 </div>
 </div>
-<p>We can also apply a mask to the entire matrix at once. For example, the following will mark any value that is greater than 0.5 with <code>TRUE</code></p>
+<p>We can also apply a logical mask to the entire matrix at once. For example, the following will mark any value that is greater than 0.5 with <code>TRUE</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>m <span class="sc">&gt;</span> <span class="fl">0.5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -591,7 +600,7 @@ CpG.9     TRUE   FALSE   FALSE   FALSE   FALSE    TRUE
 CpG.10   FALSE    TRUE   FALSE   FALSE    TRUE   FALSE</code></pre>
 </div>
 </div>
-<p>We can use this kind of masking to filter rows of the matrix using some very helpful base R functions that operate on matrices. For example, to get only those CpGs where 3 or more samples have a value &gt; 0.5 we can use the <code>rowSums()</code> like so:</p>
+<p>We can use this kind of masking to filter rows of the matrix using some very helpful base R functions. For example, to get only those CpGs where 3 or more samples have a value &gt; 0.5, we can use <code>rowSums()</code> like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>m[<span class="fu">rowSums</span>(m <span class="sc">&gt;</span> <span class="fl">0.5</span>) <span class="sc">&gt;</span> <span class="dv">3</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -601,43 +610,57 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 </div>
 </div>
 <p>This pattern is very common when dealing with sequencing data. Base R functions like <code>rowSums()</code> and <code>colMeans()</code> are specialized to operate over matrices and are the most efficient way to summarize matrix data. The R package <a href="https://github.com/HenrikBengtsson/matrixStats">matrixStats</a> also contains highly optimized functions for operating on matrices.</p>
-<p>Compare the above to the <code>tidy</code> solution given the same matrix.</p>
+<p>Compare the elegance of the base R matrix subsetting above to the <code>tidy</code> solution given the same matrix:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>tidyr<span class="sc">::</span><span class="fu">as_tibble</span>(m, <span class="at">rownames =</span> <span class="st">"CpG"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">!</span>CpG, <span class="at">names_to =</span> <span class="st">"SampleName"</span>, <span class="at">values_to =</span> <span class="st">"beta"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(CpG) <span class="sc">|&gt;</span></span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">n =</span> <span class="fu">sum</span>(beta <span class="sc">&gt;</span> <span class="fl">0.5</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">id_cols =</span> CpG, <span class="at">names_from =</span> <span class="st">"SampleName"</span>, <span class="at">values_from =</span> <span class="st">"beta"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">"CpG"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.matrix</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(</span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> CpG,</span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> <span class="st">"SampleName"</span>,</span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> <span class="st">"beta"</span></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">"CpG"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.matrix</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Sample1   Sample2   Sample3   Sample4   Sample5   Sample6
 CpG.3 0.4089769 0.6775706 0.6405068 0.6907053 0.4137243 0.7989248
 CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 </div>
 </div>
-<p><em>There’s probably some kind of tidy solution using <code>across()</code> that I’m missing but this is how most of the tidy code in the wild that I have seen looks</em></p>
+<p><em>(Note: There’s probably some kind of tidy solution using <code>across()</code> that I’m missing, but this is how most of the tidy code in the wild that I have seen looks).</em></p>
 </section>
 </section>
 <section id="data-wrangling" class="level2">
 <h2 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h2>
-<p>Now that we’ve got a handle on some different R data types, and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We’ll focus on using data.frames since they’re the primary workhorse of data analysis in R. But remember, data.frames are just lists of vectors with some special rules, so many concepts you learn will apply to data.frames but also apply to vectors and lists.</p>
+<p>Now that we’ve got a handle on some different R data types and how to slice and dice them, we can start learning basic data cleaning and exploratory data analysis. We’ll focus on using <code>data.frame</code>s since they’re the primary workhorse of data analysis in R. But remember, <code>data.frame</code>s are just lists of vectors with some special rules, so many concepts you learn will apply to <code>data.frame</code>s but also apply to vectors and lists.</p>
 <section id="data-import" class="level3">
 <h3 class="anchored" data-anchor-id="data-import">Data import</h3>
-<p>We’ll use the built in <code>penguins_raw</code> dataset to learn some basic data cleaning. This dataset is built into R version 4.5 so you can just load it by running <code>penguins_raw</code> if you have that R version installed. However, to illustrate data import, we’ll read in the data from an external source.</p>
+<p>We’ll use the built-in <code>penguins_raw</code> dataset to learn some basic data cleaning. This dataset is built into R version 4.5, so you can just load it by running <code>penguins_raw</code> if you have that R version installed. However, to illustrate data import, we’ll read in the data from an external source.</p>
 <p>The <code>read.csv()</code> function can read in comma-separated value files that are located either on your local machine or from remote sources if provided a URL.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins_raw.csv"</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/allisonhorst/palmerpenguins/refs/heads/main/inst/extdata/penguins_raw.csv"</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>penguins <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>read.csv()</code> function has many options for reading in data. If you want to learn about all of the options any particular R function has, you can prefix the function name with a <code>?</code> like, <code>?read.csv()</code> to bring up the help documentation.</p>
 </section>
+<section id="data-export" class="level3">
+<h3 class="anchored" data-anchor-id="data-export">Data export</h3>
+<p>If you have a <code>data.frame</code> then you can also export it as a file for later. The most common format to export data to is a csv file like that used above. To export a csv file we can use the <code>write.csv()</code> function and supply the <code>data.frame</code> we wish to write out along with the filename we wish to write the data to.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(penguins, <span class="st">"~/Downloads/my-penguins.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can also save R objects into files that only R can read using the <code>saveRDS()</code> function. These objects can then be read back into an R session using the <code>readRDS()</code> function.</p>
+</section>
 <section id="viewing-data" class="level3">
 <h3 class="anchored" data-anchor-id="viewing-data">Viewing data</h3>
-<p>The code above read the data into data.frame that we called <code>penguins</code>. We can take a look at the first few rows of the <code>penguins</code> data.frame using the <code>head()</code> function.</p>
+<p>The code above read the data into a <code>data.frame</code> that we called <code>penguins</code>. We can take a look at the first few rows using the <code>head()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  studyName Sample.Number                             Species Region    Island
 1   PAL0708             1 Adelie Penguin (Pygoscelis adeliae) Anvers Torgersen
@@ -669,9 +692,9 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
 6           8.66496         -25.29805                           &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p>If we want to get a general overview of the data, we can use the <code>str()</code> function.</p>
+<p>If we want to get a general overview of the data types, we can use the <code>str()</code> (structure) function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   344 obs. of  17 variables:
  $ studyName          : chr  "PAL0708" "PAL0708" "PAL0708" "PAL0708" ...
@@ -693,11 +716,11 @@ CpG.4 0.8830174 0.5726334 0.9942698 0.7954674 0.3688455 0.1218993</code></pre>
  $ Comments           : chr  "Not enough blood for isotopes." NA NA "Adult not sampled." ...</code></pre>
 </div>
 </div>
-<p>There are a few external packages that are also very useful for getting summaries of data.frames. <code>Hmsic::describe()</code> and <code>skimr::skim()</code> are two standouts.</p>
+<p>There are a few external packages that are also very useful for getting summaries of <code>data.frame</code>s. <code>Hmisc::describe()</code> and <code>skimr::skim()</code> are two standouts.</p>
 <p>One of the most basic ways to get an idea of the data is to summarize each variable. There are a few functions we can use to get summaries of the data. The <code>table()</code> function will count the number of occurrences of each type in a vector.</p>
 <p>For example, how many observations of each species of penguin are in the dataset?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
       Adelie Penguin (Pygoscelis adeliae) 
@@ -708,37 +731,37 @@ Chinstrap penguin (Pygoscelis antarctica)
                                       124 </code></pre>
 </div>
 </div>
-<p>R also provides the typical summary functions that you would expect from a statistical programming language such as <code>mean()</code>, <code>median()</code>, <code>min()</code>, and <code>max()</code>, and <code>length()</code>.</p>
+<p>R also provides the typical summary functions that you would expect from a statistical programming language such as <code>mean()</code>, <code>median()</code>, <code>min()</code>, <code>max()</code>, and <code>length()</code>.</p>
 <p>For example, what is the mean flipper length?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
 </div>
-<p>On no! This returned NA but there is clearly data in this column. What happened? Missing data is commonly observed across all data domains. NAs simply represent unknown values in this context and it’s impossible to know how to take the mean of a value that’s known with a value that’s unknown. It is for this reason that many R functions have an argument called <code>na.rm=</code>. Setting <code>na.rm=TRUE</code> in these functions tells R to ignore the NA values.</p>
+<p>Oh no! This returned <code>NA</code>, but there is clearly data in this column. What happened? Missing data is commonly observed across all data domains. <code>NA</code>s simply represent unknown values in this context, and it’s impossible to know how to take the mean of a value that’s known with a value that’s unknown. It is for this reason that many R functions have an argument called <code>na.rm</code>. Setting <code>na.rm = TRUE</code> in these functions tells R to ignore the <code>NA</code> values.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 200.9152</code></pre>
 </div>
 </div>
-<p>Now we can see that the mean flipper length is ~200 mm across all observations in the dataset. Another useful function is <code>summary()</code>. Running <code>summary()</code> on a numeric vector returns a lot of useful information.</p>
+<p>Now we can see that the mean flipper length is ~200 mm across all observations in the dataset. Another extremely useful function is <code>summary()</code>. Running <code>summary()</code> on a numeric vector returns a lot of useful information at once.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
   172.0   190.0   197.0   200.9   213.0   231.0       2 </code></pre>
 </div>
 </div>
-<p>Finally, if you are using and IDE like Rstudio or Positron you can run the <code>View()</code> function on your data.frame. This will bring up an interactive data viewer.</p>
+<p>Finally, if you are using an IDE like RStudio or Positron, you can run the <code>View()</code> function on your <code>data.frame</code>. This will bring up an interactive data viewer in a new tab.</p>
 </section>
 <section id="splitting-data" class="level3">
 <h3 class="anchored" data-anchor-id="splitting-data">Splitting data</h3>
-<p>You may have noticed above that we computed the mean flipper length across all species of penguins. But do all species have the same mean? A common pattern in R is called “split-apply-combine”. This pattern means, split the data into groups you’re interested in, apply a function to each of those groups, and combine the results. One such function that performs this operation is called <code>tapply()</code>. <code>tapply()</code> will split the data by a given variable into groups and apply a function to each group.</p>
-<p>For example, to find the mean flipper length for each species we could use</p>
+<p>You may have noticed above that we computed the mean flipper length across all species of penguins combined. But do all species have the same mean? A common pattern in R is called “split-apply-combine”. This pattern means: split the data into groups you’re interested in, apply a function to each of those groups, and combine the results. One such function that performs this operation is called <code>tapply()</code>.</p>
+<p>For example, to find the mean flipper length for <em>each</em> species, we could use:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(penguins<span class="sc">$</span>Flipper.Length..mm., penguins<span class="sc">$</span>Species, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(penguins<span class="sc">$</span>Flipper.Length..mm., penguins<span class="sc">$</span>Species, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Adelie Penguin (Pygoscelis adeliae) 
                                  189.9536 
@@ -748,22 +771,22 @@ Chinstrap penguin (Pygoscelis antarctica)
                                  217.1870 </code></pre>
 </div>
 </div>
-<p>The basic format of the <code>tapply()</code> function is</p>
+<p>The basic format of the <code>tapply()</code> function is:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="st">"data to split"</span>, <span class="st">"what to split by"</span>, <span class="st">"what to compute"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(<span class="at">X =</span> <span class="st">"data to split"</span>, <span class="at">INDEX =</span> <span class="st">"what to split by"</span>, <span class="at">FUN =</span> <span class="st">"what to compute"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Splitting can also by applied directly to data.frames using the <code>split()</code> function. Let’s say we wanted to split the penguins data.frame into one data.frame for each species. We can use the <code>split()</code> function for this purpose.</p>
+<p>Splitting can also be applied directly to <code>data.frame</code>s using the <code>split()</code> function. Let’s say we wanted to split the penguins <code>data.frame</code> into separate <code>data.frame</code>s for each species.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>by_species <span class="ot">&lt;-</span> <span class="fu">split</span>(penguins, <span class="at">f =</span> penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>by_species <span class="ot">&lt;-</span> <span class="fu">split</span>(penguins, <span class="at">f =</span> penguins<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This function returns a list of data.frames, one for each species in the original data.frame. Use <code>names(by_species)</code> to see what each list element is named. To extract the first data.frame from this list, which contains Adelie penguin data only, we can subset the list of data.frames.</p>
+<p>This function returns a list of <code>data.frame</code>s, one for each species in the original data. Use <code>names(by_species)</code> to see what each list element is named. To extract the first <code>data.frame</code> from this list, which contains Adelie penguin data only, we can subset the list.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>adelie <span class="ot">&lt;-</span> by_species[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>adelie <span class="ot">&lt;-</span> by_species[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Performing operations on lists is such a common task in R that a function exists specifically to apply functions to list elements. This function is called <code>lapply()</code>. <code>lapply()</code> takes a list and a function and applies that function to each list element. The <code>lapply()</code> function returns the results as a list. We’ll learn more about this later in the functional programming section.</p>
-<p>For example, to see how many rows are in each of the data.frames in the “by_species” list:</p>
+<p>Performing operations on lists is such a common task in R that a function exists specifically to apply functions to list elements. This function is called <code>lapply()</code>. <code>lapply()</code> takes a list and a function, applies that function to each list element, and returns the results as a new list. We’ll learn more about this later in the functional programming section.</p>
+<p>For example, to see how many rows are in each of the <code>data.frame</code>s in the <code>by_species</code> list:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(by_species, nrow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(by_species, nrow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`Adelie Penguin (Pygoscelis adeliae)`
 [1] 152
@@ -778,136 +801,151 @@ $`Gentoo penguin (Pygoscelis papua)`
 </section>
 <section id="plotting-data" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-data">Plotting data</h3>
-<p>Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you’re making in real time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://lattice.r-forge.r-project.org/">lattice</a> provide powerful alternatives to base R plots. We’ll cover <code>ggplot2</code> later. For now, base R plotting can provide all we need for exploratory analyses.</p>
-<p>One of the most useful plots for numeric data is a histogram. Histograms bin the data and plot how many occurrences of a particular bin are present. This plot allows you to get an idea of the numeric summary of a variable. To plot a histogram of a numeric variable we can use the <code>hist()</code> function.</p>
+<p>Data cleaning and data visualization go hand-in-hand. To effectively clean data, you should be examining the changes you’re making in real-time. Base R actually has very powerful graphics capabilities for quickly visualizing data. Packages like <a href="https://ggplot2.tidyverse.org/">ggplot2</a> and <a href="https://lattice.r-forge.r-project.org/">lattice</a> provide powerful alternatives to base R plots, and we’ll cover <code>ggplot2</code> later. For now, base R plotting can provide all we need for exploratory analyses.</p>
+<p>One of the most useful plots for numeric data is a histogram. Histograms bin the data and plot how many occurrences of a particular bin are present, giving you an idea of the distribution.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>The histogram has a few arguments we can use to adjust the plot. Use <code>?hist()</code> to see the full list. Below, we can adjust the axes to be more informative and modify the number of bins we’re computing.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(penguins<span class="sc">$</span>Flipper.Length..mm., </span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">30</span>,</span>
-<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Flipper Length of All Palmer Penguins"</span>, </span>
-<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>,</span>
-<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Count"</span></span>
-<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(penguins<span class="sc">$</span>Flipper.Length..mm.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The distribution appears to be bimodal. Is this because there are different species present in this plot? We can check by applying the <code>hist()</code> function to each of the groups using the list of data.frames from above.</p>
+<p>The histogram has a few arguments we can use to adjust the plot. Use <code>?hist()</code> to see the full list. Below, we can adjust the axes to be more informative and modify the number of bins we’re computing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie penguins </span></span>
-<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">1</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
-<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
-<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Adelie"</span>, </span>
-<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>Flipper.Length..mm.,</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="dv">30</span>,</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper Length of All Palmer Penguins"</span>,</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>,</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Count"</span></span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap penguins</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">2</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Chinstrap"</span>, </span>
-<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo penguins</span></span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(by_species[[<span class="dv">3</span>]]<span class="sc">$</span>Flipper.Length..mm., </span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="dv">20</span>, </span>
-<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Gentoo"</span>, </span>
-<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>Histograms are useful for plotting the distribution of a single numeric variable. Often, we wish to see how two variables are related. The <code>plot()</code> function provides a way to create a scatter plot of two variables against each other on the same plot. For example, to plot the culmen length vs the culmen depth:</p>
+<p>The distribution appears to be bimodal. Is this because there are different species present in this plot? We can check by applying the <code>hist()</code> function to each of the groups using the list of <code>data.frame</code>s from earlier.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm., </span>
-<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
-<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
-<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
-<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
-<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie penguins</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>  by_species[[<span class="dv">1</span>]]<span class="sc">$</span>Flipper.Length..mm.,</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="dv">20</span>,</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Adelie"</span>,</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span></span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap penguins</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>  by_species[[<span class="dv">2</span>]]<span class="sc">$</span>Flipper.Length..mm.,</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="dv">20</span>,</span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Chinstrap"</span>,</span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span></span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-40-2.png" class="img-fluid" width="672"></p>
 </div>
-<p>Again, these data points seem to be split by the different species of penguins present in the dataset. We can color these points using an additional variable in the call to the <code>plot()</code> function.</p>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo penguins</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>  by_species[[<span class="dv">3</span>]]<span class="sc">$</span>Flipper.Length..mm.,</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="dv">20</span>,</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Gentoo"</span>,</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Flipper Length (mm)"</span></span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-40-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Histograms are useful for plotting the distribution of a single numeric variable. Often, we wish to see how two variables are related. The <code>plot()</code> function provides a way to create a scatter plot of two variables against each other.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm., </span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
-<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">factor</span>(penguins<span class="sc">$</span>Species),</span>
-<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
-<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
-<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
-<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm.,</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>You may have noticed that we did something special to that vector of species. We wrapped it in the <code>factor()</code> function. In R, factors are used when we have categorical values. R uses factors to represent the different levels of each category. It may not seem important now, but factors are very useful for statistical analysis. We’ll build on this topic shortly.</p>
-<p>The <code>plot()</code> function is very versatile. You can use it to create line plots as well, to show trends of variables over time. Here is a contrived example of using <code>plot()</code> to create a simple line chart.</p>
+<p>Again, these data points seem to be split by the different species of penguins present in the dataset. We can color these points using an additional variable in the call to the <code>plot()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
-<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> adelie<span class="sc">$</span>Sample.Number, </span>
-<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> adelie<span class="sc">$</span>Body.Mass..g., </span>
-<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>, </span>
-<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Body mass vs sample number in Adelie penguins"</span>,</span>
-<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample Number"</span>,</span>
-<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Body Mass (g)"</span></span>
-<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>Culmen.Length..mm.,</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> penguins<span class="sc">$</span>Culmen.Depth..mm.,</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="fu">factor</span>(penguins<span class="sc">$</span>Species),</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Culmen Length (mm)"</span>,</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Culmen Depth (mm)"</span>,</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Relationship between culmen length and depth"</span></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Scatter plots are useful for displaying two numeric values against each other. However you’ll often want to compare numeric values across categorical values. One such plot for doing this is called a boxplot. Boxplots show the median and interquartile (IQR) range for a set of data. The ‘whiskers’ of the boxplot display the 1.5 x IQR of the data. We can plot a boxplot of the flipper length for each species using the <code>boxplot()</code> function.</p>
+<p>You may have noticed that we did something special to that vector of species. We wrapped it in the <code>factor()</code> function. In R, factors are used when we have categorical values. R uses factors to represent the different levels of each category. It may not seem important now, but factors are very useful for statistical analysis and plotting. We’ll build on this topic shortly.</p>
+<p>The <code>plot()</code> function is very versatile. You can use it to create line plots as well to show trends of variables over time. Here is a contrived example of using <code>plot()</code> to create a simple line chart.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(</span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species, </span>
-<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins, </span>
-<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span></span>
-<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> adelie<span class="sc">$</span>Sample.Number,</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> adelie<span class="sc">$</span>Body.Mass..g.,</span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Body mass vs sample number in Adelie penguins"</span>,</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Sample Number"</span>,</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Body Mass (g)"</span></span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>The <code>boxplot()</code> function is a little funny because it uses formula notation. Many functions in R accept formula notation as input. In this case, the formula notation means “plot the flipper length as a function of the species type”. You may have also noticed that we gave this function the penguins data.frame as the value for the <code>data=</code> argument. This allowed the boxplot function to use the column names without us having to explicitly say that they came from the penguins data.frame.</p>
-<p>If there’s not too much data, boxplots can actually hide a lot of information. In this case, another option is to use a stripchart. A stripchart shows every data point on the plot instead of a depiction of the distribution as in the boxplot.</p>
+<p>Scatter plots display two numeric values against each other, but you’ll often want to compare numeric values across categorical values. A boxplot is perfect for this. Boxplots show the median and interquartile range (IQR) for a set of data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stripchart</span>(</span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species, </span>
-<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins, </span>
-<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"jitter"</span>,</span>
-<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">1</span>,</span>
-<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span>,</span>
-<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertical =</span> <span class="cn">TRUE</span></span>
-<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species,</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins,</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Bar charts are another common way that people show summaries of data. To display a barplot of data, we can use the <code>barplot()</code> function. To create a barplot of the mean flipper length for each species we first need to summarize the flipper length for each group and then supply these summaries to the <code>barplot()</code> function.</p>
+<p>The <code>boxplot()</code> function is a little funny because it uses formula notation. Many functions in R accept formula notation as input. In this case, <code>Flipper.Length..mm. ~ Species</code> means “plot the flipper length as a function of the species type”. You may have also noticed that we gave this function the <code>penguins</code> <code>data.frame</code> via the <code>data =</code> argument. This allows the function to look up the column names without us having to explicitly type <code>penguins$</code> every time.</p>
+<p>If there’s not too much data, boxplots can actually hide a lot of information. In this case, another option is to use a stripchart, which shows every data point on the plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>species_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(penguins<span class="sc">$</span>Flipper.Length..mm., penguins<span class="sc">$</span>Species, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(species_means, <span class="at">main =</span> <span class="st">"Mean flipper length by species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stripchart</span>(</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>  Flipper.Length..mm. <span class="sc">~</span> Species,</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> penguins,</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"jitter"</span>,</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pch =</span> <span class="dv">1</span>,</span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Flipper length by species"</span>,</span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertical =</span> <span class="cn">TRUE</span></span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="r-basics_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>There are many ways to modify these default plot types and make the charts look great. Take the time to look into some of base R graphing capabilities. A really good tutorial for learning about base R plotting can be found <a href="http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/">here</a>. Also take a look at <code>?pairs()</code>, <code>?dotchart()</code>, and <code>?coplot()</code> for some other useful base R graphics functions for creating quick plots.</p>
+<p>Bar charts are another common way to show summaries of data. To create a barplot of the mean flipper length for each species, we first need to summarize the flipper length for each group and then supply these summaries to <code>barplot()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>species_means <span class="ot">&lt;-</span> <span class="fu">tapply</span>(</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>Flipper.Length..mm.,</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>Species,</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  mean,</span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(species_means, <span class="at">main =</span> <span class="st">"Mean flipper length by species"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>There are many ways to modify these default plot types and make the charts look great. Take the time to look into some of base R’s graphing capabilities. A really good tutorial for learning about base R plotting can be found <a href="http://karolis.koncevicius.lt/posts/r_base_plotting_without_wrappers/">here</a>. Also, check out <code>?pairs()</code>, <code>?dotchart()</code>, and <code>?coplot()</code> for some other useful base R graphics functions.</p>
 </section>
 <section id="filtering-data" class="level3">
 <h3 class="anchored" data-anchor-id="filtering-data">Filtering data</h3>
-<p>We’ve already learned how to subset a data.frame but let’s just take a step back and quickly revisit subsetting data.frames. To subset a data.frame means to select rows of a data.frame based on some condition that you’re interested in. This subsetting can be accomplished using the <code>[</code> operator and setting conditions by specifying <code>df[the rows we want, the cols we want]</code> syntax.</p>
-<p>For example, in the above plots it looked like the Gentoo penguins typically had the largest flippers. It looked like a value &gt; 205 roughly separated the Gentoo penguins from the others. How could we select the rows where the flipper length is greater than or equal to 205 and count the species types?</p>
+<p>We’ve already learned how to subset a <code>data.frame</code>, but let’s quickly revisit it. To subset a <code>data.frame</code> means to select rows based on some condition. This is accomplished using the <code>[</code> operator and the <code>df[rows we want, cols we want]</code> syntax.</p>
+<p>For example, in the above plots, it looked like the Gentoo penguins typically had the largest flippers. It looked like a value &gt; 205 roughly separated the Gentoo penguins from the others. How could we select the rows where the flipper length is greater than or equal to 205 and count the species types?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>big_flippers <span class="ot">&lt;-</span> penguins[penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>, ]</span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(big_flippers<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>big_flippers <span class="ot">&lt;-</span> penguins[penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>, ]</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(big_flippers<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
       Adelie Penguin (Pygoscelis adeliae) 
@@ -918,9 +956,13 @@ Chinstrap penguin (Pygoscelis antarctica)
                                       122 </code></pre>
 </div>
 </div>
-<p>We can combine conditions as well to select on multiple conditions. For example, let’s select the female penguins with flippers &gt;= 205 mm.</p>
+<p>We can combine conditions to select on multiple parameters. For example, let’s select the female penguins with flippers &gt;= 205 mm.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[penguins<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"FEMALE"</span> <span class="sc">&amp;</span> penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>big_females <span class="ot">&lt;-</span> penguins[</span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>Sex <span class="sc">==</span> <span class="st">"FEMALE"</span> <span class="sc">&amp;</span> penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">&gt;=</span> <span class="dv">205</span>,</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(big_females)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    studyName Sample.Number                           Species Region Island
 NA       &lt;NA&gt;            NA                              &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;
@@ -952,27 +994,28 @@ NA    &lt;NA&gt;                NA                NA     &lt;NA&gt;
 161 FEMALE           8.13643         -25.32176     &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p>Another important aspect of base R data.frames is that they can utilize <code>rownames()</code>. Using <code>rownames()</code> is uncommon in workflows from the <code>tidyverse</code> or even <code>data.table</code>. However, <code>rownames()</code> can be very useful when dealing with bioinformatics data. One R package that utilizes <code>rownames()</code> extensively is the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">SummarizedExperiment</a>. <code>SummarizedExperiment</code>s use rownames and colnames to ensure that data stays coordinated during an analysis.</p>
-<p>You can view and set the <code>rownames()</code> on a data.frame using the <code>rownames()</code> function.</p>
+<p>Another important aspect of base R <code>data.frame</code>s is that they utilize <code>rownames()</code>. Using <code>rownames()</code> is uncommon in workflows from the <code>tidyverse</code> or <code>data.table</code>. However, <code>rownames()</code> can be very useful when dealing with bioinformatics data. One R package that utilizes <code>rownames()</code> extensively is <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/SummarizedExperiment/inst/doc/SummarizedExperiment.html">SummarizedExperiment</a>, which uses row and column names to ensure that data stays coordinated during an analysis.</p>
+<p>You can view and set the rownames on a <code>data.frame</code> using the <code>rownames()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the current rownames</span></span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rownames</span>(penguins))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the current rownames</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rownames</span>(penguins))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "1" "2" "3" "4" "5" "6"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the rownames based on a new value - we'll go over what paste() does shortly</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(penguins) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"row_number"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(penguins), <span class="at">sep =</span> <span class="st">"."</span>)</span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the new rownames</span></span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rownames</span>(penguins))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the rownames based on a new value</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co"># paste() concatenates strings together</span></span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(penguins) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"row_number"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(penguins), <span class="at">sep =</span> <span class="st">"."</span>)</span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a><span class="co"># View the new rownames</span></span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">rownames</span>(penguins))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "row_number.1" "row_number.2" "row_number.3" "row_number.4" "row_number.5"
 [6] "row_number.6"</code></pre>
 </div>
 </div>
-<p>Above, we filtered by a column in the data.frame. We can also filter by selecting rownames.</p>
+<p>Above, we filtered by a column in the <code>data.frame</code>. We can also filter by selecting specific rownames.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>penguins[<span class="fu">c</span>(<span class="st">"row_number.1"</span>, <span class="st">"row_number.5"</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>penguins[<span class="fu">c</span>(<span class="st">"row_number.1"</span>, <span class="st">"row_number.5"</span>), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             studyName Sample.Number                             Species Region
 row_number.1   PAL0708             1 Adelie Penguin (Pygoscelis adeliae) Anvers
@@ -994,10 +1037,10 @@ row_number.5         -25.32426                           &lt;NA&gt;</code></pre>
 </section>
 <section id="reordering-data" class="level3">
 <h3 class="anchored" data-anchor-id="reordering-data">Reordering data</h3>
-<p>We can also change the order of the rows in a data.frame. This is similar to subsetting but instead rearranges the data based on some condition. To reorder the data.frame we can use the <code>order()</code> function.</p>
-<p>For example, we can order the data by decreasing flipper length</p>
+<p>We can also change the order of the rows in a <code>data.frame</code>. This is similar to subsetting but instead rearranges the data based on some condition. To reorder, we use the <code>order()</code> function.</p>
+<p>For example, we can order the data by decreasing flipper length:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[<span class="fu">order</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[<span class="fu">order</span>(penguins<span class="sc">$</span>Flipper.Length..mm., <span class="at">decreasing =</span> <span class="cn">TRUE</span>), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               studyName Sample.Number                           Species Region
 row_number.216   PAL0809            64 Gentoo penguin (Pygoscelis papua) Anvers
@@ -1036,10 +1079,10 @@ row_number.228         -26.71199     &lt;NA&gt;
 row_number.242         -26.11657     &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p>R also provides the <code>sort()</code> function. See if you can understand the difference between <code>order()</code> and <code>sort()</code>.</p>
+<p>R also provides the <code>sort()</code> function. See if you can understand the difference between <code>order()</code> and <code>sort()</code> by looking up their help pages!</p>
 <p>Similar to filtering above, we can also reorder by the <code>rownames()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[<span class="fu">order</span>(<span class="fu">rownames</span>(penguins)), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[<span class="fu">order</span>(<span class="fu">rownames</span>(penguins)), ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               studyName Sample.Number                             Species
 row_number.1     PAL0708             1 Adelie Penguin (Pygoscelis adeliae)
@@ -1085,13 +1128,13 @@ row_number.102                                 &lt;NA&gt;
 row_number.103                                 &lt;NA&gt;</code></pre>
 </div>
 </div>
-<p>Can you figure out why the data.frame was sorted this way?</p>
+<p><em>(Can you figure out why the <code>data.frame</code> was sorted this way? Hint: Rownames are characters, so “row_number.10” comes before “row_number.2” alphabetically!)</em></p>
 </section>
 <section id="selecting-columns-of-data" class="level3">
 <h3 class="anchored" data-anchor-id="selecting-columns-of-data">Selecting columns of data</h3>
-<p>Similarly to how we were able to select rows of data from the data.frame, we can also select columns of the data.frame. First, to see what columns are in our data.frame we can use the <code>colnames()</code> function.</p>
+<p>Similarly to how we select rows, we can also select columns. First, to see what columns are in our <code>data.frame</code>, we use the <code>colnames()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "studyName"           "Sample.Number"       "Species"            
  [4] "Region"              "Island"              "Stage"              
@@ -1101,9 +1144,9 @@ row_number.103                                 &lt;NA&gt;</code></pre>
 [16] "Delta.13.C..o.oo."   "Comments"           </code></pre>
 </div>
 </div>
-<p>To select columns, we can either specify the columns we want by name</p>
+<p>To select columns, we can either specify them by name:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[, <span class="fu">c</span>(<span class="st">"studyName"</span>, <span class="st">"Species"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[, <span class="fu">c</span>(<span class="st">"studyName"</span>, <span class="st">"Species"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             studyName                             Species
 row_number.1   PAL0708 Adelie Penguin (Pygoscelis adeliae)
@@ -1114,9 +1157,9 @@ row_number.5   PAL0708 Adelie Penguin (Pygoscelis adeliae)
 row_number.6   PAL0708 Adelie Penguin (Pygoscelis adeliae)</code></pre>
 </div>
 </div>
-<p>Or by the column index</p>
+<p>Or by their numeric index:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(penguins[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             studyName                             Species
 row_number.1   PAL0708 Adelie Penguin (Pygoscelis adeliae)
@@ -1127,23 +1170,23 @@ row_number.5   PAL0708 Adelie Penguin (Pygoscelis adeliae)
 row_number.6   PAL0708 Adelie Penguin (Pygoscelis adeliae)</code></pre>
 </div>
 </div>
-<p>If we want to rename a column, we can use the <code>colnames()</code> function to reassign the column name with a new name. First, we can get the index of the column we want to change. Then we can reassign that column with the new name.</p>
+<p>If we want to rename a column, we can use the <code>colnames()</code> function to reassign a specific position with a new name.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This returns the index of the colnames() that matches "Species"</span></span>
-<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>which_col_to_change <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(penguins) <span class="sc">==</span> <span class="st">"Species"</span>)</span>
-<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb113-4"><a href="#cb113-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename "Species" to "species"</span></span>
-<span id="cb113-5"><a href="#cb113-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(penguins)[which_col_to_change] <span class="ot">&lt;-</span> <span class="st">"species"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This returns the numeric index of the colname that matches "Species"</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a>which_col_to_change <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">colnames</span>(penguins) <span class="sc">==</span> <span class="st">"Species"</span>)</span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename "Species" to "species"</span></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(penguins)[which_col_to_change] <span class="ot">&lt;-</span> <span class="st">"species"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>One tricky aspect of base R subsetting on data.frames has to do with selecting a single column of data. If you select a single column of data from a data.frame what you get back is a vector. To ensure that you return a data.frame when selecting a single column, add the <code>drop=FALSE</code> argument when selecting a single column.</p>
+<p>One tricky aspect of base R subsetting has to do with selecting a <em>single</em> column. If you select a single column using bracket notation, R simplifies it and returns a vector. To ensure that you return a <code>data.frame</code>, add the <code>drop = FALSE</code> argument.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns a vector</span></span>
-<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(penguins[, <span class="st">"species"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns a vector</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(penguins[, <span class="st">"species"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "character"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns a data.frame</span></span>
-<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(penguins[, <span class="st">"species"</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns a data.frame</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(penguins[, <span class="st">"species"</span>, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
@@ -1151,88 +1194,86 @@ row_number.6   PAL0708 Adelie Penguin (Pygoscelis adeliae)</code></pre>
 </section>
 <section id="modifying-columns-of-data" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-columns-of-data">Modifying columns of data</h3>
-<p>Adding or removing columns of data to a data.frame is as simple as specifying the name of the column you want to add along with the data that you want to add.</p>
-<p>For example, if I wanted to convert the flipper length from mm to m I could multiply each value of flipper length by 0.001.</p>
+<p>Adding or removing columns is as simple as specifying the name of the new column using the <code>$</code> operator and assigning data to it.</p>
+<p>For example, if I wanted to convert the flipper length from mm to m, I could multiply each value by 0.001.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>flipper_length_m <span class="ot">&lt;-</span> penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">*</span> <span class="fl">0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>flipper_length_m <span class="ot">&lt;-</span> penguins<span class="sc">$</span>Flipper.Length..mm. <span class="sc">*</span> <span class="fl">0.001</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The above data transformation works because of R’s <em>vectorization</em> rule described above. What if I wanted to define a new variable based on a logical condition? For example, what if I wanted to create a new column based on whether or not a penguin was and Adelie or any other kind? A useful function for performing this action is <code>ifelse()</code>. <code>ifelse()</code> evaluates a logical condition and returns a value based on whether the condition evaluates to TRUE or FALSE.</p>
+<p>This data transformation works seamlessly because of R’s <em>vectorization</em> rule described earlier. What if I wanted to define a new variable based on a logical condition? A useful function for performing this action is <code>ifelse()</code>. <code>ifelse()</code> evaluates a logical condition and returns one value if TRUE, and another if FALSE.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>is_adelie <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
-<span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Adelie Penguin (Pygoscelis adeliae)"</span>, </span>
-<span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Adelie"</span>, </span>
-<span id="cb119-4"><a href="#cb119-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Other"</span></span>
-<span id="cb119-5"><a href="#cb119-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>is_adelie <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(</span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>  penguins<span class="sc">$</span>species <span class="sc">==</span> <span class="st">"Adelie Penguin (Pygoscelis adeliae)"</span>,</span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Adelie"</span>,</span>
+<span id="cb120-4"><a href="#cb120-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Other"</span></span>
+<span id="cb120-5"><a href="#cb120-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>If I want to remove a column from the data.frame I can set the value of the column to <code>NULL</code></p>
+<p>If I want to remove a column from the <code>data.frame</code>, I can simply set its value to <code>NULL</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>Flipper.Length..mm. <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>Flipper.Length..mm. <span class="ot">&lt;-</span> <span class="cn">NULL</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="string-operations" class="level2">
 <h2 class="anchored" data-anchor-id="string-operations">String operations</h2>
-<p>String operations are an important part of data cleaning. Base R supports many functions for transforming strings. Again, these string functions are typically <em>vectorized</em> meaning that they can easily be used to modify columns of data.frames.</p>
-<p>The “species” column of the penguins data.frame is annoying to work with. We can simplify this column by creating simpler names for each species by excluding the scientific name and the word ‘penguin’ (we know they’re all penguins…)</p>
-<p>One base R function we can use to find and replace text is called <code>gsub()</code>. <code>gsub()</code> takes what is called a <a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference">regular expression</a> to find text inside of a string and then replaces the text it finds with the text you supply. Regular expressions can become incredibly complex. With this complexity come a lot of power. It would be impossible to teach regular expression in this tutorial. Taking some time to understand the basics of regular expressions can go a long way during data cleaning.</p>
+<p>String operations are an important part of data cleaning. Base R supports many functions for transforming strings. Again, these functions are typically vectorized, meaning they can easily be used to modify entire columns at once.</p>
+<p>The “species” column of the penguins <code>data.frame</code> is annoying to work with. We can simplify this column by extracting just the core species name and dropping the scientific name.</p>
+<p>One base R function we can use to find and replace text is <code>gsub()</code>. <code>gsub()</code> takes a <a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference">regular expression</a> to find text inside of a string and replaces it with the text you supply. Regular expressions can become incredibly complex, but taking some time to understand the basics will go a long way during data cleaning.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace a space followed by the word 'penguins' and any other character</span></span>
-<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>species_clean <span class="ot">&lt;-</span> <span class="fu">gsub</span>(</span>
-<span id="cb121-3"><a href="#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">" penguin.*"</span>, </span>
-<span id="cb121-4"><a href="#cb121-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">""</span>, </span>
-<span id="cb121-5"><a href="#cb121-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species, </span>
-<span id="cb121-6"><a href="#cb121-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ignore.case =</span> <span class="cn">TRUE</span></span>
-<span id="cb121-7"><a href="#cb121-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb121-8"><a href="#cb121-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb121-9"><a href="#cb121-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the counts for these new categories</span></span>
-<span id="cb121-10"><a href="#cb121-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>species_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace a space followed by the word 'penguin' and any other character with nothing ("")</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>species_clean <span class="ot">&lt;-</span> <span class="fu">gsub</span>(</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">" penguin.*"</span>,</span>
+<span id="cb122-4"><a href="#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">replacement =</span> <span class="st">""</span>,</span>
+<span id="cb122-5"><a href="#cb122-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species,</span>
+<span id="cb122-6"><a href="#cb122-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ignore.case =</span> <span class="cn">TRUE</span></span>
+<span id="cb122-7"><a href="#cb122-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb122-8"><a href="#cb122-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-9"><a href="#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the counts for these new, cleaner categories</span></span>
+<span id="cb122-10"><a href="#cb122-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>species_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    Adelie Chinstrap    Gentoo 
       152        68       124 </code></pre>
 </div>
 </div>
-<p>Another base R function that is useful for extracting text is the <code>substr()</code> function. <code>substr()</code> extracts sub-strings from the supplied text based on the index of the text. For example, to create an even simpler representation of species we could extract only the first letter from the “species” column.</p>
+<p>Another base R function that is useful for extracting text is <code>substr()</code>. <code>substr()</code> extracts sub-strings from the supplied text based on numeric start and stop positions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>species_simple <span class="ot">&lt;-</span> <span class="fu">substr</span>(penguins<span class="sc">$</span>species, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">stop =</span> <span class="dv">1</span>)</span>
-<span id="cb123-2"><a href="#cb123-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>species_simple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>species_simple <span class="ot">&lt;-</span> <span class="fu">substr</span>(penguins<span class="sc">$</span>species, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">stop =</span> <span class="dv">1</span>)</span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>species_simple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   A   C   G 
 152  68 124 </code></pre>
 </div>
 </div>
-<p>A slightly more complicated string operation is extracting text from a string. This involves two functions; one to find a match in the text and another to extract it. Let’s say we wanted to extract the word ‘penguin’ from each of the original species strings. We can do this with a combination of <code>regmatches()</code> and <code>regexpr()</code>.</p>
+<p>A slightly more complicated string operation involves finding and extracting a specific pattern. This involves two functions: <code>regexpr()</code> to find the match, and <code>regmatches()</code> to extract it. Let’s extract the word ‘penguin’ from each of the original species strings.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>only_penguin <span class="ot">&lt;-</span> <span class="fu">regmatches</span>(</span>
-<span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species, </span>
-<span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">regexpr</span>(<span class="at">pattern =</span> <span class="st">"penguin"</span>, </span>
-<span id="cb125-4"><a href="#cb125-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">text =</span> penguins<span class="sc">$</span>species, </span>
-<span id="cb125-5"><a href="#cb125-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb125-6"><a href="#cb125-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>only_penguin <span class="ot">&lt;-</span> <span class="fu">regmatches</span>(</span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species,</span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">m =</span> <span class="fu">regexpr</span>(<span class="at">pattern =</span> <span class="st">"penguin"</span>, <span class="at">text =</span> penguins<span class="sc">$</span>species, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb126-4"><a href="#cb126-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>R also supports basic operations on strings like making all characters upper or lowercase. For example, to ensure <code>only_penguin</code> contains ‘penguin’ (and not ‘Penguin’) we can convert the string to lowercase</p>
+<p>R also supports basic operations for changing case. For example, to ensure <code>only_penguin</code> contains ‘penguin’ entirely in lowercase:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lower case</span></span>
-<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">tolower</span>(penguins<span class="sc">$</span>only_penguin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># lower case</span></span>
+<span id="cb127-2"><a href="#cb127-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">tolower</span>(penguins<span class="sc">$</span>only_penguin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "penguin" "penguin" "penguin" "penguin" "penguin" "penguin"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or upper case</span></span>
-<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">toupper</span>(penguins<span class="sc">$</span>only_penguin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># or upper case</span></span>
+<span id="cb129-2"><a href="#cb129-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">toupper</span>(penguins<span class="sc">$</span>only_penguin))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "PENGUIN" "PENGUIN" "PENGUIN" "PENGUIN" "PENGUIN" "PENGUIN"</code></pre>
 </div>
 </div>
-<p>Another slightly complicated string operation is string splitting. String splitting in base R can be accomplished using the <code>strsplit()</code> function. This function is a little tricky because it returns a list. Here, we split the “species” column on every space character. Using the results from the <code>strsplit()</code> function most efficiently involves some advanced R skills.</p>
+<p>String splitting in base R can be accomplished using <code>strsplit()</code>. This function is a little tricky because it returns a <em>list</em> of split strings.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>split_species <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(</span>
-<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species, </span>
-<span id="cb130-3"><a href="#cb130-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="st">" "</span></span>
-<span id="cb130-4"><a href="#cb130-4" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb130-5"><a href="#cb130-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb130-6"><a href="#cb130-6" aria-hidden="true" tabindex="-1"></a><span class="co"># strsplit returns a list of character vectors split on every space</span></span>
-<span id="cb130-7"><a href="#cb130-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(split_species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>split_species <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(</span>
+<span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> penguins<span class="sc">$</span>species,</span>
+<span id="cb131-3"><a href="#cb131-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="st">" "</span></span>
+<span id="cb131-4"><a href="#cb131-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb131-5"><a href="#cb131-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb131-6"><a href="#cb131-6" aria-hidden="true" tabindex="-1"></a><span class="co"># strsplit returns a list of character vectors split on every space</span></span>
+<span id="cb131-7"><a href="#cb131-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(split_species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "Adelie"      "Penguin"     "(Pygoscelis" "adeliae)"   
@@ -1252,77 +1293,77 @@ row_number.6   PAL0708 Adelie Penguin (Pygoscelis adeliae)</code></pre>
 [[6]]
 [1] "Adelie"      "Penguin"     "(Pygoscelis" "adeliae)"   </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To extract the species from this list, we can use a fancy trick</span></span>
-<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="co"># don't worry about what's happening here right now</span></span>
-<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>extracted_species <span class="ot">&lt;-</span> <span class="fu">sapply</span>(split_species, <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To extract just the first word from each split list element, we can use sapply</span></span>
+<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a><span class="co"># The `[[` tells sapply to apply the double-bracket extraction, and `1` means get the first element.</span></span>
+<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>penguins<span class="sc">$</span>extracted_species <span class="ot">&lt;-</span> <span class="fu">sapply</span>(split_species, <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="control-flow" class="level2">
 <h2 class="anchored" data-anchor-id="control-flow">Control flow</h2>
-<p>R contains all of the typical control flow you expect from a programming language.</p>
-<p>For-loops are somewhat under-utilized by many R users but can often be the most clear for new (and experienced) users. one common for-loop idion in R is to use a for-loop with the <code>seq_along()</code> function. <code>seq_along()</code> generates an index of the given vector that you can use to loop over.</p>
+<p>R contains all of the typical control flow mechanisms you expect from a programming language.</p>
+<p>For-loops are somewhat under-utilized by many R users but can often be the clearest approach for new (and experienced) users. One common for-loop idiom in R is to use it in conjunction with the <code>seq_along()</code> function. <code>seq_along()</code> generates an index of the given vector that you can safely loop over.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
-<span id="cb133-2"><a href="#cb133-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">doSomething</span>(x[i])</span>
-<span id="cb133-3"><a href="#cb133-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(x)) {</span>
+<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">doSomething</span>(x[i])</span>
+<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Other looping operations in base R include <code>while</code> and <code>repeat</code>.</p>
-<p>Conditional statements can be tested using if statements. These follow a familiar syntax</p>
+<p>Conditional statements can be tested using <code>if</code> statements. These follow a familiar syntax:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">==</span> <span class="dv">10</span>) {</span>
-<span id="cb134-3"><a href="#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"the value of x is 10"</span>)</span>
-<span id="cb134-4"><a href="#cb134-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb134-5"><a href="#cb134-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"the value of x is something else"</span>)</span>
-<span id="cb134-6"><a href="#cb134-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (x <span class="sc">==</span> <span class="dv">10</span>) {</span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"the value of x is 10"</span>)</span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"the value of x is something else"</span>)</span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "the value of x is 10"</code></pre>
 </div>
 </div>
-<p>If statements in R are <em>not</em> vectorized. Use <code>ifelse()</code> to perform a vectorized if statement as demonstrated above.</p>
-<p>If statements are often combined with for-loops.</p>
+<p>Standard <code>if</code> statements in R are <em>not</em> vectorized. Use <code>ifelse()</code> to perform a vectorized conditional statement on a column, as demonstrated earlier.</p>
+<p><code>if</code> statements are often combined with for-loops.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make some space to save the result</span></span>
-<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"character"</span>, <span class="at">length =</span> <span class="dv">10</span>)</span>
-<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine if the number is even or odd</span></span>
-<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
-<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>) {</span>
-<span id="cb136-7"><a href="#cb136-7" aria-hidden="true" tabindex="-1"></a>    result[i] <span class="ot">&lt;-</span> <span class="st">"even"</span></span>
-<span id="cb136-8"><a href="#cb136-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb136-9"><a href="#cb136-9" aria-hidden="true" tabindex="-1"></a>    result[i] <span class="ot">&lt;-</span> <span class="st">"odd"</span></span>
-<span id="cb136-10"><a href="#cb136-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb136-11"><a href="#cb136-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb136-12"><a href="#cb136-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb136-13"><a href="#cb136-13" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make some space to save the result</span></span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="st">"character"</span>, <span class="at">length =</span> <span class="dv">10</span>)</span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine if the number is even or odd</span></span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>) {</span>
+<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">%%</span> <span class="dv">2</span> <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a>    result[i] <span class="ot">&lt;-</span> <span class="st">"even"</span></span>
+<span id="cb137-8"><a href="#cb137-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb137-9"><a href="#cb137-9" aria-hidden="true" tabindex="-1"></a>    result[i] <span class="ot">&lt;-</span> <span class="st">"odd"</span></span>
+<span id="cb137-10"><a href="#cb137-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb137-11"><a href="#cb137-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb137-12"><a href="#cb137-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-13"><a href="#cb137-13" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "odd"  "even" "odd"  "even" "odd"  "even" "odd"  "even" "odd"  "even"</code></pre>
 </div>
 </div>
-<p>R also contains a <code>switch()</code> statement which can be very useful when programming new functions.</p>
+<p>R also contains a <code>switch()</code> statement which can be very useful when programming new functions with multiple potential inputs.</p>
 </section>
 <section id="functions" class="level2">
 <h2 class="anchored" data-anchor-id="functions">Functions</h2>
-<p>Eventually you’ll want to create your own functions to do stuff. Functions can be defined in R using the following syntax</p>
+<p>Eventually, you’ll want to create your own functions to do stuff. Functions can be defined in R using the following syntax:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(args) {</span>
-<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>  expr</span>
-<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> <span class="cf">function</span>(args) {</span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>  expr</span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To make this a little more concrete, let’s define a function that classifies a penguin based on it’s flipper size. Our function will take in a flipper size and a threshold value for determining whether or not the penguin is “large” or “small” based on this flipper size. The function will return the resulting size designation.</p>
+<p>To make this a little more concrete, let’s define a function that classifies a penguin based on its flipper size. Our function will take in a flipper size and a threshold value for determining whether the penguin is “large” or “small”. The function will return the resulting size designation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>determine_size <span class="ot">&lt;-</span> <span class="cf">function</span>(flipper_size, <span class="at">threshold =</span> <span class="fl">0.2</span>) {</span>
-<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (flipper_size <span class="sc">&gt;=</span> threshold) {</span>
-<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>    size_category <span class="ot">&lt;-</span> <span class="st">"large"</span></span>
-<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a>    size_category <span class="ot">&lt;-</span> <span class="st">"small"</span></span>
-<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb139-8"><a href="#cb139-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(size_category)</span>
-<span id="cb139-9"><a href="#cb139-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb139-10"><a href="#cb139-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-11"><a href="#cb139-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Is a 0.5 meter flipper length large or small?</span></span>
-<span id="cb139-12"><a href="#cb139-12" aria-hidden="true" tabindex="-1"></a><span class="fu">determine_size</span>(<span class="at">flipper_size =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>determine_size <span class="ot">&lt;-</span> <span class="cf">function</span>(flipper_size, <span class="at">threshold =</span> <span class="fl">0.2</span>) {</span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (flipper_size <span class="sc">&gt;=</span> threshold) {</span>
+<span id="cb140-3"><a href="#cb140-3" aria-hidden="true" tabindex="-1"></a>    size_category <span class="ot">&lt;-</span> <span class="st">"large"</span></span>
+<span id="cb140-4"><a href="#cb140-4" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb140-5"><a href="#cb140-5" aria-hidden="true" tabindex="-1"></a>    size_category <span class="ot">&lt;-</span> <span class="st">"small"</span></span>
+<span id="cb140-6"><a href="#cb140-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb140-7"><a href="#cb140-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-8"><a href="#cb140-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(size_category)</span>
+<span id="cb140-9"><a href="#cb140-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb140-10"><a href="#cb140-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb140-11"><a href="#cb140-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Is a 0.5 meter flipper length large or small?</span></span>
+<span id="cb140-12"><a href="#cb140-12" aria-hidden="true" tabindex="-1"></a><span class="fu">determine_size</span>(<span class="at">flipper_size =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "large"</code></pre>
 </div>
@@ -1330,34 +1371,38 @@ row_number.6   PAL0708 Adelie Penguin (Pygoscelis adeliae)</code></pre>
 </section>
 <section id="functional-programming" class="level2">
 <h2 class="anchored" data-anchor-id="functional-programming">Functional programming</h2>
-<p>For-loops in R are very simple to understand but most R programmers use functions in the <code>apply()</code> family. These functions supply abstractions over common for-loops that make applying functions over lists much easier in R.</p>
-<p>The most commonly used functional programming paradigm in R is the use of the <code>lapply()</code> function. The <code>lapply()</code> function takes a list as input, applies a function to each element of that list, and returns the results as a list. For example, above we split the penguins data.frame into a list of smaller data.frames for each species. Instead of repeating the code to create a histogram from each data.frame, let’s define a function that plots a histogram using a data.frame and then apply that function to every data.frame in our “by_species” list of data.frames</p>
+<p>For-loops in R are simple to understand, but most R programmers heavily utilize functions in the <code>apply()</code> family. These functions supply abstractions over common for-loops that make applying functions over lists and matrices much easier in R.</p>
+<p>The most commonly used functional programming paradigm in R is the <code>lapply()</code> function. <code>lapply()</code> takes a list as input, applies a function to each element of that list, and returns the results as a list. For example, earlier we split the penguins <code>data.frame</code> into a list of smaller <code>data.frame</code>s for each species. Instead of writing a loop to create a histogram for each one, let’s define a function and <code>lapply()</code> it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function for plotting a histogram of flipper lengths</span></span>
-<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>plot_histogram <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
-<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(df[, <span class="st">"Flipper.Length..mm."</span>], <span class="at">breaks=</span><span class="dv">20</span>)</span>
-<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply this function to every data.frame</span></span>
-<span id="cb141-7"><a href="#cb141-7" aria-hidden="true" tabindex="-1"></a><span class="co"># invisible() is used to hide the output from the hist() function</span></span>
-<span id="cb141-8"><a href="#cb141-8" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(</span>
-<span id="cb141-9"><a href="#cb141-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="at">X =</span> by_species, <span class="at">FUN =</span> plot_histogram)</span>
-<span id="cb141-10"><a href="#cb141-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function for plotting a histogram of flipper lengths</span></span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>plot_histogram <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(df[, <span class="st">"Flipper.Length..mm."</span>], <span class="at">breaks =</span> <span class="dv">20</span>)</span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb142-6"><a href="#cb142-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply this function to every data.frame</span></span>
+<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a><span class="co"># invisible() is used to suppress the text output from the hist() function</span></span>
+<span id="cb142-8"><a href="#cb142-8" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(</span>
+<span id="cb142-9"><a href="#cb142-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="at">X =</span> by_species, <span class="at">FUN =</span> plot_histogram)</span>
+<span id="cb142-10"><a href="#cb142-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-70-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-70-2.png" class="img-fluid" width="672"></p>
+<p><img src="r-basics_files/figure-html/unnamed-chunk-71-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="r-basics_files/figure-html/unnamed-chunk-70-3.png" class="img-fluid" width="672"></p>
+<p><img src="r-basics_files/figure-html/unnamed-chunk-71-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="r-basics_files/figure-html/unnamed-chunk-71-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>R includes some other specialized functions for functional programming. Be sure to explore <code>apply()</code> for computing over rows/columns of matrices, <code>sapply()</code>and <code>vapply()</code> for applying functions over lists and returning vectors, <code>mapply()</code> for supplying multiple arguments to a list.</p>
+<p>R includes several other specialized functions for functional programming. Be sure to explore <code>apply()</code> for computing over rows/columns of matrices, <code>sapply()</code> and <code>vapply()</code> for applying functions over lists and returning simplified vectors, and <code>mapply()</code> for applying a function to multiple list arguments at once.</p>
+</section>
+<section id="r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="r-packages">R packages</h2>
+<p>Even though the base language provides much of the functionality we need for simple analyses the real strength of R comes from its rich package repository called the <a href="https://cran.r-project.org/">Comprehensive R Archive Network</a> or CRAN. CRAN packages can be installed using <code>install.packages("package_name")</code>. in addition to CRAN the bioinformatics community is centered around the <a href="https://bioconductor.org/">BioConductor</a> project. BioConductor curates R packages focused on biological data analysis and uses standardized objects for R analysis that enable really great cross-package functionality. BioConductor packages can typically be installed using the <code>BiocManager</code> package with <code>BiocManager::install("bioc_package")</code></p>
 </section>
 <section id="resources" class="level2">
 <h2 class="anchored" data-anchor-id="resources">Resources</h2>
-<p>This only scratches the surface of programming in R. Check out these resources for more information.</p>
+<p>This only scratches the surface of programming in R. Check out these resources for more information:</p>
 <ul>
 <li><a href="https://github.com/matloff/fasteR">fasteR</a></li>
 <li><a href="https://r4ds.had.co.nz/">R for Data Science</a></li>
