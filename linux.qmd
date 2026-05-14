@@ -1,46 +1,28 @@
 # Command line basics {.unnumbered}
 
-Basic proficiency with the [Unix](https://en.wikipedia.org/wiki/Unix-like) shell 
-is essential for anyone who wants to start doing computational work outside of 
-their laptop and Excel. Unix shells provide an interface for interacting with 
-Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The [Unix philosopy](https://en.wikipedia.org/wiki/Unix_philosophy) is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they 
-can be strung together into what are called "pipes", is a powerful skill for
-developing quick and composable bioinformatics programs. Here, we'll describe 
-some essential commands to get you started using the command line. 
+Basic proficiency with the [Unix](https://en.wikipedia.org/wiki/Unix-like) shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The [Unix philosopy](https://en.wikipedia.org/wiki/Unix_philosophy) is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called "pipes", is a powerful skill for developing quick and composable bioinformatics programs. Here, we'll describe some essential commands to get you started using the command line. 
+
+This tutorial is very brief. If you want a more in-depth tutorial be sure to check out the [Software Carpentries course on Unix](https://swcarpentry.github.io/shell-novice/). 
 
 ## Accessing the terminal
 
-First, you'll have to open the Terminal application. If you're on Mac OS, the quickest way to access your terminal is: "command + space", typing "terminal" 
-and pressing Enter. On Windows, you'll have to install [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) which will allow
-you to interact with a (default) Ubuntu OS. 
+First, you'll have to open the Terminal application. If you're on Mac OS, the quickest way to access your terminal is: "command + space", typing "terminal" and pressing Enter. On Windows, you'll have to install [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) which will allow you to interact with a (default) Ubuntu OS. These default terminals are not the only options for interacting with your computer on the command line. For Mac [iTerm2](https://iterm2.com/) is a popular termina emulator. [Alacritty](https://alacritty.org/) is a cross-platform terminal 
 
-Once you've opened the terminal app, you're ready to start typing commands at
-the command line. 
+Once you've opened the terminal app, you're ready to start typing commands at the command line. 
 
 ## Where am I?
 
-The first command you should know is `pwd`. `pwd` will print your current 
-working directory. This command is used to display where you are currently in 
-the file system. For example, if I open a terminal window in my "Downloads"
-directory and type and hit Enter:
-
-```{.Bash}
-pwd 
-```
-
-It will return
+The first command you should know is `pwd`. `pwd` will print your current working directory. This command is used to display where you are currently in the filesystem. For example, if I open a terminal window in my "Downloads" directory and type `pwd` and hit 'Enter', It will return something like:
 
 ```{.Bash}
 /home/gennaro/Downloads
 ```
 
-indicating that I am in my "Downloads" directory.
+indicating that I am in my "Downloads" directory. It can be informative to take a look at how the [Unix filesystem works](https://en.wikipedia.org/wiki/Unix_filesystem) if you are unfamiliar with looking at files on the command line. Basically, all files on a Unix system begin at `/`, which represents the 'root' of the filesystem. All files and directories are accessed by traversing this tree to its tips, which represent files or directories.
 
 ## Listing files
 
-Now that I'm in my "Downloads" directory I want to see what files I've 
-downloaded. To do this, I can use the `ls` command to list files in the 
-directory. 
+Now that I'm in my "Downloads" directory I want to see what files I've downloaded. To do this, I can use the `ls` command to 'list' files in the directory. 
 
 ```{.Bash}
 ls
@@ -52,11 +34,7 @@ which returns:
 BDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv
 ```
 
-Your "Downloads" directory will of course have different files. If I need to 
-display more information about these files, such as the time that they were
-created or how large they are, I can supply the `ls` command with arguments. 
-
-For example
+Your "Downloads" directory will of course have different files. If I need to display more information about these files, such as the time that they were created or how large they are, I can supply the `ls` command with arguments. For example:
 
 ```{.Bash}
 ls -lah
@@ -73,29 +51,17 @@ drwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..
 -rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv
 ```
 
-Which provides information about the file permissions, the file sizes, and when
-the files were created.
+Which provides information about the [file permissions](https://unix.stackexchange.com/a/183999), the file sizes, and when the files were created.
 
 ### Learning more about a command
 
-To learn more about what arguments are available to any of the command line
-programs you run, you can use the `man`, or manual, command. This command will
-open the user manual for the given command. 
+To learn more about what arguments are available to any of the command line programs you run, you can use the `man`, or manual, command. This command will open the user manual for the given command. 
 
-Try typing
-
-```{.Bash}
-man ls
-```
-
-to view all of the options available when listing files with `ls`.
+Try typing `man ls` to view all of the options available when listing files with `ls`. Use the 'q' key to exit the manual information. 
 
 ## Moving around
 
-Let's say I want to move from my "Downloads" directory to my "Documents" 
-directory. The command I have to use is `cd`, short for "change directory". We
-can use the `cd` command with the argument for the target directory we want to 
-go to. For example, to move to my "Documents" directory
+Let's say I want to move from my "Downloads" directory to my "Documents" directory. The command I have to use is `cd`, short for "change directory". We can use the `cd` command with the argument for the target directory we want to go to. For example, to move to my "Documents" directory I can use `cd` with the full path to the directory that I want to change into. Since it can become incredibly cumbersome to type entire paths into the shell most terminals use the "tab" key to autocomplete the path. So if you start typing `ls Do` and hit "tab" in your home directory you should see "Documents" and "Downloads" appear as options that can be autocompleted.
 
 ```{.Bash}
 cd /home/gennaro/Documents
@@ -103,40 +69,18 @@ cd /home/gennaro/Documents
 
 ### Directory shortcuts
 
-The shell has a few shortcuts that make moving around a little easier. Running
-`cd` without any arguments will bring you back into your home directory. 
+The shell has a few shortcuts that make moving around a little easier. 
 
+- `cd`: Running `cd` alone without any arguments will bring you back to your home directory
+- `cd ~`: the `~` character is also a shortcut for `/home/user`. So you can use that inplace of the full path. For example, to change to the Downloads directory `cd ~/Downloads`
+- `cd ..`: Will allow you to move "up" the directory tree. So to move from "/home/gennaro/Downloads" back up to "/home/gennaro" I can run `cd ..`.
+- `cd -`: Will allow you to return to the last directory that you were in. For example, if I was in my "Documents" directory, changed to "Downloads" and then wanted to get back into "Documents" I could simply use `cd -`.   
 
-```{.Bash}
-cd
-```
-
-In Bash, there is an additional shortcut to specify the "/home" as well. You 
-can use `~` in place of "/home". For example, to move into my "Documents" 
-folder I can use
-
-```{.Bash}
-cd ~/Documents
-```
-
-instead of typing the full path. To go up one level in the directory you can use
-`..`. So to go from my Documents directory 'up' into my "/home" directory I can 
-use
-
-```{.Bash}
-cd ..
-```
-
-Finally, to go back to the same directory that you were just in you can use
-
-```{.Bash}
-cd -
-```
+There are many more [shortcuts](https://gist.github.com/tuxfight3r/60051ac67c5f0445efee) you can learn as you become more fluent on the command line.
 
 ## Creating files
 
-You can create files with the `touch` command. For example, to create an empty 
-file in my "Downloads" directory called "A.txt" I can run
+One way to create files is with the `touch` command. For example, to create an empty file in my "Downloads" directory called "A.txt" we can run:
 
 ```{.Bash}
 touch ~/Downloads/A.txt
@@ -144,38 +88,30 @@ touch ~/Downloads/A.txt
 
 ## Redirection
 
-I'll add some content to this file using the `echo` command. `echo` simply
-prints it's arguments back out to the terminal. I'll also use what is called
-redirection to append the results of the `echo` command into the text file. 
+Another more common way to add contents to a file is using a concept called [redirection](https://en.wikipedia.org/wiki/Redirection_(computing)). Redirection is a core concept in Unix pipes. It allows you to take the output from one program and use it as input to another program. 
 
-Redirection is a core concept in Unix pipes. It allows you to take the output
-from one program and use it as input to another program. In this example, I'll
-take the output from `echo` and redirect it to the file "A.txt" that we just 
-created. 
+In this example, I'll take the output from `echo` and redirect it to the file "A.txt" that we just created. `echo` simply prints its arguments back out to the terminal using what is called "stdout" or "standard out". If we instead want to 'redirect' this output (stdout) to a file we can use the `>>` operator which will append the output from the `echo` command to the file. 
 
 ```{.Bash}
 echo "This is a new line in the file" >> ~/Downloads/A.txt
 echo "Here is another new line in the file" >> ~/Downloads/A.txt
 ```
 
-The `>>` took the output of the `echo` command and inserted it as a new line in 
-"A.txt". Importantly, `>>` **appended** these lines into "A.txt". If I were 
-instead to use `>` like
+The `>>` took the output of the `echo` command and inserted it as a new line in "A.txt". Importantly, `>>` **appended** these lines into "A.txt". If I were instead to use `>` like:
 
 ```{.Bash}
 echo "This will replace the current contents of A.txt" > ~/Downloads/A.txt
 ```
 
-"A.txt" will be overwritten with the new contents. The final essential 
-redirection operator is the pipe `|`. The pipe lets you take the output from one
-program and use it as input to another. I'll show an example of this later.
+"A.txt" will be overwritten with the new contents. `>` is more common to see in practice. In bioinformatics you'll often see commands that take the output of a program and redirect the results to a new file with `>`.
+
+The final essential redirection operator is the pipe `|`. The pipe lets you take the output (stdout) from one program and use it as input (stdin - "standard in") to another. I'll show an example of this later. 
+
+There are other redirection operators that you'll come across for handling stdout and stdin as [separate streams](https://en.wikipedia.org/wiki/Standard_streams) these are not essential to know right now but are useful to have a solid grasp of as you advance.
 
 ## Displaying the content of files
 
-The simplest way to display the contents of a file on the command line is by 
-using the `cat` command. The `cat` command is actually designed to concatenate
-file together, but running it on a single file will print the entire contents 
-of the file to the command line. For example, to print the contents of "A.txt"
+The simplest way to display the contents of a file on the command line is by using the `cat` command. The `cat` command is actually designed to concatenate file together, but running it on a single file will print the entire contents of the file to the command line (AKA stdout). For example, to print the contents of "A.txt" in you terminal:
 
 ```{.Bash}
 cat ~/Downloads/A.txt
@@ -187,28 +123,21 @@ Will print
 This will replace the current contents of A.txt
 ```
 
-to the console. If you have a lot of text that you would like to display `cat`
-can result in too much information being displayed on the screen. Instead, you
-can use the `less` command. `less` will print the contents of the file as pages 
-on the screen. You can use the `d` key to scroll down a page, or the `u` key to
-scroll up a page. 
+to the console. If you have a lot of text that you would like to display `cat` can result in too much information being  on the screen. Instead, you can use the `less` command. `less` will print the contents of the file as pages on the screen. You can use the `d` key to scroll down a page, or the `u` key to scroll up a page.
 
-Another way to display only some of the contents of a file is to use the `head`
-or `tail` commands. `head -n10` will print the first 10 lines of a file, whereas
-`tail -n10` can be used to print the last 10 lines of a file.
+Another way to display only some of the contents of a file is to use the `head` or `tail` commands. `head -n10` will print the first 10 lines of a file, whereas `tail -n10` can be used to print the last 10 lines of a file.
+
+`cat` is also useful for actually combining the contents of files as well. So something like `cat A.txt B.txt > C.txt` can be used to easily create a new file called "C.txt" with the combined contents of "A.txt" and "B.txt". 
 
 ## Copying files
 
-You can copy a file using the `cp` command. For example, to copy the "A.txt" 
-file into a new file "B.txt" I can use
+You can copy a file using the `cp` command. For example, to copy the "A.txt" file into a new file "B.txt" I can use
 
 ```{.Bash}
 cp ~/Downloads/A.txt ~/Downloads/B.txt
 ```
 
-To copy an entire directory you need to supply the `-r`, or recursive, argument
-to the `cp` command. For example, to create a copy of my Downloads directory
-inside of my Documents directory
+To copy an entire directory you need to supply the `-r`, or recursive argument to the `cp` command. For example, to create a copy of my "Downloads" directory inside of my "Documents" directory
 
 ```{.Bash}
 cp -r ~/Downloads ~/Documents/Downloads-copy
@@ -216,16 +145,13 @@ cp -r ~/Downloads ~/Documents/Downloads-copy
 
 ## Moving and renaming files
 
-The `mv` command can be used to move files and rename them. For example, to 
-move the "A.txt" file into my Documents directory I can use
+The `mv` or "move" command can be used to move files and rename them. For example, to move the "A.txt" file into my "Documents" directory I can use:
 
 ```{.Bash}
 mv A.txt ~/Documents
 ```
 
-If I now want to change the name of that file I can also use the `mv` command. 
-Now you need to specify the new file name instead of the location to move the 
-file to
+If I want to change the name of that file I can also use the `mv` command. Now you need to specify the new file name instead of the location to move the file to
 
 ```{.Bash}
 mv ~/Documents/A.txt ~/Documents/C.txt
@@ -233,16 +159,13 @@ mv ~/Documents/A.txt ~/Documents/C.txt
 
 ## Making new directories
 
-To make a new directory you can use the `mkdir` command. To make a new directory
-inside of my Downloads directory I can use
+To make a new directory you can use the `mkdir` command. To make a new directory inside of my "Downloads" directory I can use
 
 ```{.Bash}
 mkdir ~/Downloads/textfiles
 ```
 
-By default, the `mkdir` command doesn't allow you to create nested directories. 
-To enable this, set the `mkdir -p` flag. For example I can create a parent 
-folder and subfolders using
+By default, the `mkdir` command doesn't allow you to create nested directories. To enable this, set the `mkdir -p` flag. For example I can create a parent folder and subfolders using:
 
 ```{.Bash}
 mkdir -p ~/Downloads/imagefiles/jpegs
@@ -250,9 +173,7 @@ mkdir -p ~/Downloads/imagefiles/jpegs
 
 ### Shell expansion
 
-Another useful trick is to learn shell expansion. Shell expansion 'expands' the 
-arguments. Shell expansion can be a shortcut when creating new project 
-directories. For example
+Another useful trick is to learn shell expansion. Shell expansion 'expands' the arguments. Shell expansion can be a shortcut when creating new project directories. For example
 
 ```{.Bash}
 mkdir -p data doc scripts results/{figures,data-files,rds-files}
@@ -264,105 +185,103 @@ The `results/{figures,data-files,rds-files}` expands this command into
 mkdir -p data doc scripts results/figures results/data-files results/rds-files
 ```
 
-Which saves some typing. Shell expansion can also be used in other contexts. For
-example, I can create 260 empty text files using the following command
+Which saves some typing. Shell expansion can also be used in other contexts. For example, I can create 260 empty text files using the following command which ilustrates the `..` expansion.
 
 ```{.Bash}
 touch ~/Downloads/textfiles/{A..Z}{1..10}.txt
 ```
 
-Another useful shell expansion is `*`. For example, if I needed to display the
-contents of each of the file we just created I could run
+Another useful shell expansion is `*`. For example, if I needed to display the contents of each of the file we just created I could run
 
 ```{.Bash}
 cat ~/Downloads/textfiles/*.txt
 ```
 
+The `*` symbol is just one example of a ["wildcard" character](https://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm). These wildcards will come in handy as you advance in your shell usage. They allow you to select patterns to match rather than having to exhaustively list all of the files you may need. 
+
 ## Removing files
 
-Removing files on the command line can be done with the `rm` command. Unlike 
-when using a GUI, when you remove files on the command line you cannot get them
-back so use `rm` wisely. To remove one of the empty files I just created I can
-use
+Removing files on the command line can be done with the `rm` command. Unlike when using a GUI, when you remove files on the command line you cannot get them back so use `rm` wisely. To remove one of the empty files that we just created we can use:
 
 ```{.Bash}
 rm ~/Downloads/textfiles/A1.txt
 ```
 
-If I want to remove the entire "textfiles" directory I can use the `-r`, or 
-recursive flag with `rm`. 
+If I want to remove the entire "textfiles" directory I need to use the `-r`, or recursive flag with `rm`. 
 
 ```{.Bash}
 rm -r ~/Downloads/textfiles
 ```
 
-**Be careful when using `rm`**. A simple space can mean removing entire file 
-systems by mistake!
+**Be careful when using `rm`**. A simple space can mean removing entire file systems by mistake!
 
 ## Finding files
 
-One incredibly useful but often overlooked command line tools is `find`. `find`
-does exactly what you expect it to do, it finds files and folders. `find` has 
-many arguments but the simplest usage is for finding files using a specific 
-pattern. For example, to find all text (.txt) files in a particular directory
-and all of its subdirectories you can use:
+One incredibly useful but often overlooked command line tools is `find`. `find` does exactly what you expect it to do, it finds files and folders. `find` has many arguments but the simplest usage is for finding files using a specific pattern. For example, to find all text (.txt) files in a particular directory and all of its subdirectories you can use:
 
 ```{.Bash}
 find . -name "*.txt" -type f
 ```
 
-This command says, "find any file (-type f) that has a name like '.txt'". `find`
-is especially powerful when combined with the `-exec` argument. For example, 
-to remove all .txt file in a directory you can use:
+This command says, "find any file (-type f) that has a name like '.txt'". `find` is especially powerful when combined with the `-exec` argument. For example, to remove all .txt file in a directory you can use:
 
 ```{.Bash}
 find . -name "*.txt" -type f -exec rm {} \;
+
+# Alternatively, depending on your system
+find . -name "*.txt" -type f -delete
 ```
 
 ## Downloading files
 
-`curl` and `wget` are both command line utilities for downloading files from
-remote resources. `curl` will download and stream the results to your terminal
-by default. `wget` will save the result to a file by default. 
+`curl` and `wget` are both command line utilities for downloading files from remote resources. `curl` will download and stream the results to your terminal by default. `wget` will save the result to a file by default. 
+
+Try running the following to download the *The Complete Works of William Shakespeare* from [Project Gutenburg](https://www.gutenberg.org/)
 
 ```{.Bash}
+# Prints the contents to stdout
 curl https://www.gutenberg.org/cache/epub/100/pg100.txt
+
+# Saves the contents into pg100.txt
 wget https://www.gutenberg.org/cache/epub/100/pg100.txt
 ```
 
 ## Searching the contents of files
 
-`grep` is a tool that's use to search the contents of files for specific text 
-patterns. For example, if you wanted to find every line in a text file that 
-contains the word "the" you could use:
+`grep` is a tool that's use to search the contents of files for specific text patterns. For example, if you wanted to find every line in a text file that contains the word "the" you could use:
 
 ```{.Bash}
 grep "the" pg100.txt
 ```
 
-`grep` also has many useful arguments. One of the most useful is that `grep`
-can return the count of the number of lines that are returned. For example, 
-to count the number of lines in a text file that contain the word "the":
+`grep` also has many useful arguments. One of the most useful is that `grep` can return the count of the number of lines that are returned. For example, to count the number of lines in a text file that contain the word "the":
 
 ```{.Bash}
 grep -c "the" pg100.txt
 ```
 
+`grep` is one of those commands that you'll use a ton and has a bunch of options for returning the resulting lines. [Mastering `grep`](https://www.digitalocean.com/community/tutorials/grep-command-in-linux-unix) will make your life easier. 
+
+### `awk`
+
+[AWK](https://www.baeldung.com/linux/awk-guide) is another command line tool that is also a programming language and is used quite extensively in bioinformatics for matching patterns, filtering text, and extracting lines from delimited files. Because `awk` is a programming language learning `awk` is outside the scope of this tutorial. Tools like [bioawk](https://github.com/lh3/bioawk) have even been developed specifically ith bioinformatics file formats in mind. 
+
 ## Replacing file contents
+
+`sed` is a command line tool for finding and replacing text in a file. `sed` has arguments that allow you to replace file contents 'in-place', meaning the file gets changed permanently. This can be good for really memory intensive operations but can also be really dangerous. the basic syntax of a `sed` command is:
 
 ```{.Bash}
 sed 's/find/replace/' myfile.txt
 ```
 
+So if you wanted to replace all of the instances of 'the' in the pg100.txt file with the word "ELEPHANT" you could use:
+`sed 's/the/ELEPHANT/ pg100.txt' > shakespeare-elephants.txt`. 
+
 ## Piping commands
 
-The Unix pipe is what makes the command line so powerful. You can string 
-together small programs to build up solutions to complex problems. The pipe 
-allows you to take the output from one program and use it as input to another
-program directly. 
+The Unix pipe is what makes the command line so powerful. You can string together small programs to build up solutions to complex problems. The pipe allows you to take the output from one program and use it as input to another program directly. 
 
-For example, suppose we wanted count the top 10 most frequently used words 
-across all of the works of Shakespeare
+For example, suppose we wanted count the top 10 most frequently used words across all of the works of Shakespeare. The commands below are pretty complicated but illustrate how multiple single tools can interact with eachother through the pipe operator `|`. This modular workflow is a core tenant of the [Unix Philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
 
 ```{.Bash}
 curl https://www.gutenberg.org/cache/epub/100/pg100.txt | \
@@ -386,26 +305,19 @@ head -n10
 
 ## Compressing and uncompressing
 
-Bioinformatics and command line tools can generally work with compressed data. 
-Data compression saves space which can be really beneficial when transferring 
-files over the internet. `gzip` is an old but commonly used compression utility
-that is compatible with many command line utilities. To compress a file for 
-example.
+Bioinformatics and command line tools can generally work with compressed data. Data compression saves space which can be really beneficial when transferring files over the internet. `gzip` is an old but commonly used compression utility that is compatible with many command line utilities. To compress a file for example:
 
 ```{.Bash}
 gzip pg100.txt
 ```
 
-Will produce a compressed version of the "pg100.txt" file called "pg100.txt.gz".
-Many Unix tools can work directly with gzipped files. For example,
+Will produce a compressed version of the "pg100.txt" file called "pg100.txt.gz". Many Unix tools can work directly with gzipped files. For example:
 
 ```{.Bash}
 zcat pg100.txt.gz
 ```
 
-Will unzip and print the contents of the file to the terminal and `zgrep` can
-be used to directly search the contents of a gzipped file without the need to
-decompress the entire file
+Will unzip and print the contents of the file to the terminal and `zgrep` can be used to directly search the contents of a gzipped file without the need to decompress the entire file
 
 ```{.Bash}
 zgrep -c "the" pg100.txt.gz
@@ -417,52 +329,91 @@ To decompress a file you use the 'un' version of the compression command, `gunzi
 gunzip somefile.txt.gz
 ```
 
+There are other compression formats to be aware of in bioinformatics. The most important is "blocked gzip" or `bgzip`. `bgzip` is a format that is compatible with `gzip` but utilizes 'blocks' of data. These files are important for building indeces of large files. Indexes let you hop to individual lines in massive files without having to search through the entire file from the top down. 
+
 ## For-loops
 
-The command line is also a scripting language and like any scripting language, 
-it provides some basic control flow utilities. One of the more useful of these
-is the basic for loop. In Bash, the for-loop takes the form of a for each loop. 
-the looping variable can be referred to in the loop by using the `$` syntax. 
-For example, to loop through 
+The command line is also a scripting language and like any scripting language, it provides some basic control flow utilities. One of the more useful of these is the basic for loop. In Bash, the for-loop takes the form of a for each loop. 
+the looping variable can be referred to in the loop by using the `$` syntax.
+
+For example, to loop through all text files and return the top words from each:
 
 ```{.Bash}
-for F in *.txt; do sort $F | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt; done
+# For each file that ends in .txt:
+for F in *.txt; 
+ do
+  # Sort the file ($F is a variable), count unique occurences, sort numerically, 
+  # return the top results and append to the 'top-words.txt' file  
+  sort $F | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt; 
+done
 ```
 
 ## GNU parallel
 
-[GNU parallel](https://www.gnu.org/software/parallel/) is a command line tool 
-that takes away the need to use for-loops entirely. `parallel` is extremely 
-powerful and feature filled. Importantly, it lets you run commands across 
-multiple jobs. For example, instead of writing a for loop we can process the 
-text files above using 8 jobs at once with `parallel`
+[GNU parallel](https://www.gnu.org/software/parallel/) is a command line tool that takes away the need to use for-loops entirely. `parallel` is extremely powerful and feature filled. Importantly, it lets you run commands across multiple jobs. For example, instead of writing a for loop we can process the text files above using 8 jobs at once with `parallel`
 
 ```{.Bash}
-parallel --jobs 8 "sort {} | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt" ::: *.txt
+parallel "sort {} | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt" ::: *.txt
 ```
+
+The [GNU parallel cheatsheet](https://www.gnu.org/software/parallel/parallel_cheat.pdf) gives good overview of the capabilities of `parallel` and how you can use it practically.  
 
 ## Editors
 
-You'll eventually need to edit some code or files from the terminal. Two 
-options for code editing from the command line are `vim` and `nano`. `vim` can
-be more difficult to use for a beginner but is very powerful. 
+You'll eventually need to edit some code or files from the terminal. Two options for code editing from the command line are `vim` and `nano`. `vim` can be more difficult to use for a beginner but is very powerful. 
 
 ```{.Bash}
 vim
 ```
 
-Once you're in `vim` you can use the `i` key to enter "input" mode. "input" 
-mode let's you type in new characters. Once you've typed away, save your work 
-and exit with `esc + :wq`. `vim` can be difficult to get used to which lead to 
-the [most famous of StackOverflow questions](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/): 
-`nano` provides a more user friendly interface. 
+Once you're in `vim` you can use the `i` key to enter "input" mode. "input" mode let's you type in new characters. Once you've typed away, save your work and exit with `esc + :wq`. `vim` can be difficult to get used to which lead to the [most famous of StackOverflow questions](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/): `nano` provides a more user friendly interface. 
 
 ```{.Bash}
 nano
 ```
 
+## Connecting to a remote server
+
+Most data processing tasks in bioinformatics require running commands on high-performance compute clusters with lots of cores and RAM. You'll typically access these servers using `ssh` or *secure shell*. We use `ssh` because it's encrypted and present on every unix filesystem. 
+
+To initialize an ssh connection we use the syntax
+
+```{.Bash}
+ssh username@my-remote-server.org
+```
+
+If you're accessing the same remote resource often then it's advisable to do two things (1) add the host to your ssh config file and create an ssh-key. The ssh config file describes default settings for connecting to a remote resource. Use one of the text editors above to create or edit the file located at `~/.ssh/config`. the ssh config file specifies the Host name, IP address and the user that is accessing the server
+
+```{.Bash}
+Host remote_server
+  HostName 111.222.333.444
+  User myusername
+  Port 22
+```
+
+Once you sae this file you can access the remote server using `ssh remote_server`. However, you'll notice that every time you do this you'll need to enter your password. Instead of entering your password every time a more secure and convienient way is to create an ssh key pair and add it to the remote server. To create an ssh key you can use the `ssh-keygen` program. 
+
+```{.Bash}
+`ssh-keygen`
+```
+
+this will ask you to create a password for the ssh key and will generate the key's random art. Once the private key and public key have been created, you can use the `ssh-copy-id` command to copy the public key to the remote server. This will ask your for your password on the remote machine. After correctly entering your password it wil copy the public key to the remote server. 
+
+```{.Bash}
+ssh-copy-id remote_erver
+```
+
+After these steps you will be able to use `ssh remote_server` and seemlessly login to the remote server without having to enter IP addresses or passwords.
+
+## Long running jobs
+
+If you do log onto a remote server chance are you'll have to run a job that takes a long time - a longer time than you're willing to sit on your computer for. To make sure that your long running command *stays* running when you log out of the remote server the easiest way to to use a terminal multiplexer like [tmux])(https://www.redhat.com/en/blog/introduction-tmux-linux). 
+
+Running `tmux new -s long-session` will create a new window where you can initialize a long running command. Once this command is running you can 'detach' from the session safely without worrying about the process quiting when you log off of the remote server. to detech from a session use `ctl + b, d` while in the active session. When you log back onto the remote server you can access the running session with `tmux a` 
+
 ## Resources
 
+- [Software Carpentries course on Unix](https://swcarpentry.github.io/shell-novice/)
 - [Terminus](https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html) is a fun game designed to get you comfortable navigating the command line
 - [OverTheWire](https://overthewire.org/wargames/bandit/) is another game designed to tech you command line tools through the lense of a 'hacker'
 - [vimtutor](https://vimschool.netlify.app/introduction/vimtutor/) can be used to learn `vim`
