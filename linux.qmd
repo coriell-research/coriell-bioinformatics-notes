@@ -1,12 +1,12 @@
 # Command line basics {.unnumbered}
 
-Basic proficiency with the [Unix](https://en.wikipedia.org/wiki/Unix-like) shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The [Unix philosopy](https://en.wikipedia.org/wiki/Unix_philosophy) is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called "pipes", is a powerful skill for developing quick and composable bioinformatics programs. Here, we'll describe some essential commands to get you started using the command line. 
+Basic proficiency with the [Unix](https://en.wikipedia.org/wiki/Unix-like) shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The [Unix philosophy](https://en.wikipedia.org/wiki/Unix_philosophy) is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called "pipes", is a powerful skill for developing quick and composable bioinformatics programs. Here, we'll describe some essential commands to get you started using the command line. 
 
 This tutorial is very brief. If you want a more in-depth tutorial be sure to check out the [Software Carpentries course on Unix](https://swcarpentry.github.io/shell-novice/). 
 
 ## Accessing the terminal
 
-First, you'll have to open the Terminal application. If you're on Mac OS, the quickest way to access your terminal is: "command + space", typing "terminal" and pressing Enter. On Windows, you'll have to install [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) which will allow you to interact with a (default) Ubuntu OS. These default terminals are not the only options for interacting with your computer on the command line. For Mac [iTerm2](https://iterm2.com/) is a popular termina emulator. [Alacritty](https://alacritty.org/) is a cross-platform terminal 
+First, you'll have to open the Terminal application. If you're on Mac OS, the quickest way to access your terminal is: "command + space", typing "terminal" and pressing Enter. On Windows, you'll have to install [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install) which will allow you to interact with a (default) Ubuntu OS. These default terminals are not the only options for interacting with your computer on the command line. For Mac [iTerm2](https://iterm2.com/) is a popular terminal emulator. [Alacritty](https://alacritty.org/) is a cross-platform terminal. 
 
 Once you've opened the terminal app, you're ready to start typing commands at the command line. 
 
@@ -72,7 +72,7 @@ cd /home/gennaro/Documents
 The shell has a few shortcuts that make moving around a little easier. 
 
 - `cd`: Running `cd` alone without any arguments will bring you back to your home directory
-- `cd ~`: the `~` character is also a shortcut for `/home/user`. So you can use that inplace of the full path. For example, to change to the Downloads directory `cd ~/Downloads`
+- `cd ~`: the `~` character is also a shortcut for `/home/user`. So you can use that in place of the full path. For example, to change to the Downloads directory `cd ~/Downloads`
 - `cd ..`: Will allow you to move "up" the directory tree. So to move from "/home/gennaro/Downloads" back up to "/home/gennaro" I can run `cd ..`.
 - `cd -`: Will allow you to return to the last directory that you were in. For example, if I was in my "Documents" directory, changed to "Downloads" and then wanted to get back into "Documents" I could simply use `cd -`.   
 
@@ -105,7 +105,7 @@ echo "This will replace the current contents of A.txt" > ~/Downloads/A.txt
 
 "A.txt" will be overwritten with the new contents. `>` is more common to see in practice. In bioinformatics you'll often see commands that take the output of a program and redirect the results to a new file with `>`.
 
-The final essential redirection operator is the pipe `|`. The pipe lets you take the output (stdout) from one program and use it as input (stdin - "standard in") to another. I'll show an example of this later. 
+The final essential operator is the pipe `|`. The pipe lets you take the output (stdout) from one program and use it as input (stdin - "standard in") to another. I'll show an example of this later. The pipe operator technically handles streams differently from the other redirection operators but for our purposes imagine it as moving data from one program into the next.
 
 There are other redirection operators that you'll come across for handling stdout and stdin as [separate streams](https://en.wikipedia.org/wiki/Standard_streams) these are not essential to know right now but are useful to have a solid grasp of as you advance.
 
@@ -236,7 +236,7 @@ find . -name "*.txt" -type f -delete
 
 `curl` and `wget` are both command line utilities for downloading files from remote resources. `curl` will download and stream the results to your terminal by default. `wget` will save the result to a file by default. 
 
-Try running the following to download the *The Complete Works of William Shakespeare* from [Project Gutenburg](https://www.gutenberg.org/)
+Try running the following to download the *The Complete Works of William Shakespeare* from [Project Gutenberg](https://www.gutenberg.org/)
 
 ```{.Bash}
 # Prints the contents to stdout
@@ -264,7 +264,7 @@ grep -c "the" pg100.txt
 
 ### `awk`
 
-[AWK](https://www.baeldung.com/linux/awk-guide) is another command line tool that is also a programming language and is used quite extensively in bioinformatics for matching patterns, filtering text, and extracting lines from delimited files. Because `awk` is a programming language learning `awk` is outside the scope of this tutorial. Tools like [bioawk](https://github.com/lh3/bioawk) have even been developed specifically ith bioinformatics file formats in mind. 
+[AWK](https://www.baeldung.com/linux/awk-guide) is another command line tool that is also a programming language and is used quite extensively in bioinformatics for matching patterns, filtering text, and extracting lines from delimited files. Because `awk` is a programming language learning `awk` is outside the scope of this tutorial. Tools like [bioawk](https://github.com/lh3/bioawk) have even been developed specifically with bioinformatics file formats in mind. 
 
 ## Replacing file contents
 
@@ -275,13 +275,13 @@ sed 's/find/replace/' myfile.txt
 ```
 
 So if you wanted to replace all of the instances of 'the' in the pg100.txt file with the word "ELEPHANT" you could use:
-`sed 's/the/ELEPHANT/ pg100.txt' > shakespeare-elephants.txt`. 
+`sed 's/the/ELEPHANT/' pg100.txt > shakespeare-elephants.txt`. 
 
 ## Piping commands
 
 The Unix pipe is what makes the command line so powerful. You can string together small programs to build up solutions to complex problems. The pipe allows you to take the output from one program and use it as input to another program directly. 
 
-For example, suppose we wanted count the top 10 most frequently used words across all of the works of Shakespeare. The commands below are pretty complicated but illustrate how multiple single tools can interact with eachother through the pipe operator `|`. This modular workflow is a core tenant of the [Unix Philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
+For example, suppose we wanted count the top 10 most frequently used words across all of the works of Shakespeare. The commands below are pretty complicated but illustrate how multiple single tools can interact with eachother through the pipe operator `|`. This modular workflow is a core tenet of the [Unix Philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
 
 ```{.Bash}
 curl https://www.gutenberg.org/cache/epub/100/pg100.txt | \
@@ -329,7 +329,7 @@ To decompress a file you use the 'un' version of the compression command, `gunzi
 gunzip somefile.txt.gz
 ```
 
-There are other compression formats to be aware of in bioinformatics. The most important is "blocked gzip" or `bgzip`. `bgzip` is a format that is compatible with `gzip` but utilizes 'blocks' of data. These files are important for building indeces of large files. Indexes let you hop to individual lines in massive files without having to search through the entire file from the top down. 
+There are other compression formats to be aware of in bioinformatics. The most important is "blocked gzip" or `bgzip`. `bgzip` is a format that is compatible with `gzip` but utilizes 'blocks' of data. These files are important for building indices of large files. Indexes let you hop to individual lines in massive files without having to search through the entire file from the top down. 
 
 ## For-loops
 
@@ -342,7 +342,7 @@ For example, to loop through all text files and return the top words from each:
 # For each file that ends in .txt:
 for F in *.txt; 
  do
-  # Sort the file ($F is a variable), count unique occurences, sort numerically, 
+  # Sort the file ($F is a variable), count unique occurrences, sort numerically, 
   # return the top results and append to the 'top-words.txt' file  
   sort $F | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt; 
 done
@@ -366,7 +366,9 @@ You'll eventually need to edit some code or files from the terminal. Two options
 vim
 ```
 
-Once you're in `vim` you can use the `i` key to enter "input" mode. "input" mode let's you type in new characters. Once you've typed away, save your work and exit with `esc + :wq`. `vim` can be difficult to get used to which lead to the [most famous of StackOverflow questions](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/): `nano` provides a more user friendly interface. 
+Once you're in `vim` you can use the `i` key to enter "input" mode. "input" mode let's you type in new characters. Once you've typed away, save your work and exit by pressing the `Esc` key to return to normal mode, then type `:wq`, and finally press `Enter`. This series of keystrokes can be difficult to get used to which leads to the [most famous of StackOverflow questions](https://stackoverflow.blog/2017/05/23/stack-overflow-helping-one-million-developers-exit-vim/)
+
+`nano`, however, provides a more user friendly interface. 
 
 ```{.Bash}
 nano
@@ -379,41 +381,41 @@ Most data processing tasks in bioinformatics require running commands on high-pe
 To initialize an ssh connection we use the syntax
 
 ```{.Bash}
-ssh username@my-remote-server.org
+ssh username@my.remote.server.org
 ```
 
-If you're accessing the same remote resource often then it's advisable to do two things (1) add the host to your ssh config file and create an ssh-key. The ssh config file describes default settings for connecting to a remote resource. Use one of the text editors above to create or edit the file located at `~/.ssh/config`. the ssh config file specifies the Host name, IP address and the user that is accessing the server
+If you're accessing the same remote resource often then it's advisable to do two things (1) add the host to your ssh config file and create an ssh-key. The ssh config file describes default settings for connecting to a remote resource. Use one of the text editors above to create or edit the file located at `~/.ssh/config`. The ssh config file specifies the host name, IP address and the user that is accessing the server
 
 ```{.Bash}
 Host remote_server
-  HostName 111.222.333.444
+  HostName 111.222.333.44
   User myusername
   Port 22
 ```
 
-Once you sae this file you can access the remote server using `ssh remote_server`. However, you'll notice that every time you do this you'll need to enter your password. Instead of entering your password every time a more secure and convienient way is to create an ssh key pair and add it to the remote server. To create an ssh key you can use the `ssh-keygen` program. 
+Once you save this file you can access the remote server using `ssh remote_server`. However, you'll notice that every time you do this you'll need to enter your password. Instead of entering your password every time, a more secure and convenient way is to create an ssh key-pair and add it to the remote server. To create an ssh key you can use the `ssh-keygen` program. 
 
 ```{.Bash}
-`ssh-keygen`
+ssh-keygen
 ```
 
-this will ask you to create a password for the ssh key and will generate the key's random art. Once the private key and public key have been created, you can use the `ssh-copy-id` command to copy the public key to the remote server. This will ask your for your password on the remote machine. After correctly entering your password it wil copy the public key to the remote server. 
+This will ask you to create a password for the ssh key and will generate the key's random art. Once the private key and public key have been created, you can use the `ssh-copy-id` command to copy the public key to the remote server. This will ask you for your password on the remote machine. After correctly entering your password it wil copy the public key to the remote server. 
 
 ```{.Bash}
-ssh-copy-id remote_erver
+ssh-copy-id remote_server
 ```
 
-After these steps you will be able to use `ssh remote_server` and seemlessly login to the remote server without having to enter IP addresses or passwords.
+After these steps you will be able to use `ssh remote_server` and seamlessly login to the remote server without having to enter IP addresses or passwords.
 
 ## Long running jobs
 
-If you do log onto a remote server chance are you'll have to run a job that takes a long time - a longer time than you're willing to sit on your computer for. To make sure that your long running command *stays* running when you log out of the remote server the easiest way to to use a terminal multiplexer like [tmux])(https://www.redhat.com/en/blog/introduction-tmux-linux). 
+If you do log onto a remote server chances are you'll have to run a job that takes a long time - a longer time than you're willing to sit on your computer for. To make sure that your long running command *stays* running when you log out of the remote server the easiest way to to use a terminal multiplexer like [tmux](https://www.redhat.com/en/blog/introduction-tmux-linux). 
 
-Running `tmux new -s long-session` will create a new window where you can initialize a long running command. Once this command is running you can 'detach' from the session safely without worrying about the process quiting when you log off of the remote server. to detech from a session use `ctl + b, d` while in the active session. When you log back onto the remote server you can access the running session with `tmux a` 
+Running `tmux new -s long-session` will create a new window where you can initialize a long running command. Once this command is running you can 'detach' from the session safely without worrying about the process quitting when you log off of the remote server. to detach from a session use `Ctl + b, d` while in the active session. When you log back onto the remote server you can access the running session with `tmux a` 
 
 ## Resources
 
 - [Software Carpentries course on Unix](https://swcarpentry.github.io/shell-novice/)
 - [Terminus](https://web.mit.edu/mprat/Public/web/Terminus/Web/main.html) is a fun game designed to get you comfortable navigating the command line
-- [OverTheWire](https://overthewire.org/wargames/bandit/) is another game designed to tech you command line tools through the lense of a 'hacker'
+- [OverTheWire](https://overthewire.org/wargames/bandit/) is another game designed to teach you command line tools through the lens of a 'hacker'
 - [vimtutor](https://vimschool.netlify.app/introduction/vimtutor/) can be used to learn `vim`

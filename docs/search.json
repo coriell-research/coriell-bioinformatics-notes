@@ -225,140 +225,200 @@
     "href": "linux.html#where-am-i",
     "title": "Command line basics",
     "section": "Where am I?",
-    "text": "Where am I?\nThe first command you should know is pwd. pwd will print your current working directory. This command is used to display where you are currently in the filesystem. For example, if I open a terminal window in my “Downloads” directory and type pwd and hit ‘Enter’, It will return something like:\n/home/gennaro/Downloads\nindicating that I am in my “Downloads” directory. It can be informative to take a look at how the Unix filesystem works if you are unfamiliar with looking at files on the command line. Basically, all files on a Unix system begin at /, which represents the ‘root’ of the filesystem. All files and directories are accessed by traversing this tree to its tips, which represent files or directories."
+    "text": "Where am I?\nThe first command you should know is pwd. pwd will print your current working directory. This command is used to display where you are currently in the filesystem. For example, if I open a terminal window in my “Downloads” directory and type pwd and hit ‘Enter’, It will return something like:\n/home/gennaro/Downloads\nindicating that I am in my “Downloads” directory. It can be informative to take a look at how the Unix filesystem works if you are unfamiliar with looking at files on the command line. Basically, all files on a Unix system begin at /, which represents the ‘root’ of the filesystem. All files and directories are accessed by traversing this tree to its tips, which represent files or directories.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#listing-files",
     "href": "linux.html#listing-files",
     "title": "Command line basics",
     "section": "Listing files",
-    "text": "Listing files\nNow that I’m in my “Downloads” directory I want to see what files I’ve downloaded. To do this, I can use the ls command to ‘list’ files in the directory.\nls\nwhich returns:\nBDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv\nYour “Downloads” directory will of course have different files. If I need to display more information about these files, such as the time that they were created or how large they are, I can supply the ls command with arguments. For example:\nls -lah\nReturns\ntotal 15M\ndrwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .\ndrwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..\n-rw-rw-r--  1 gennaro gennaro 6.8K May 30 18:00 BDNF-data.tsv\n-rw-rw-r--  1 gennaro gennaro 973K May 30 17:34 CORI_Candidate_SNP_draft_250528_clean.docx\n-rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv\nWhich provides information about the file permissions, the file sizes, and when the files were created.\n\nLearning more about a command\nTo learn more about what arguments are available to any of the command line programs you run, you can use the man, or manual, command. This command will open the user manual for the given command.\nTry typing man ls to view all of the options available when listing files with ls. Use the ‘q’ key to exit the manual information."
+    "text": "Listing files\nNow that I’m in my “Downloads” directory I want to see what files I’ve downloaded. To do this, I can use the ls command to ‘list’ files in the directory.\nls\nwhich returns:\nBDNF-data.tsv  CORI_Candidate_SNP_draft_250528_clean.docx  differential-expression2.tsv\nYour “Downloads” directory will of course have different files. If I need to display more information about these files, such as the time that they were created or how large they are, I can supply the ls command with arguments. For example:\nls -lah\nReturns\ntotal 15M\ndrwxr-xr-x  2 gennaro gennaro 4.0K Jun  1 14:52 .\ndrwxr-x--- 51 gennaro gennaro 4.0K Jun  1 09:34 ..\n-rw-rw-r--  1 gennaro gennaro 6.8K May 30 18:00 BDNF-data.tsv\n-rw-rw-r--  1 gennaro gennaro 973K May 30 17:34 CORI_Candidate_SNP_draft_250528_clean.docx\n-rw-rw-r--  1 gennaro gennaro  14M May 30 12:54 differential-expression2.tsv\nWhich provides information about the file permissions, the file sizes, and when the files were created.\n\nLearning more about a command\nTo learn more about what arguments are available to any of the command line programs you run, you can use the man, or manual, command. This command will open the user manual for the given command.\nTry typing man ls to view all of the options available when listing files with ls. Use the ‘q’ key to exit the manual information.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#moving-around",
     "href": "linux.html#moving-around",
     "title": "Command line basics",
     "section": "Moving around",
-    "text": "Moving around\nLet’s say I want to move from my “Downloads” directory to my “Documents” directory. The command I have to use is cd, short for “change directory”. We can use the cd command with the argument for the target directory we want to go to. For example, to move to my “Documents” directory I can use cd with the full path to the directory that I want to change into. Since it can become incredibly cumbersome to type entire paths into the shell most terminals use the “tab” key to autocomplete the path. So if you start typing ls Do and hit “tab” in your home directory you should see “Documents” and “Downloads” appear as options that can be autocompleted.\ncd /home/gennaro/Documents\n\nDirectory shortcuts\nThe shell has a few shortcuts that make moving around a little easier.\n\ncd: Running cd alone without any arguments will bring you back to your home directory\ncd ~: the ~ character is also a shortcut for /home/user. So you can use that inplace of the full path. For example, to change to the Downloads directory cd ~/Downloads\ncd ..: Will allow you to move “up” the directory tree. So to move from “/home/gennaro/Downloads” back up to “/home/gennaro” I can run cd ...\ncd -: Will allow you to return to the last directory that you were in. For example, if I was in my “Documents” directory, changed to “Downloads” and then wanted to get back into “Documents” I could simply use cd -.\n\nThere are many more shortcuts you can learn as you become more fluent on the command line."
+    "text": "Moving around\nLet’s say I want to move from my “Downloads” directory to my “Documents” directory. The command I have to use is cd, short for “change directory”. We can use the cd command with the argument for the target directory we want to go to. For example, to move to my “Documents” directory I can use cd with the full path to the directory that I want to change into. Since it can become incredibly cumbersome to type entire paths into the shell most terminals use the “tab” key to autocomplete the path. So if you start typing ls Do and hit “tab” in your home directory you should see “Documents” and “Downloads” appear as options that can be autocompleted.\ncd /home/gennaro/Documents\n\nDirectory shortcuts\nThe shell has a few shortcuts that make moving around a little easier.\n\ncd: Running cd alone without any arguments will bring you back to your home directory\ncd ~: the ~ character is also a shortcut for /home/user. So you can use that in place of the full path. For example, to change to the Downloads directory cd ~/Downloads\ncd ..: Will allow you to move “up” the directory tree. So to move from “/home/gennaro/Downloads” back up to “/home/gennaro” I can run cd ...\ncd -: Will allow you to return to the last directory that you were in. For example, if I was in my “Documents” directory, changed to “Downloads” and then wanted to get back into “Documents” I could simply use cd -.\n\nThere are many more shortcuts you can learn as you become more fluent on the command line.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#creating-files",
     "href": "linux.html#creating-files",
     "title": "Command line basics",
     "section": "Creating files",
-    "text": "Creating files\nOne way to create files is with the touch command. For example, to create an empty file in my “Downloads” directory called “A.txt” we can run:\ntouch ~/Downloads/A.txt"
+    "text": "Creating files\nOne way to create files is with the touch command. For example, to create an empty file in my “Downloads” directory called “A.txt” we can run:\ntouch ~/Downloads/A.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#redirection",
     "href": "linux.html#redirection",
     "title": "Command line basics",
     "section": "Redirection",
-    "text": "Redirection\nAnother more common way to add contents to a file is using a concept called redirection. Redirection is a core concept in Unix pipes. It allows you to take the output from one program and use it as input to another program.\nIn this example, I’ll take the output from echo and redirect it to the file “A.txt” that we just created. echo simply prints its arguments back out to the terminal using what is called “stdout” or “standard out”. If we instead want to ‘redirect’ this output (stdout) to a file we can use the >> operator which will append the output from the echo command to the file.\necho \"This is a new line in the file\" >> ~/Downloads/A.txt\necho \"Here is another new line in the file\" >> ~/Downloads/A.txt\nThe >> took the output of the echo command and inserted it as a new line in “A.txt”. Importantly, >> appended these lines into “A.txt”. If I were instead to use > like:\necho \"This will replace the current contents of A.txt\" > ~/Downloads/A.txt\n“A.txt” will be overwritten with the new contents. > is more common to see in practice. In bioinformatics you’ll often see commands that take the output of a program and redirect the results to a new file with >.\nThe final essential redirection operator is the pipe |. The pipe lets you take the output (stdout) from one program and use it as input (stdin - “standard in”) to another. I’ll show an example of this later.\nThere are other redirection operators that you’ll come across for handling stdout and stdin as separate streams these are not essential to know right now but are useful to have a solid grasp of as you advance."
+    "text": "Redirection\nAnother more common way to add contents to a file is using a concept called redirection. Redirection is a core concept in Unix pipes. It allows you to take the output from one program and use it as input to another program.\nIn this example, I’ll take the output from echo and redirect it to the file “A.txt” that we just created. echo simply prints its arguments back out to the terminal using what is called “stdout” or “standard out”. If we instead want to ‘redirect’ this output (stdout) to a file we can use the &gt;&gt; operator which will append the output from the echo command to the file.\necho \"This is a new line in the file\" &gt;&gt; ~/Downloads/A.txt\necho \"Here is another new line in the file\" &gt;&gt; ~/Downloads/A.txt\nThe &gt;&gt; took the output of the echo command and inserted it as a new line in “A.txt”. Importantly, &gt;&gt; appended these lines into “A.txt”. If I were instead to use &gt; like:\necho \"This will replace the current contents of A.txt\" &gt; ~/Downloads/A.txt\n“A.txt” will be overwritten with the new contents. &gt; is more common to see in practice. In bioinformatics you’ll often see commands that take the output of a program and redirect the results to a new file with &gt;.\nThe final essential operator is the pipe |. The pipe lets you take the output (stdout) from one program and use it as input (stdin - “standard in”) to another. I’ll show an example of this later. The pipe operator technically handles streams differently from the other redirection operators but for our purposes imagine it as moving data from one program into the next.\nThere are other redirection operators that you’ll come across for handling stdout and stdin as separate streams these are not essential to know right now but are useful to have a solid grasp of as you advance.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#displaying-the-content-of-files",
     "href": "linux.html#displaying-the-content-of-files",
     "title": "Command line basics",
     "section": "Displaying the content of files",
-    "text": "Displaying the content of files\nThe simplest way to display the contents of a file on the command line is by using the cat command. The cat command is actually designed to concatenate file together, but running it on a single file will print the entire contents of the file to the command line (AKA stdout). For example, to print the contents of “A.txt” in you terminal:\ncat ~/Downloads/A.txt\nWill print\nThis will replace the current contents of A.txt\nto the console. If you have a lot of text that you would like to display cat can result in too much information being on the screen. Instead, you can use the less command. less will print the contents of the file as pages on the screen. You can use the d key to scroll down a page, or the u key to scroll up a page.\nAnother way to display only some of the contents of a file is to use the head or tail commands. head -n10 will print the first 10 lines of a file, whereas tail -n10 can be used to print the last 10 lines of a file.\ncat is also useful for actually combining the contents of files as well. So something like cat A.txt B.txt > C.txt can be used to easily create a new file called “C.txt” with the combined contents of “A.txt” and “B.txt”."
+    "text": "Displaying the content of files\nThe simplest way to display the contents of a file on the command line is by using the cat command. The cat command is actually designed to concatenate file together, but running it on a single file will print the entire contents of the file to the command line (AKA stdout). For example, to print the contents of “A.txt” in you terminal:\ncat ~/Downloads/A.txt\nWill print\nThis will replace the current contents of A.txt\nto the console. If you have a lot of text that you would like to display cat can result in too much information being on the screen. Instead, you can use the less command. less will print the contents of the file as pages on the screen. You can use the d key to scroll down a page, or the u key to scroll up a page.\nAnother way to display only some of the contents of a file is to use the head or tail commands. head -n10 will print the first 10 lines of a file, whereas tail -n10 can be used to print the last 10 lines of a file.\ncat is also useful for actually combining the contents of files as well. So something like cat A.txt B.txt &gt; C.txt can be used to easily create a new file called “C.txt” with the combined contents of “A.txt” and “B.txt”.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#copying-files",
     "href": "linux.html#copying-files",
     "title": "Command line basics",
     "section": "Copying files",
-    "text": "Copying files\nYou can copy a file using the cp command. For example, to copy the “A.txt” file into a new file “B.txt” I can use\ncp ~/Downloads/A.txt ~/Downloads/B.txt\nTo copy an entire directory you need to supply the -r, or recursive argument to the cp command. For example, to create a copy of my “Downloads” directory inside of my “Documents” directory\ncp -r ~/Downloads ~/Documents/Downloads-copy"
+    "text": "Copying files\nYou can copy a file using the cp command. For example, to copy the “A.txt” file into a new file “B.txt” I can use\ncp ~/Downloads/A.txt ~/Downloads/B.txt\nTo copy an entire directory you need to supply the -r, or recursive argument to the cp command. For example, to create a copy of my “Downloads” directory inside of my “Documents” directory\ncp -r ~/Downloads ~/Documents/Downloads-copy",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#moving-and-renaming-files",
     "href": "linux.html#moving-and-renaming-files",
     "title": "Command line basics",
     "section": "Moving and renaming files",
-    "text": "Moving and renaming files\nThe mv or “move” command can be used to move files and rename them. For example, to move the “A.txt” file into my “Documents” directory I can use:\nmv A.txt ~/Documents\nIf I want to change the name of that file I can also use the mv command. Now you need to specify the new file name instead of the location to move the file to\nmv ~/Documents/A.txt ~/Documents/C.txt"
+    "text": "Moving and renaming files\nThe mv or “move” command can be used to move files and rename them. For example, to move the “A.txt” file into my “Documents” directory I can use:\nmv A.txt ~/Documents\nIf I want to change the name of that file I can also use the mv command. Now you need to specify the new file name instead of the location to move the file to\nmv ~/Documents/A.txt ~/Documents/C.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#making-new-directories",
     "href": "linux.html#making-new-directories",
     "title": "Command line basics",
     "section": "Making new directories",
-    "text": "Making new directories\nTo make a new directory you can use the mkdir command. To make a new directory inside of my “Downloads” directory I can use\nmkdir ~/Downloads/textfiles\nBy default, the mkdir command doesn’t allow you to create nested directories. To enable this, set the mkdir -p flag. For example I can create a parent folder and subfolders using:\nmkdir -p ~/Downloads/imagefiles/jpegs\n\nShell expansion\nAnother useful trick is to learn shell expansion. Shell expansion ‘expands’ the arguments. Shell expansion can be a shortcut when creating new project directories. For example\nmkdir -p data doc scripts results/{figures,data-files,rds-files}\nThe results/{figures,data-files,rds-files} expands this command into\nmkdir -p data doc scripts results/figures results/data-files results/rds-files\nWhich saves some typing. Shell expansion can also be used in other contexts. For example, I can create 260 empty text files using the following command which ilustrates the .. expansion.\ntouch ~/Downloads/textfiles/{A..Z}{1..10}.txt\nAnother useful shell expansion is *. For example, if I needed to display the contents of each of the file we just created I could run\ncat ~/Downloads/textfiles/*.txt\nThe * symbol is just one example of a “wildcard” character. These wildcards will come in handy as you advance in your shell usage. They allow you to select patterns to match rather than having to exhaustively list all of the files you may need."
+    "text": "Making new directories\nTo make a new directory you can use the mkdir command. To make a new directory inside of my “Downloads” directory I can use\nmkdir ~/Downloads/textfiles\nBy default, the mkdir command doesn’t allow you to create nested directories. To enable this, set the mkdir -p flag. For example I can create a parent folder and subfolders using:\nmkdir -p ~/Downloads/imagefiles/jpegs\n\nShell expansion\nAnother useful trick is to learn shell expansion. Shell expansion ‘expands’ the arguments. Shell expansion can be a shortcut when creating new project directories. For example\nmkdir -p data doc scripts results/{figures,data-files,rds-files}\nThe results/{figures,data-files,rds-files} expands this command into\nmkdir -p data doc scripts results/figures results/data-files results/rds-files\nWhich saves some typing. Shell expansion can also be used in other contexts. For example, I can create 260 empty text files using the following command which ilustrates the .. expansion.\ntouch ~/Downloads/textfiles/{A..Z}{1..10}.txt\nAnother useful shell expansion is *. For example, if I needed to display the contents of each of the file we just created I could run\ncat ~/Downloads/textfiles/*.txt\nThe * symbol is just one example of a “wildcard” character. These wildcards will come in handy as you advance in your shell usage. They allow you to select patterns to match rather than having to exhaustively list all of the files you may need.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#removing-files",
     "href": "linux.html#removing-files",
     "title": "Command line basics",
     "section": "Removing files",
-    "text": "Removing files\nRemoving files on the command line can be done with the rm command. Unlike when using a GUI, when you remove files on the command line you cannot get them back so use rm wisely. To remove one of the empty files that we just created we can use:\nrm ~/Downloads/textfiles/A1.txt\nIf I want to remove the entire “textfiles” directory I need to use the -r, or recursive flag with rm.\nrm -r ~/Downloads/textfiles\nBe careful when using rm. A simple space can mean removing entire file systems by mistake!"
+    "text": "Removing files\nRemoving files on the command line can be done with the rm command. Unlike when using a GUI, when you remove files on the command line you cannot get them back so use rm wisely. To remove one of the empty files that we just created we can use:\nrm ~/Downloads/textfiles/A1.txt\nIf I want to remove the entire “textfiles” directory I need to use the -r, or recursive flag with rm.\nrm -r ~/Downloads/textfiles\nBe careful when using rm. A simple space can mean removing entire file systems by mistake!",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#finding-files",
     "href": "linux.html#finding-files",
     "title": "Command line basics",
     "section": "Finding files",
-    "text": "Finding files\nOne incredibly useful but often overlooked command line tools is find. find does exactly what you expect it to do, it finds files and folders. find has many arguments but the simplest usage is for finding files using a specific pattern. For example, to find all text (.txt) files in a particular directory and all of its subdirectories you can use:\nfind . -name \"*.txt\" -type f\nThis command says, “find any file (-type f) that has a name like ‘.txt’”. find is especially powerful when combined with the -exec argument. For example, to remove all .txt file in a directory you can use:\nfind . -name \"*.txt\" -type f -exec rm {} \\;\n\n# Alternatively, depending on your system\nfind . -name \"*.txt\" -type f -delete"
+    "text": "Finding files\nOne incredibly useful but often overlooked command line tools is find. find does exactly what you expect it to do, it finds files and folders. find has many arguments but the simplest usage is for finding files using a specific pattern. For example, to find all text (.txt) files in a particular directory and all of its subdirectories you can use:\nfind . -name \"*.txt\" -type f\nThis command says, “find any file (-type f) that has a name like ‘.txt’”. find is especially powerful when combined with the -exec argument. For example, to remove all .txt file in a directory you can use:\nfind . -name \"*.txt\" -type f -exec rm {} \\;\n\n# Alternatively, depending on your system\nfind . -name \"*.txt\" -type f -delete",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#downloading-files",
     "href": "linux.html#downloading-files",
     "title": "Command line basics",
     "section": "Downloading files",
-    "text": "Downloading files\ncurl and wget are both command line utilities for downloading files from remote resources. curl will download and stream the results to your terminal by default. wget will save the result to a file by default.\nTry running the following to download the The Complete Works of William Shakespeare from Project Gutenburg\n# Prints the contents to stdout\ncurl https://www.gutenberg.org/cache/epub/100/pg100.txt\n\n# Saves the contents into pg100.txt\nwget https://www.gutenberg.org/cache/epub/100/pg100.txt"
+    "text": "Downloading files\ncurl and wget are both command line utilities for downloading files from remote resources. curl will download and stream the results to your terminal by default. wget will save the result to a file by default.\nTry running the following to download the The Complete Works of William Shakespeare from Project Gutenberg\n# Prints the contents to stdout\ncurl https://www.gutenberg.org/cache/epub/100/pg100.txt\n\n# Saves the contents into pg100.txt\nwget https://www.gutenberg.org/cache/epub/100/pg100.txt",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#searching-the-contents-of-files",
     "href": "linux.html#searching-the-contents-of-files",
     "title": "Command line basics",
     "section": "Searching the contents of files",
-    "text": "Searching the contents of files\ngrep is a tool that’s use to search the contents of files for specific text patterns. For example, if you wanted to find every line in a text file that contains the word “the” you could use:\ngrep \"the\" pg100.txt\ngrep also has many useful arguments. One of the most useful is that grep can return the count of the number of lines that are returned. For example, to count the number of lines in a text file that contain the word “the”:\ngrep -c \"the\" pg100.txt\ngrep is one of those commands that you’ll use a ton and has a bunch of options for returning the resulting lines. Mastering grep will make your life easier.\n\nawk\nAWK is another command line tool that is also a programming language and is used quite extensively in bioinformatics for matching patterns, filtering text, and extracting lines from delimited files. Because awk is a programming language learning awk is outside the scope of this tutorial. Tools like bioawk have even been developed specifically ith bioinformatics file formats in mind."
+    "text": "Searching the contents of files\ngrep is a tool that’s use to search the contents of files for specific text patterns. For example, if you wanted to find every line in a text file that contains the word “the” you could use:\ngrep \"the\" pg100.txt\ngrep also has many useful arguments. One of the most useful is that grep can return the count of the number of lines that are returned. For example, to count the number of lines in a text file that contain the word “the”:\ngrep -c \"the\" pg100.txt\ngrep is one of those commands that you’ll use a ton and has a bunch of options for returning the resulting lines. Mastering grep will make your life easier.\n\nawk\nAWK is another command line tool that is also a programming language and is used quite extensively in bioinformatics for matching patterns, filtering text, and extracting lines from delimited files. Because awk is a programming language learning awk is outside the scope of this tutorial. Tools like bioawk have even been developed specifically with bioinformatics file formats in mind.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#replacing-file-contents",
     "href": "linux.html#replacing-file-contents",
     "title": "Command line basics",
     "section": "Replacing file contents",
-    "text": "Replacing file contents\nsed is a command line tool for finding and replacing text in a file. sed has arguments that allow you to replace file contents ‘in-place’, meaning the file gets changed permanently. This can be good for really memory intensive operations but can also be really dangerous. the basic syntax of a sed command is:\nsed 's/find/replace/' myfile.txt\nSo if you wanted to replace all of the instances of ‘the’ in the pg100.txt file with the word “ELEPHANT” you could use: sed 's/the/ELEPHANT/ pg100.txt' > shakespeare-elephants.txt."
+    "text": "Replacing file contents\nsed is a command line tool for finding and replacing text in a file. sed has arguments that allow you to replace file contents ‘in-place’, meaning the file gets changed permanently. This can be good for really memory intensive operations but can also be really dangerous. the basic syntax of a sed command is:\nsed 's/find/replace/' myfile.txt\nSo if you wanted to replace all of the instances of ‘the’ in the pg100.txt file with the word “ELEPHANT” you could use: sed 's/the/ELEPHANT/' pg100.txt &gt; shakespeare-elephants.txt.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#piping-commands",
     "href": "linux.html#piping-commands",
     "title": "Command line basics",
     "section": "Piping commands",
-    "text": "Piping commands\nThe Unix pipe is what makes the command line so powerful. You can string together small programs to build up solutions to complex problems. The pipe allows you to take the output from one program and use it as input to another program directly.\nFor example, suppose we wanted count the top 10 most frequently used words across all of the works of Shakespeare. The commands below are pretty complicated but illustrate how multiple single tools can interact with eachother through the pipe operator |. This modular workflow is a core tenant of the Unix Philosophy.\ncurl https://www.gutenberg.org/cache/epub/100/pg100.txt | \\\nsed 's/[^a-zA-Z ]/ /g' | \\\ntr 'A-Z ' 'a-z\\n' | \\\ngrep '[a-z]' | \\\nsort | \\\nuniq -c | \\\nsort -nr -k1 | \\\nhead -n10\n\ncurl downloads the text file from Project Gutenberg and streams it to stdout\nsed replaces all characters that are not spaces or letters, with spaces.\ntr changes all of the uppercase letters into lowercase and converts the spaces in the lines of text to newlines (each ‘word’ is now on a separate line)\ngrep includes only lines that contain at least one lowercase alphabetical character (removing any blank lines)\nsort sorts the list of ‘words’ into alphabetical order\nuniq counts the occurrences of each word\nsort sorts the occurrences numerically in descending order\nhead shows the top 10 lines"
+    "text": "Piping commands\nThe Unix pipe is what makes the command line so powerful. You can string together small programs to build up solutions to complex problems. The pipe allows you to take the output from one program and use it as input to another program directly.\nFor example, suppose we wanted count the top 10 most frequently used words across all of the works of Shakespeare. The commands below are pretty complicated but illustrate how multiple single tools can interact with eachother through the pipe operator |. This modular workflow is a core tenet of the Unix Philosophy.\ncurl https://www.gutenberg.org/cache/epub/100/pg100.txt | \\\nsed 's/[^a-zA-Z ]/ /g' | \\\ntr 'A-Z ' 'a-z\\n' | \\\ngrep '[a-z]' | \\\nsort | \\\nuniq -c | \\\nsort -nr -k1 | \\\nhead -n10\n\ncurl downloads the text file from Project Gutenberg and streams it to stdout\nsed replaces all characters that are not spaces or letters, with spaces.\ntr changes all of the uppercase letters into lowercase and converts the spaces in the lines of text to newlines (each ‘word’ is now on a separate line)\ngrep includes only lines that contain at least one lowercase alphabetical character (removing any blank lines)\nsort sorts the list of ‘words’ into alphabetical order\nuniq counts the occurrences of each word\nsort sorts the occurrences numerically in descending order\nhead shows the top 10 lines",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#compressing-and-uncompressing",
     "href": "linux.html#compressing-and-uncompressing",
     "title": "Command line basics",
     "section": "Compressing and uncompressing",
-    "text": "Compressing and uncompressing\nBioinformatics and command line tools can generally work with compressed data. Data compression saves space which can be really beneficial when transferring files over the internet. gzip is an old but commonly used compression utility that is compatible with many command line utilities. To compress a file for example:\ngzip pg100.txt\nWill produce a compressed version of the “pg100.txt” file called “pg100.txt.gz”. Many Unix tools can work directly with gzipped files. For example:\nzcat pg100.txt.gz\nWill unzip and print the contents of the file to the terminal and zgrep can be used to directly search the contents of a gzipped file without the need to decompress the entire file\nzgrep -c \"the\" pg100.txt.gz\nTo decompress a file you use the ‘un’ version of the compression command, gunzip.\ngunzip somefile.txt.gz\nThere are other compression formats to be aware of in bioinformatics. The most important is “blocked gzip” or bgzip. bgzip is a format that is compatible with gzip but utilizes ‘blocks’ of data. These files are important for building indeces of large files. Indexes let you hop to individual lines in massive files without having to search through the entire file from the top down."
+    "text": "Compressing and uncompressing\nBioinformatics and command line tools can generally work with compressed data. Data compression saves space which can be really beneficial when transferring files over the internet. gzip is an old but commonly used compression utility that is compatible with many command line utilities. To compress a file for example:\ngzip pg100.txt\nWill produce a compressed version of the “pg100.txt” file called “pg100.txt.gz”. Many Unix tools can work directly with gzipped files. For example:\nzcat pg100.txt.gz\nWill unzip and print the contents of the file to the terminal and zgrep can be used to directly search the contents of a gzipped file without the need to decompress the entire file\nzgrep -c \"the\" pg100.txt.gz\nTo decompress a file you use the ‘un’ version of the compression command, gunzip.\ngunzip somefile.txt.gz\nThere are other compression formats to be aware of in bioinformatics. The most important is “blocked gzip” or bgzip. bgzip is a format that is compatible with gzip but utilizes ‘blocks’ of data. These files are important for building indices of large files. Indexes let you hop to individual lines in massive files without having to search through the entire file from the top down.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#for-loops",
     "href": "linux.html#for-loops",
     "title": "Command line basics",
     "section": "For-loops",
-    "text": "For-loops\nThe command line is also a scripting language and like any scripting language, it provides some basic control flow utilities. One of the more useful of these is the basic for loop. In Bash, the for-loop takes the form of a for each loop. the looping variable can be referred to in the loop by using the $ syntax.\nFor example, to loop through all text files and return the top words from each:\n# For each file that ends in .txt:\nfor F in *.txt; \n do\n  # Sort the file ($F is a variable), count unique occurences, sort numerically, \n  # return the top results and append to the 'top-words.txt' file  \n  sort $F | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt; \ndone"
+    "text": "For-loops\nThe command line is also a scripting language and like any scripting language, it provides some basic control flow utilities. One of the more useful of these is the basic for loop. In Bash, the for-loop takes the form of a for each loop. the looping variable can be referred to in the loop by using the $ syntax.\nFor example, to loop through all text files and return the top words from each:\n# For each file that ends in .txt:\nfor F in *.txt; \n do\n  # Sort the file ($F is a variable), count unique occurrences, sort numerically, \n  # return the top results and append to the 'top-words.txt' file  \n  sort $F | uniq -c | sort -nr -k1 | head -n1 &gt;&gt; top-words.txt; \ndone",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#gnu-parallel",
     "href": "linux.html#gnu-parallel",
     "title": "Command line basics",
     "section": "GNU parallel",
-    "text": "GNU parallel\nGNU parallel is a command line tool that takes away the need to use for-loops entirely. parallel is extremely powerful and feature filled. Importantly, it lets you run commands across multiple jobs. For example, instead of writing a for loop we can process the text files above using 8 jobs at once with parallel\nparallel \"sort {} | uniq -c | sort -nr -k1 | head -n1 >> top-words.txt\" ::: *.txt\nThe GNU parallel cheatsheet gives good overview of the capabilities of parallel and how you can use it practically."
+    "text": "GNU parallel\nGNU parallel is a command line tool that takes away the need to use for-loops entirely. parallel is extremely powerful and feature filled. Importantly, it lets you run commands across multiple jobs. For example, instead of writing a for loop we can process the text files above using 8 jobs at once with parallel\nparallel \"sort {} | uniq -c | sort -nr -k1 | head -n1 &gt;&gt; top-words.txt\" ::: *.txt\nThe GNU parallel cheatsheet gives good overview of the capabilities of parallel and how you can use it practically.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#editors",
     "href": "linux.html#editors",
     "title": "Command line basics",
     "section": "Editors",
-    "text": "Editors\nYou’ll eventually need to edit some code or files from the terminal. Two options for code editing from the command line are vim and nano. vim can be more difficult to use for a beginner but is very powerful.\nvim\nOnce you’re in vim you can use the i key to enter “input” mode. “input” mode let’s you type in new characters. Once you’ve typed away, save your work and exit with esc + :wq. vim can be difficult to get used to which lead to the most famous of StackOverflow questions: nano provides a more user friendly interface.\nnano"
+    "text": "Editors\nYou’ll eventually need to edit some code or files from the terminal. Two options for code editing from the command line are vim and nano. vim can be more difficult to use for a beginner but is very powerful.\nvim\nOnce you’re in vim you can use the i key to enter “input” mode. “input” mode let’s you type in new characters. Once you’ve typed away, save your work and exit by pressing the Esc key to return to normal mode, then type :wq, and finally press Enter. This series of keystrokes can be difficult to get used to which leads to the most famous of StackOverflow questions\nnano, however, provides a more user friendly interface.\nnano",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#resources",
     "href": "linux.html#resources",
     "title": "Command line basics",
     "section": "Resources",
-    "text": "Resources\n\nSoftware Carpentries course on Unix\nTerminus is a fun game designed to get you comfortable navigating the command line\nOverTheWire is another game designed to tech you command line tools through the lense of a ‘hacker’\nvimtutor can be used to learn vim"
+    "text": "Resources\n\nSoftware Carpentries course on Unix\nTerminus is a fun game designed to get you comfortable navigating the command line\nOverTheWire is another game designed to teach you command line tools through the lens of a ‘hacker’\nvimtutor can be used to learn vim",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "r-basics.html#introduction-to-programming-in-r",
@@ -806,14 +866,20 @@
     "href": "linux.html#connecting-to-a-remote-server",
     "title": "Command line basics",
     "section": "Connecting to a remote server",
-    "text": "Connecting to a remote server\nMost data processing tasks in bioinformatics require running commands on high-performance compute clusters with lots of cores and RAM. You’ll typically access these servers using ssh or secure shell. We use ssh because it’s encrypted and present on every unix filesystem.\nTo initialize an ssh connection we use the syntax\nssh username@my-remote-server.org\nIf you’re accessing the same remote resource often then it’s advisable to do two things (1) add the host to your ssh config file and create an ssh-key. The ssh config file describes default settings for connecting to a remote resource. Use one of the text editors above to create or edit the file located at ~/.ssh/config. the ssh config file specifies the Host name, IP address and the user that is accessing the server\nHost remote_server\n  HostName 111.222.333.444\n  User myusername\n  Port 22\nOnce you sae this file you can access the remote server using ssh remote_server. However, you’ll notice that every time you do this you’ll need to enter your password. Instead of entering your password every time a more secure and convienient way is to create an ssh key pair and add it to the remote server. To create an ssh key you can use the ssh-keygen program.\n`ssh-keygen`\nthis will ask you to create a password for the ssh key and will generate the key’s random art. Once the private key and public key have been created, you can use the ssh-copy-id command to copy the public key to the remote server. This will ask your for your password on the remote machine. After correctly entering your password it wil copy the public key to the remote server.\nssh-copy-id remote_erver\nAfter these steps you will be able to use ssh remote_server and seemlessly login to the remote server without having to enter IP addresses or passwords."
+    "text": "Connecting to a remote server\nMost data processing tasks in bioinformatics require running commands on high-performance compute clusters with lots of cores and RAM. You’ll typically access these servers using ssh or secure shell. We use ssh because it’s encrypted and present on every unix filesystem.\nTo initialize an ssh connection we use the syntax\nssh username@my.remote.server.org\nIf you’re accessing the same remote resource often then it’s advisable to do two things (1) add the host to your ssh config file and create an ssh-key. The ssh config file describes default settings for connecting to a remote resource. Use one of the text editors above to create or edit the file located at ~/.ssh/config. The ssh config file specifies the host name, IP address and the user that is accessing the server\nHost remote_server\n  HostName 111.222.333.44\n  User myusername\n  Port 22\nOnce you save this file you can access the remote server using ssh remote_server. However, you’ll notice that every time you do this you’ll need to enter your password. Instead of entering your password every time, a more secure and convenient way is to create an ssh key-pair and add it to the remote server. To create an ssh key you can use the ssh-keygen program.\nssh-keygen\nThis will ask you to create a password for the ssh key and will generate the key’s random art. Once the private key and public key have been created, you can use the ssh-copy-id command to copy the public key to the remote server. This will ask you for your password on the remote machine. After correctly entering your password it wil copy the public key to the remote server.\nssh-copy-id remote_server\nAfter these steps you will be able to use ssh remote_server and seamlessly login to the remote server without having to enter IP addresses or passwords.",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "linux.html#long-running-jobs",
     "href": "linux.html#long-running-jobs",
     "title": "Command line basics",
     "section": "Long running jobs",
-    "text": "Long running jobs\nIf you do log onto a remote server chance are you’ll have to run a job that takes a long time - a longer time than you’re willing to sit on your computer for. To make sure that your long running command stays running when you log out of the remote server the easiest way to to use a terminal multiplexer like [tmux])(https://www.redhat.com/en/blog/introduction-tmux-linux).\nRunning tmux new -s long-session will create a new window where you can initialize a long running command. Once this command is running you can ‘detach’ from the session safely without worrying about the process quiting when you log off of the remote server. to detech from a session use ctl + b, d while in the active session. When you log back onto the remote server you can access the running session with tmux a"
+    "text": "Long running jobs\nIf you do log onto a remote server chances are you’ll have to run a job that takes a long time - a longer time than you’re willing to sit on your computer for. To make sure that your long running command stays running when you log out of the remote server the easiest way to to use a terminal multiplexer like tmux.\nRunning tmux new -s long-session will create a new window where you can initialize a long running command. Once this command is running you can ‘detach’ from the session safely without worrying about the process quitting when you log off of the remote server. to detach from a session use Ctl + b, d while in the active session. When you log back onto the remote server you can access the running session with tmux a",
+    "crumbs": [
+      "Command line basics"
+    ]
   },
   {
     "objectID": "r-basics.html#vectors",
@@ -828,5 +894,15 @@
     "title": "R programming basics",
     "section": "R packages",
     "text": "R packages\nEven though the base language provides much of the functionality we need for simple analyses the real strength of R comes from its rich package repository called the Comprehensive R Archive Network or CRAN. CRAN packages can be installed using install.packages(\"package_name\"). in addition to CRAN the bioinformatics community is centered around the BioConductor project. BioConductor curates R packages focused on biological data analysis and uses standardized objects for R analysis that enable really great cross-package functionality. BioConductor packages can typically be installed using the BiocManager package with BiocManager::install(\"bioc_package\")"
+  },
+  {
+    "objectID": "linux.html",
+    "href": "linux.html",
+    "title": "Command line basics",
+    "section": "",
+    "text": "Accessing the terminal\nBasic proficiency with the Unix shell is essential for anyone who wants to start doing computational work outside of their laptop and Excel. Unix shells provide an interface for interacting with Unix-like (Mac OS, Linux, etc.) operating systems and a scripting language for controlling the system. The Unix philosophy is a set of software engineering norms and concepts that guide how the tools of the Unix shell interact with one another. Learning a few of these command line tools, and how they can be strung together into what are called “pipes”, is a powerful skill for developing quick and composable bioinformatics programs. Here, we’ll describe some essential commands to get you started using the command line.\nThis tutorial is very brief. If you want a more in-depth tutorial be sure to check out the Software Carpentries course on Unix.\nFirst, you’ll have to open the Terminal application. If you’re on Mac OS, the quickest way to access your terminal is: “command + space”, typing “terminal” and pressing Enter. On Windows, you’ll have to install Windows Subsystem for Linux which will allow you to interact with a (default) Ubuntu OS. These default terminals are not the only options for interacting with your computer on the command line. For Mac iTerm2 is a popular terminal emulator. Alacritty is a cross-platform terminal.\nOnce you’ve opened the terminal app, you’re ready to start typing commands at the command line.",
+    "crumbs": [
+      "Command line basics"
+    ]
   }
 ]
