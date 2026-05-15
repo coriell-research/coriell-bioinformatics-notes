@@ -14,8 +14,7 @@ need to get my .bib files in order to give proper attribution).
 ## Why care about data management?
 
 Computing is now an essential part of research. This is outlined beautifully
-in the paper, ["All biology is computational biology"](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002050) by
-Florian Markowetz. Data is getting bigger and bigger and we need to be equipped
+in the paper, ["All biology is computational biology"](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.2002050) by Florian Markowetz. Data is getting bigger and bigger and we need to be equipped
 with the tools for storing, manipulating, and communicating insights derived 
 from it. However, most researchers are never taught good computational practices. 
 Computational best practices are imperitive. Implementing best (or good enough)
@@ -57,7 +56,7 @@ royal pain when manipulating files on the command line.
 To ensure filenames are computer friendly, don't use spaces in filenames. 
 Use only letters, numbers, and "-" "_" and "." as delimiters. For example:
 
-```{.Bash}
+```{.bash}
 # Bad
 data for jozef.txt
 
@@ -72,7 +71,7 @@ data-for-jozef.txt
 
 I have a directory with the following files:
 
-```{.Bash}
+```{.bash}
 a.txt
 b.txt
 c.txt
@@ -80,8 +79,7 @@ file with spaces in the name.txt
 some other file.txt
 ```
 
-What does the following code return? (Expected: For each file in the directory 
-print the filename)
+What does the following code return? *(Expected: For each file in the directory print the filename)*
 
 ```{.Bash}
 for FILE in $(ls); do echo $FILE; done
@@ -89,7 +87,7 @@ for FILE in $(ls); do echo $FILE; done
 
 Bash interprets every space as a new word!
 
-```{.Bash}
+```{.bash}
 a.txt
 b.txt
 c.txt
@@ -104,16 +102,17 @@ other
 file.txt
 ```
 
-**Pro-tip**
+**Pro-tip** one nice way of iterating over files that do have spaces in their names is outlined
+in this [stackoverflow comment](https://stackoverflow.com/a/7039208). 
 
-A simple alternative here is to use a text document with the basenames the 
-files you want to loop over and then loop over the lines of the file instead. 
+```{.bash}
+# Source - https://stackoverflow.com/a/7039208
+# Posted by martin clayton
+# Retrieved 2026-05-15, License - CC BY-SA 3.0
 
-```{.Bash}
-SAMPLES=sample-names.txt
-
-for SAMPLE in $(cat $SAMPLES); do
-  doStuff ${SAMPLE}.txt;
+find . -iname "foo*" | while read f
+do
+    # ... loop body
 done
 ```
 
@@ -125,10 +124,9 @@ stick to some basic principles for naming files. First, use consistent and
 unique identifiers across all files that you generate for an experiment. For 
 example, if you're conducting a study that has both RNA-seq and ATAC-seq data
 performed on the same subjects, don't name the files from the RNA-seq experiment
-`subject1.fq.fz` and the files from the ATAC-seq experiment 
-`control_subject1.fq.gz` if they refer to the same sample. For small projects, 
-it's fairly easy to create consistent and unique IDs for each subject. For large 
-projects unique random IDs can be used.
+`subject1.fq.fz` and the files from the ATAC-seq experiment `control_subject1.fq.gz` 
+if they refer to the same sample. For small projects, it's fairly easy to create consistent 
+and unique IDs for each subject. For large projects unique random IDs can be used.
 
 For example, the following filenames would be bad:
 
@@ -141,7 +139,7 @@ sbj2_Treatment_4_Days_Replicate_2.txt
 
 Instead, look at these filenames.
 
-```{.Bash}
+```{.bash}
 subject1_control_4days_rep1.txt
 subject1_control_4days_rep2.txt
 subject2_treatment_4days_rep1.txt
@@ -156,28 +154,23 @@ can easily be parsed automatically.
 File naming best practices also apply to naming executable scripts. The name of 
 the file should describe the function of the script. For example, 
 
-```{.Bash}
+```
 01_align_with_STAR.sh
 ```
 
 is better than simply naming the file
 
-```{.Bash}
+```{.bash}
 01_script.sh
 ```
 
 **Pro-tip**
 
-One easy way to create unique random IDs for a large project is to concatenate 
-descriptions and take the SHA/MDA5 hashsum. 
-
-```{.Bash}
-echo "subject1_control_4days_rep1" | sha256
-# 57f458a294542b2ed6ac14ca64d3c8e4599eed7a
-
-echo "subject1_control_4days_rep2" | shasum
-# b6ea9d729e57cce68b37de390d56c542bc17dea6
-```
+If you have a large study and you need to create unique paticipant IDs there are 
+[several common methods](https://cghlewis.com/blog/participant_id/). My prefered option is the 
+create a completely unique ID devoid of any personally identifying information using a simple study 
+identifier and a number. This identifier stays with that participant across any new experiments. 
+Metadata is then used to link the participant ID with participant information (think SQL database). 
 
 ## Create analysis friendly data - tidy data
 
@@ -214,32 +207,34 @@ head(iris)
 **Pro-tip**
 
 `data.frame` like objects can be stored and retrieved efficiently using the 
-Apache Arrow format instead of CSV files:  
+Apache Arrow format instead of CSV files. The .parquet format is a cross-platform data.frame 
+oriented format that can make it easier and quicker to move data between programming languages.  
 
-```{.R}
+```{.r}
 df <- arrow::read_parquet("path/to/file.parquet")
 arrow::write_parquet(df, "path/to/different_file.parquet")
 ```
 
 see [R arrow](https://arrow.apache.org/docs/r/index.html) for more details. 
 There's also the [nanoparquet](https://nanoparquet.r-lib.org/)
-package which provides a light weight reader/writer for parquet files.
+package which provides a light weight reader/writer for parquet files. The 
+[fst](https://www.fstpackage.org/) R package is another interesting option for serializing 
+data.frmaes in R.
 
 ## Untidy(?) data
 
 Some data formats are not amenable to the 'tidy' structure, i.e. they're just 
 not best represented as long tables. For example, large/sparse matrices, 
-geo-spatial data, R objects, etc.the lesson here is to store data in the format 
+geo-spatial data, R objects, etc. The lesson here is to store data in the format 
 that is most appropriate for the data. For example, don't convert a matrix to a 
 long format and save as a tsv file! Save it as an `.rds` file instead. Large 
 matrices can also be efficiently stored as [HDF5 files](https://cran.r-project.org/web/packages/hdf5r/vignettes/hdf5r.html). 
-Sparse matrices can be saved and accessed eficiently using the [Matrix](https://matrix.r-forge.r-project.org/) package in R. And if you are 
-accessing the same data often, consider storing as a 
-[SQLite](https://www.sqlite.org/index.html) database and accessing with [dbplyr](https://dbplyr.tidyverse.org/) or 
-[sqlalchemy](https://www.sqlalchemy.org/) in Python. The main point is don't 
-force data into a format that you're familiar with only because you're familiar
-with that format. This will often lead to large file sizes and inefficient 
-performance.
+Sparse matrices can be saved and accessed eficiently using the [Matrix](https://matrix.r-forge.r-project.org/) 
+package in R. And if you are accessing the same data often, consider storing as a 
+[SQLite](https://www.sqlite.org/index.html) or [duckdb](https://duckdb.org/) database and accessing 
+with [dbplyr](https://dbplyr.tidyverse.org/) or [sqlalchemy](https://www.sqlalchemy.org/) in Python. 
+The main point is don't force data into a format that you're familiar with only because you're 
+familiar with that format. This will often lead to large file sizes and inefficient performance.
 
 ## Save and lock all raw data
 
@@ -257,7 +252,7 @@ that is not documented by code. To ensure this, you can consider changing file
 permissions to make the file immutable (unchangable). Using bash, you can change 
 file permissions with:
 
-```bash
+```{.bash}
 chattr +i myfile.txt
 ```
 
@@ -274,7 +269,7 @@ of large local files or persistent databases and simply link to the files.
 You can use use soft links. A powerful way of finding an linking files can be 
 done with `find`
 
-```bash
+```{.bash}
 # Link all fastq files to a local directory
 find /path/to/fq/files -name "*.fq.gz") -exec ln -s {} . \;
 ```
@@ -282,7 +277,7 @@ find /path/to/fq/files -name "*.fq.gz") -exec ln -s {} . \;
 If using R, you can also sometimes specify a URL in place of a file path for 
 certain functions.
 
-```{.R}
+```{.r}
 # Avoid downloading a large GTF file - reads GTF directly into memory
 url <- "https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.annotation.gtf.gz"
 gtf <- rtracklayer::import(url)
@@ -334,21 +329,22 @@ name and append the date the project was started. For example,
 collaborator wants their old BRCA data re-analyzed you'll thank yourself for 
 timestamping the project folder and giving it a descriptive name. 
 
-My personal structure for every project looks like:
+My personal structure for **every** project looks like:
 
-<pre><font color="#7DAEA3"><b>yyyymmdd_project-name/</b></font>
-├── <font color="#7DAEA3"><b>data</b></font>
-├── <font color="#7DAEA3"><b>doc</b></font>
-├── README
-├── <font color="#7DAEA3"><b>results</b></font>
-│   ├── <font color="#7DAEA3"><b>data-files</b></font>
-│   ├── <font color="#7DAEA3"><b>figures</b></font>
-│   └── <font color="#7DAEA3"><b>rds-files</b></font>
-└── <font color="#7DAEA3"><b>scripts</b></font>
-</pre>
+```{.html}
+20260515_my-descriptive-project-name/
+├── data
+├── doc
+├── README.md
+├── result
+│   ├── data-files
+│   ├── figures
+│   └── rds-files
+└── scripts
+```
 
 - Prefixing the project directory with the ISO date allows for easy sorting by date
-- a README text file is present at the top level of the directory with a short 
+- a README file is present at the top level of the directory with a short 
 description about the project and any notes or updates
 - `data/` should contain soft links to any raw data or the results
 of downloading data from an external source
@@ -361,50 +357,14 @@ script generated the results.
 - `scripts/` contains all analysis scripts numbered in their order of execution.
 Synchronize the script names with the results they produce.
 
-### A more complex example
-
-<pre><font color="#7DAEA3"><b>yyyymmdd_project-name/</b></font>
-├── <font color="#7DAEA3"><b>data</b></font>
-│   ├── <font color="#7DAEA3"><b>00_fastq</b></font>
-│   ├── <font color="#7DAEA3"><b>01_fastqc</b></font>
-│   ├── <font color="#7DAEA3"><b>02_trimmed</b></font>
-│   └── <font color="#7DAEA3"><b>03_quants</b></font>
-├── <font color="#7DAEA3"><b>delivered</b></font>
-│   └── <font color="#EA6962"><b>2022-09-11_analysis-results.zip</b></font>
-├── <font color="#7DAEA3"><b>doc</b></font>
-│   └── sample-metadata.txt
-├── project.Rproj
-├── README
-├── <font color="#7DAEA3"><b>results</b></font>
-│   ├── <font color="#7DAEA3"><b>data-files</b></font>
-│   │   ├── <font color="#7DAEA3"><b>04</b></font>
-│   │   │   └── <font color="#EA6962"><b>differential-expression.tsv.gz</b></font>
-│   │   └── <font color="#7DAEA3"><b>05</b></font>
-│   │       └── <font color="#EA6962"><b>gsea-results.tsv.gz</b></font>
-│   ├── <font color="#7DAEA3"><b>figures</b></font>
-│   │   ├── <font color="#7DAEA3"><b>04</b></font>
-│   │   │   ├── <font color="#D3869B"><b>ma-plots.png</b></font>
-│   │   │   └── <font color="#D3869B"><b>volcano-plots.png</b></font>
-│   │   └── <font color="#7DAEA3"><b>05</b></font>
-│   │       └── <font color="#D3869B"><b>enrichment-plots.png</b></font>
-│   └── <font color="#7DAEA3"><b>rds-files</b></font>
-│       └── <font color="#7DAEA3"><b>04</b></font>
-│           └── SummarizedExperiment.rds
-└── <font color="#7DAEA3"><b>scripts</b></font>
-    ├── 01_fastqc.sh
-    ├── 02_trim.sh
-    ├── 03_quant.sh
-    ├── 04_differential_expression.Qmd
-    └── 05_gsea.Qmd</pre>
-
 **Pro-tip**
 
-If using Rstudio, include an `.Rproj` file at the top level of your directory. 
+If using R/Positron/Rstudio, include an `.Rproj` file at the top level of your directory. 
 Doing this enables you to use the [here](https://here.r-lib.org/) package to 
 reference data within your project in a relative fashion. For example, you can
 more easily save data with:
 
-```{.R}
+```{.r}
 plot_volcano(...)
 ggsave(here("data", "results", "figures", "04", "volcano-plots.png"))
 ```
@@ -422,7 +382,7 @@ that you created or downloaded.
 For example, a README documenting the creation of the files needed to generate 
 a reference index might look like:
 
-```{.Bash}
+```{.bash}
 Transcripts:
 wget http://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_38/gencode.v38.transcripts.fa.gz
 
@@ -446,14 +406,16 @@ A simple way to build a data pipeline that is surprisingly robust is just to
 create scripts for each step and number them in the order that they should be 
 executed. 
 
-```{.Bash}
+```{.bash}
 01_download.sh
 02_process.py
 03_makeFigures.R
 ```
 
 You can also include a runner script that will execute all of the above. Or, 
-for more consistent workflows, use a workflow manager like [Nextflow](https://training.nextflow.io/),  [Snakemake](https://snakemake.readthedocs.io/en/stable/),  [WDL](https://openwdl.org/), or good ole' [GNU Make](https://swcarpentry.github.io/make-novice/)
+for more consistent workflows, use a workflow manager like [Nextflow](https://training.nextflow.io/), 
+[Snakemake](https://snakemake.readthedocs.io/en/stable/), 
+[WDL](https://openwdl.org/), or good ole' [GNU Make](https://swcarpentry.github.io/make-novice/)
 
 ## Manual version control
 
@@ -483,7 +445,7 @@ If you make a significant change to the project, copy the whole directory,
 date it, and store it such that it will no longer be modified. Copies of these 
 old projects can be compressed and saved with tar + xz compression
 
-```{.Bash}
+```{.bash}
 tar -cJvf old.20231109_myproject.tar.xz myproject/`
 ```
 
@@ -549,7 +511,7 @@ This also follows the [Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%
 
 Compare this chunk of code that rescales values using a min-max function (0-1)
 
-```{.R code-line-numbers="|10-11"}
+```{.r}
 df <- tibble::tibble(
   a = rnorm(10),
   b = rnorm(10),
@@ -569,7 +531,7 @@ df$d <- (df$d - min(df$d, na.rm = TRUE)) /
 
 to this function which does the same thing
 
-```{.R}
+```{.r}
 rescale01 <- function(x) {
   rng <- range(x, na.rm = TRUE)
   (x - rng[1]) / (rng[2] - rng[1])
@@ -578,7 +540,8 @@ rescale01 <- function(x) {
 df <- lapply(df, rescale01)
 ```
 
-Which is easier to read? Which is easier to debug? Which is more efficient?
+Which is easier to read? Which is easier to debug? Which is more efficient? Which has a subtle 
+error that you didn't notice and now feel the need to go back and look for?
 
 ### Give functions and variables meaningful names
 
@@ -589,7 +552,7 @@ mix both
 
 Bad:
 
-```{.R}
+```{.r}
 lol <- 1:100
 
 mydata <- data.frame(x = c("Jozef", "Gennaro", "Matt", "Morgan", "Anthony"))
@@ -601,7 +564,7 @@ f <- function(x, y, ...) {
 
 Better:
 
-```{.R}
+```{.r}
 ages <- 1:100
 
 bioinfo_names <- data.frame(Name = c("Jozef", "Gennaro", "Matt", "Morgan", "Anthony"))
@@ -618,7 +581,7 @@ plotScatterPlot <- function(x, y, ...) {
 
 Bad:
 
-```{.R}
+```{.r}
 # Download the file
 #filename <- "data.tsv"
 #url <- "http:://example.com/data.tsv"
@@ -630,7 +593,7 @@ df <- read.delim("data.tsv", sep="\t")
 
 Good:
 
-```{.R}
+```{.r}
 filename <- "data.tsv"
 url <- "http:://example.com/data.tsv"
 
@@ -643,13 +606,14 @@ df <- read.delim(filename)
 ### Use a consistent style
 
 Pick a [style guide](https://style.tidyverse.org/) and stick with it. If using 
-R, the [styler](https://styler.r-lib.org/index.html) package can automatically 
-clean up poorly formatted code. If using Python, [black](https://black.readthedocs.io/en/stable/index.html) is a highly opinionated formatter that is pretty popular. Although, I think [ruff](https://docs.astral.sh/ruff/) is 
-currently all the rage with the Pythonistas these days. 
+R, the [air](https://tidyverse.org/blog/2025/02/air/) formatter can quickly clean up poorly 
+formatted code. If using Python, [black](https://black.readthedocs.io/en/stable/index.html) is a 
+highly opinionated formatter that is pretty popular. Although, [ruff](https://docs.astral.sh/ruff/) 
+is currently all the rage with the Pythonistas these days. 
 
 Bad:
 
-```{.R}
+```{.r}
 flights|>group_by(dest)|> summarize(
 distance=mean( distance),speed = mean(distance/air_time, na.rm= T)) |> 
 ggplot(aes(x= distance, y=speed))+geom_smooth(method = "loess",span = 0.5,se = FALSE,color = "white",linewidth =4)+geom_point()-> flight_plot
@@ -657,7 +621,7 @@ ggplot(aes(x= distance, y=speed))+geom_smooth(method = "loess",span = 0.5,se = F
 
 Good:
 
-```{.R}
+```{.r}
 flight_plot <- flights |> 
   group_by(dest) |> 
   summarize(
@@ -686,7 +650,7 @@ can be anywhere in the pipe!
 
 **Don't do this**
 
-```{.R}
+```{.r}
 data |> 
   select(...) |> 
   filter(...) |> 
@@ -697,12 +661,44 @@ data |>
 It's much easier to look down a script and see that `by_group` is created by
 all of the piped operations when assigned normally.
 
-```{.R}
+```{.r}
 by_group <- data |> 
   select(...) |> 
   filter(...) |> 
   group_by(...) |> 
   summarize(...)
+```
+
+### Set up chunks
+
+Another useful R idiom is to set up your output directories as variables at the top of your script
+or .qmd document. I will often create a new script with the following at the top of the script. 
+The "01" subdirectories should match the script name. For example, name the script 
+"01_analysis.qmd" and all of the output will be nicely organized in subdirectories. Repeating this 
+strategy will allow you to create as many new analysis scripts as you need and keep them organized.
+
+```{.r}
+library(here)
+library(data.table)
+library(ggplot2)
+
+datafiles <- here("results", "data-files", "01")
+figures <- here("results", "figures", "01")
+rdsfiles <- here("results", "rds-files", "01")
+
+invisible(sapply(c(datafiles, figures, rdsfiles), dir.create, showWarnings = F, recursive = T))
+```
+
+Creating output directories at the top of the script like this allows you to save files and data 
+using variable names instead of specifying entire paths like so:
+
+```{.r}
+# Saving a .png figure to the figures diectory
+ggplot(...) + geom_point(...)
+ggsave(here(figures, "scatterplot.png"))
+
+# Saving a csv file to the "data-files" directory
+fwrite(dt, here(datafiles, "dataframe.csv"))
 ```
 
 # Summary
