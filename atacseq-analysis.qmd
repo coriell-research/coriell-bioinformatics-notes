@@ -2,6 +2,8 @@
 
 **Work in progress**
 
+Check out the coriell [Snakemake ATAC-seq workflow](https://github.com/coriell-research/snakemake-pipelines/tree/main/atacseq-pe) for a more complete example workflow.
+
 ## Filter raw fastq files
 
 Use [fastp](https://github.com/OpenGene/fastp) to perform quality trimming
@@ -51,9 +53,14 @@ This file gets used throughout.
 
 ## Perform alignment with Bowtie2
 
-Use `--very-sensitive` mode and set max insertion size to 1,000. The output is
-piped to `samtools fixmate` for adding mate tag information and then to 
-`samtools sort -n` to create name sorted BAM files. 
+This command is doing a lot of work. 
+
+1. Align the trimmed reads with `Bowtie2` in `--very-sensitive` mode disallowing mixed and discordant reads
+2. The output gets piped through `samtools view` to remove any reads from mitochondrial sequences
+3. `samtools collate` is then used to quickly name sort the alignments
+4. Name sorted alignments are piped to `samtools fixmate` to fill in mate coordinates and insert size fields
+5. The alignments then need to be position sorted with `samtools sort` before
+6. Marking duplicates with `samtools markdup`
 
 It's assumed that you have a bowtie2 index generated for your species of 
 interest. The number of jobs, threads, and memory allowed per thread will all
@@ -73,21 +80,49 @@ FQ=/path/to/01_fastp
 SAMPLES=/path/to/sample-names.txt   
 OUT=/path/to/02_align
 IDX=/path/to/bt2_idx
-INSERT=1000
+INSERT=2000
 JOBS=6
 THREADS=4
 
 mkdir -p $OUT
 
-parallel --jobs $JOBS \
+parallel -q --jobs $JOBS \
   "bowtie2 -x $IDX \
-    -1 $FQ/{}.trimmed.1.fq.gz \
-    -2 $FQ/{}.trimmed.2.fq.gz \
-    --very-sensitive \
-    --threads $THREADS \
-    --maxins $INSERT | \
-    samtools fixmate -m -@$THREADS - - | \
-    samtools sort -n -@$THREADS -m4G -o $OUT/{}.bam - " :::: $SAMPLES
+           -1 $FQ/{}.trimmed.1.fq.gz \
+           -2 $FQ/{}.trimmed.2.fq.gz \
+           --very-sensitive \
+           --no-mixed \
+           --no-discordant \
+           --maxins $INSERT \
+           --threads {threads} \
+            2> {log} | \
+        samtools view -u -h -e 'rname != "chrM" && rname != "MT"' - | \
+        samtools collate -u -O -@4 - | \
+        samtools fixmate -m -u -@4 - - | \
+        samtools sort -u -@4 -m8G - | \
+        samtools markdup --write-index -f $OUT/{}.sorted.bam.stats -@4 - $OUT/{}.sorted.bam" :::: $SAMPLES
+```
+
+## Collate BAMS
+
+Genrich (the peak caller I prefer downstream) needs name sorted BAMs. We have just position sorted 
+our BAMs so we'll need to name sort or collate them again before running `Genrich`
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Collate position sorted BAMs
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt   
+BAM=/path/to/02_align
+JOBS=6
+
+parallel --jobs $JOBS "samtools collate -r 100000 -@4 -o $BAM/{}.collated.bam $BAM/{}.sorted.bam" :::: $SAMPLES
 ```
 
 ## Call peaks with `Genrich`
@@ -125,7 +160,7 @@ PVAL=0.05
 JOBS=6
 
 parallel --jobs $JOBS \
-    "Genrich -t $BAM/{}.bam \
+    "Genrich -t $BAM/{}.collated.bam \
         -o $OUT/{}.narrowPeak \
         -k $OUT/{}.pileup.txt \
         -f $OUT/{}.log \
@@ -135,7 +170,7 @@ parallel --jobs $JOBS \
 
 ### Exclusion lists
 
-The “excluderanges.bed” file used above contains blacklisted regions of 
+The "excluderanges.bed" file used above contains blacklisted regions of 
 high-mappability that can be excluded from peak calling. This BED file can be 
 created using the [excluderanges](https://www.bioconductor.org/packages/release/data/annotation/vignettes/excluderanges/inst/doc/excluderanges.html) R package. For example, to generate the 
 excluded regions for mm39:
@@ -152,53 +187,9 @@ mm39_exclude_gr <- query_data[["AH107321"]]
 rtracklayer::export.bed(mm39_exclude_gr, "mm39-excluderanges.bed")
 ```
 
-## Determine consensus peaks for replicate samples
-
-After peak calling finishes, I create consensus peak calls for replicate 
-samples. The consensus peak calls can be used in downstream differential 
-accessibility analysis or for visualization. Creating consensus peak calls
-can be done in R by requiring all or some peaks to be called across replicate
-samples.
-
-```{r}
-#| eval: false
-suppressPackageStartupMessages(library(here))
-suppressPackageStartupMessages(library(GenomicRanges))
-
-
-# Read in peak calls
-peak_files <- list.files(here("data", "04_callpeak"), pattern="*.narrowPeak", full.names=TRUE)
-names(peak_files) <- gsub(".narrowPeak", "", basename(peak_files))
-peak_calls <- lapply(peak_files, rtracklayer::import)
-
-# Separate into groups 
-control_calls <- peak_calls[c("control1", "control2", "control3")]
-treatment_calls <- peak_calls[c("treatment1", "treatment2", "treatment3")]
-control_calls <- GRangesList(control_calls)
-treatment_calls <- GRangesList(treatment_calls)
-
-# Compute coverage across ranges
-control_coverage <- coverage(control_calls)
-treatment_coverage <- coverage(treatment_calls)
-
-# Determine regions with coverage in N replicates -- here require all 3 to have the same peaks
-control_covered <- GRanges(slice(control_coverage, lower=length(control_calls), rangesOnly=TRUE))
-treatment_covered <- GRanges(slice(treatment_coverage, lower=length(treatment_calls), rangesOnly=TRUE))
-
-# Close gaps in the resulting regions -- min.gapwidth can be adjusted 
-control_consensus <- reduce(control_covered, min.gapwidth=101)
-treatment_consensus <- reduce(treatment_covered, min.gapwidth=101)
-all_consensus <- union(control_consensus, treatment_consensus)
-
-# Export as BED files
-rtracklayer::export.bed(control_consensus, here("data", "04_callpeak", "control-consensus.bed"))
-rtracklayer::export.bed(treatment_consensus, here("data", "04_callpeak", "treatment-consensus.bed"))
-rtracklayer::export.bed(all_consensus, here("data", "04_callpeak", "consensus.bed"))
-```
-
 ## Create raw signal tracks
 
-Genrich outputs a bedgraph-ish file using the `-k` flag that can be used to 
+`Genrich` outputs a bedgraph-ish file using the `-k` flag that can be used to 
 quickly create a a bigwig file of the raw signal which can be viewed in IGV. I 
 find it useful to look at the raw signal tracks after peak calling so I can 
 assess the absolute magnitude of the pileup that went into calling a peak. 
@@ -249,6 +240,240 @@ UCSC utility, `faSize`, and your genome fasta.
 faSize -detailed -tab genome.fasta > genome.chrom.sizes
 ```
 
+## Check fragment size distributions
+
+Now that we have bigwig files of the raw signal tracks we can generate some more QC plots. Here, we
+want to check the [fragment size distributions](https://nbis-workshop-epigenomics.readthedocs.io/en/latest/content/tutorials/data-preproc/data-qc-atac.html#fragment-length-distribution). These fragment size 
+distributions should display characteristic peaks derived from nucleosome-free regions (NFR), 
+mononucleosome, dinucleosome, trinucleosome and longer oligonucleosome from open chromatin regions.
+
+Histograms of fragment size distributions can be generated with [deeptools](https://deeptools.readthedocs.io/en/latest/content/tools/bamPEFragmentSize.html)
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Generate fragment size distribution histograms from each BAM file
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt
+BAM=/path/to/02_align
+OUT=/path/to/05_deeptools
+EXCLUDE=/path/to/excluderanges.bed
+JOBS=6
+
+parallel -q --jobs $JOBS "bamPEFragmentSize --bamfiles $BAM/{}.sorted.bam \
+            --histogram $OUT/{}.fragmentsizes.pdf \
+            --plotFileFormat 'pdf' \
+            --numberOfProcessors 4 \
+            --maxFragmentLength 2000 \
+            --blackListFileName $EXCLUDE" :::: $SAMPLES
+```
+
+## Check signal around transcription start sites (TSS)
+
+We expect ATAC-seq reads to pileup at the TSS of active genes. We can generate plots from the raw
+signal files around the TSS using `deeptools`. The first step is to compute a matrix of pileups 
+around the TSSs which `deeptools` can reuse for downstream plotting functions.
+
+Here, it is assumed that you have a [GTF file](https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_50/gencode.v50.annotation.gtf.gz) with the gene annotations for you species of interest.
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Generate TSS profile plots
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt
+BW=/path/to/04_bg2bw
+OUT=/path/to/05_deeptools
+EXCLUDE=/path/to/excluderanges.bed
+GTF=/path/to/annotation.gtf
+JOBS=6
+
+
+# Compute the pileup matrices of the raw signal arounf the TSS for genes
+parallel --jobs $JOB "computeMatrix reference-point \
+            --regionsFileName $GTF \
+            --scoreFileName $BW/{}.bw \
+            --outFileName $OUT/{}.tss.mat.gz \
+            --referencePoint TSS \
+            --beforeRegionStartLength 2000 \
+            --afterRegionStartLength 2000 \
+            --blackListFileName $EXCLUDE \
+            --skipZeros \
+            --missingDataAsZero \
+            --metagene \
+            --transcriptID gene \
+            --numberOfProcessors 6" :::: $SAMPLES
+
+# Generate profile plots of the signals for each sample
+parallel --jobs $JOBS "plotProfile --matrixFile $OUT/{}.tss.mat.gz \
+            --outFileName $OUT/{}.profile.pdf \
+            --plotTitle 'TSS enrichment' \
+            --plotFileFormat 'pdf'" :::: $SAMPLES
+```
+
+## Count reads in promoters
+
+For ATAC-seq, we are sometimes interested in the counts of reads only in the promoter regions. This 
+can simplify downstream analysis, especially when RNA-seq is available, by allowing direct 
+comparisons between promoter accessibility and gene expression. To count reads in promoters we'll 
+need a file of the promoter regions. 
+
+### Generating promoter regions from a GTF
+
+We can use `awk` to extract and compute promoter regions for all genes in a GTF file and format them
+into an SAF file for downstream use in `featureCounts`
+
+```{bash}
+#| eval: false
+
+GTF=/path/to/annotation.gtf
+SAF=/path/to/promoters.saf
+
+zcat $GTF | awk -F'\t' '
+BEGIN {{
+    OFS="\t"; 
+    # Print the required SAF header
+    print "GeneID", "Chr", "Start", "End", "Strand";
+    
+    up = {params.upstream};       # Base pairs upstream of TSS
+    down = {params.downstream};   # Base pairs downstream of TSS
+}}
+!/^#/ && $3 == "gene" {{
+    # Extract the gene_id from the attributes column ($9)
+    split($9, a, "gene_id \\""); 
+    split(a[2], b, "\\""); 
+    gene_id = b[1];
+    
+    # Calculate coordinates based on DNA strand
+    if ($7 == "+") {{
+        start = $4 - up; 
+        if (start < 1) start = 1; # Prevent negative coordinates
+        end = $4 + down;
+    }} else if ($7 == "-") {{
+        start = $5 - down; 
+        if (start < 1) start = 1;
+        end = $5 + up;
+    }} else {{
+        next; # Skip if strand is undefined
+    }}
+    
+    # Print in SAF format
+    print gene_id, $1, start, end, $7
+}}' > $SAF
+```
+
+### Count reads in promoters with `featureCounts`
+
+We can now use `featureCounts` to count reads in the promoter regions extracted from above. The 
+most important parameter here is counting reads at the 5' position to account for the Tn5 
+transposases position. 
+
+```{bash}
+#| eval: false
+
+#!/usr/bin/env bash
+#
+# Count reads in promoter regions
+#
+# ----------------------------------------------------------------------------
+set -Eeou pipefail
+
+SAMPLES=/path/to/sample-names.txt
+BAM=/path/to/02_align
+OUT=/path/to/06_featurecounts
+SAF=/path/to/promoters.saf
+JOBS=6
+
+parallel --jobs $JOBS "featureCounts \
+            -a $SAF \
+            -o $OUT/{}.featurecounts.txt \
+            -F 'SAF' \
+            -p \
+            -d 0 \
+            -D 2000 \
+            --read2pos 5 \
+            -O \
+            --fraction \
+            --ignoreDup \
+            -T 8 \
+            $BAM/{}.sorted.bam" :::: $SAMPLES
+```
+
+## Determine consensus peaks for replicate samples
+
+After peak calling finishes, I create consensus peak calls for replicate 
+samples. The consensus peak calls can be used in downstream differential 
+accessibility analysis or for visualization. Creating consensus peak calls
+can be done in R by requiring all or some peaks to be called across replicate
+samples.
+
+```{r}
+#| eval: false
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(GenomicRanges))
+
+
+# Read in peak calls
+peak_files <- list.files(
+  here("data", "04_callpeak"),
+  pattern = "*.narrowPeak",
+  full.names = TRUE
+)
+names(peak_files) <- gsub(".narrowPeak", "", basename(peak_files))
+peak_calls <- lapply(peak_files, rtracklayer::import)
+
+# Separate into groups
+control_calls <- peak_calls[c("control1", "control2", "control3")]
+treatment_calls <- peak_calls[c("treatment1", "treatment2", "treatment3")]
+control_calls <- GRangesList(control_calls)
+treatment_calls <- GRangesList(treatment_calls)
+
+# Compute coverage across ranges
+control_coverage <- coverage(control_calls)
+treatment_coverage <- coverage(treatment_calls)
+
+# Determine regions with coverage in N replicates -- here require all 3 to have the same peaks
+control_covered <- GRanges(slice(
+  control_coverage,
+  lower = length(control_calls),
+  rangesOnly = TRUE
+))
+treatment_covered <- GRanges(slice(
+  treatment_coverage,
+  lower = length(treatment_calls),
+  rangesOnly = TRUE
+))
+
+# Close gaps in the resulting regions -- min.gapwidth can be adjusted
+control_consensus <- reduce(control_covered, min.gapwidth = 101)
+treatment_consensus <- reduce(treatment_covered, min.gapwidth = 101)
+all_consensus <- union(control_consensus, treatment_consensus)
+
+# Export as BED files
+rtracklayer::export.bed(
+  control_consensus,
+  here("data", "04_callpeak", "control-consensus.bed")
+)
+rtracklayer::export.bed(
+  treatment_consensus,
+  here("data", "04_callpeak", "treatment-consensus.bed")
+)
+rtracklayer::export.bed(
+  all_consensus,
+  here("data", "04_callpeak", "consensus.bed")
+)
+```
+
 ## ATACSeqQC
 
 **TODO: complete this section**
@@ -273,7 +498,7 @@ from the [Rsubread](https://bioconductor.org/packages/devel/bioc/vignettes/Rsubr
 "consensus.bed" file. To get the read counts to align with the Genrich called 
 peaks, set the `-read2Pos 5` flag to count alignments over the 5' end of reads.
 
-## Create TSS and region plots with `deeptools`
+## Create normalized TSS and region plots with `deeptools`
 
 [deeptools](https://deeptools.readthedocs.io/en/latest/) can be used to compute
 normalized coverage files in bigwig format for visualization in IGV. 
@@ -294,18 +519,17 @@ First, compute the reciprocal of the TMM scaling factors in R:
 y <- normLibSizes(y)
 
 # Compute the scale factors for each library
-sf <- y$samples$norm.factors * y$samples$lib.size / 1e6   
+sf <- y$samples$norm.factors * y$samples$lib.size / 1e6
 
 # Take the inverse of the scale factors for use in deeptools
 inv_sf <- 1 / sf
 
 # Write out to a csv file -- assuming the colnames match the file basenames
 fwrite(
-  data.frame(sample_name = colnames(y), 
-             scale_factor=inv_sf), 
-  "scale-factors.csv", 
-  col.names=FALSE
-  )
+  data.frame(sample_name = colnames(y), scale_factor = inv_sf),
+  "scale-factors.csv",
+  col.names = FALSE
+)
 ```
 
 Then, to compute TMM scaled bigwigs using `deeptools`
@@ -442,7 +666,7 @@ suppressPackageStartupMessages(library(GenomicRanges))
 peaks <- fread("annotated-peaks.tsv")
 peaks <- makeGRangesFromDataFrame(peaks, keep.extra.columns = TRUE)
 
-# Extract promoter peaks -- this can be any filtering you're interested in 
+# Extract promoter peaks -- this can be any filtering you're interested in
 promoter_peaks <- peaks[peaks$annotation %like% "Promoter"]
 
 # Extract and write out the hg38 sequences as fasta records
