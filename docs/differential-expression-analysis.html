@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Coriell Bioinformatics Notes - Differential Expression Analysis</title>
+<title>Coriell Bioinformatics Notes - RNA-seq Differential Expression Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -135,7 +135,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">Differential Expression Analysis</h1>
+      <h1 class="quarto-secondary-nav-title">RNA-seq Differential Expression Analysis</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link active">Differential Expression Analysis</a>
+  <a href="./differential-expression-analysis.html" class="sidebar-item-text sidebar-link active">RNA-seq Differential Expression Analysis</a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -280,7 +280,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Differential Expression Analysis</h1>
+<h1 class="title d-none d-lg-block">RNA-seq Differential Expression Analysis</h1>
 </div>
 
 
@@ -313,6 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="workflow-managers" class="level3">
 <h3 class="anchored" data-anchor-id="workflow-managers">Workflow managers</h3>
 <p>Most of the above processing steps can (and should) be orchestrated using a workflow manager like <a href="https://snakemake.readthedocs.io/en/stable/">Snakemake</a> or <a href="https://www.nextflow.io/">Nextflow</a>. Below, I demonstrate example processing steps using simple Bash scripts for simplicity and illustrative purposes.</p>
+<p>Check out the <a href="https://github.com/coriell-research/snakemake-pipelines/tree/main/rnaseq-pe">Coriell RNA-seq Snakemake pipeline</a> for a simple example workflow.</p>
 </section>
 </section>
 <section id="quality-control" class="level2">
@@ -1107,7 +1108,7 @@ Residuals    6 31225.5  5204.2               </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.1 (2025-06-13)
 Platform: x86_64-apple-darwin20
-Running under: macOS Sequoia 15.7.4
+Running under: macOS Sequoia 15.7.8
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRblas.0.dylib 

@@ -1,4 +1,4 @@
-# Differential Expression Analysis {.unnumbered}
+# RNA-seq Differential Expression Analysis {.unnumbered}
 
 This vignette outlines some common steps for RNA-seq analysis highlighting 
 functions present in the `coriell` package. To illustrate some of the 
@@ -41,6 +41,8 @@ Most of the above processing steps can (and should) be orchestrated using a work
 [Snakemake](https://snakemake.readthedocs.io/en/stable/) or [Nextflow](https://www.nextflow.io/). 
 Below, I demonstrate example processing steps using simple Bash scripts for simplicity and 
 illustrative purposes.
+
+Check out the [Coriell RNA-seq Snakemake pipeline](https://github.com/coriell-research/snakemake-pipelines/tree/main/rnaseq-pe) for a simple example workflow.
 
 ## Quality Control
 
